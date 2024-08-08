@@ -1,0 +1,7 @@
+<div>
+  <label>Select Users:</label>
+  <select multiple >
+    <option *ngFor="let user of arbitrationParties" [value]="user">sam</option>
+  </select>
+</div>
+<button (click)="closePopover()">Close</button>

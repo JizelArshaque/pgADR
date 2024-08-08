@@ -1,0 +1,91 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <div class="row justify-content-center" >  
+      <div class="col-lg-12" style="text-align: center;">
+       <button  class="btn btn-success" (click)="Print()">Print</button>
+
+        <!-- <h4 class="heading-con top-heading" style="width: 20rem; margin-left: 22%; margin-bottom: 17px;"> UPLOAD FILES</h4>  -->
+        <button (click)="back()" style="margin-top: -20px;" class="close"><i class="fas fa-times"></i></button>
+      </div> 
+    </div> 
+  </ion-toolbar>
+</ion-header> 
+ 
+<ion-content [fullscreen]="true" id="print_div_doc" #print_div_doc>
+  <div *ngIf="selecteddocument && Type==0"> 
+    <iframe [src]="selecteddocument | safe" style="width:100%;height:700px;"></iframe>
+  </div> 
+  <div class="row justify-content-center" *ngIf="Type==1 && !!ArbitrationDetails"> 
+    <div class="container" id="auto_doc">
+      <h4 style="text-align: center;" style="text-align: center;"><b>ARBITRATION REQUEST</b></h4><br>
+     
+
+        
+
+        <p
+          *ngIf="!!FilterArbitrationParties(0,0) && FilterArbitrationParties(0,0).length>0 ">
+          <b>Name of Claimant</b> : {{FilterArbitrationParties(0,0)[0].Name}}
+          <br>Address : {{FilterArbitrationParties(0,0)[0].Address}}<br> Email : {{FilterArbitrationParties(0,0)[0].Email}}<br>
+          Mobile No. : {{FilterArbitrationParties(0,0)[0].Mobile}}</p>
+          <p *ngIf="!!FilterArbitrationParties(0,2) && FilterArbitrationParties(0,2).length>0"><b>Lawyer for
+            Claimant</b> : {{FilterArbitrationParties(0,2)[0].Name}}<br>Address : {{FilterArbitrationParties(0,2)[0].Address}}<br> Email : {{FilterArbitrationParties(0,2)[0].Email}}<br>
+          Mobile No. : {{FilterArbitrationParties(0,2)[0].Mobile}} <br><span *ngIf="CheckDate(FilterArbitrationParties(0,2)[0].SysTime)"><i>Joined on : {{FilterArbitrationParties(0,2)[0].SysTime | date:'dd-MMM-yyyy'}}</i></span></p>
+        <p
+          *ngIf="!!FilterArbitrationParties(1,0) && FilterArbitrationParties(1,0).length>0 ">
+          <b>Respondent</b> : {{FilterArbitrationParties(1,0)[0].Name}}
+          <br> Address : {{FilterArbitrationParties(1,0)[0].Address}} 
+          <br> Email : {{FilterArbitrationParties(1,0)[0].Email}}<br>
+          Mobile No. : {{FilterArbitrationParties(1,0)[0].Mobile}}</p>
+          <p *ngIf="!!FilterArbitrationParties(1,2) && FilterArbitrationParties(1,2).length>0"><b>Lawyer for
+            Respondent</b> : {{FilterArbitrationParties(1,2)[0].Name}}<br>Address : {{FilterArbitrationParties(1,2)[0].Address}}<br> Email : {{FilterArbitrationParties(1,2)[0].Email}}<br>
+          Mobile No. : {{FilterArbitrationParties(1,2)[0].Mobile}}<br><span *ngIf="CheckDate(FilterArbitrationParties(1,2)[0].SysTime)"><i>Joined on : {{FilterArbitrationParties(1,2)[0].SysTime | date:'dd-MMM-yyyy'}}</i></span></p>
+      <ul>
+<li><b>1.	Date of filing of arbitration request : </b>{{ArbitrationDetails.SysTime|date:'dd-MMM-yyyy'}}</li>    
+<li><b>2.	Date and details of arbitration agreement : </b>{{ArbitrationDetails.DateOfAgreement|date:'dd-MMM-yyyy'}} (Document Attached #)</li>    
+<li><b>3.	Date and details of notice of arbitration issued by claimant(s) : </b> {{ArbitrationDetails.DateOfClaimantNotice|date:'dd-MMM-yyyy'}} (Document Attached #)</li>
+<li><b>4.	Date and details of reply notice, if any, issued by respondent(s) : </b><span *ngIf="!!ArbitrationDetails.DateOfRespondentNotice && ArbitrationDetails.DateOfRespondentNotice.length>1">{{ArbitrationDetails.DateOfRespondentNotice|date:'dd-MMM-yyyy'}} (Document Attached #)</span><span *ngIf="!ArbitrationDetails.DateOfRespondentNotice ">No</span></li>
+<li><b>5.	Brief facts in dispute relied on by the Claimant : </b>{{ArbitrationDetails.DisputeSynopsis}}</li>
+<li><b>6.	Reliefs sought, including an estimate of the monetary value of the claims : </b>INR {{ArbitrationDetails.DisputeValue}}.00</li>
+<li><b>7. Type of arbitration : </b>  {{ArbitrationDetails.TypeofArbitration==1?'Ad-Hoc': ArbitrationDetails.Institution==2? 'Institutional - under APCAM Arbitration Rules': ArbitrationDetails.ArbitrationAgreementType==3?'Institutional - under IIAM Expedited Arbitration Rules':'Institutional - under IIAM Arbitration Rules'}}  </li>
+<li><b>8.	Category of arbitration : </b>  {{ArbitrationDetails.ArbitrationAgreementType==2?'Fast Track':ArbitrationDetails.ArbitrationAgreementType==1?'Regular':'Expedited'}}</li> 
+<li><b>9.	Number of arbitrators : </b>{{ArbitrationDetails.NumberofArbitrator}} </li>
+<li><b>10.  Seat of arbitration : </b>{{ArbitrationDetails.Seat}}</li>
+<li *ngIf="!!FilterArbitrationPartiesWithIsConteoller(0,3,0) && FilterArbitrationPartiesWithIsConteoller(0,3,0).length>0"><b>11.	If applicable, the name, address, telephone number and e-mail address of the arbitrator appointed by the Claimant : </b>
+  <p>
+          <b>Claimant Arbitrator Name : </b> {{FilterArbitrationPartiesWithIsConteoller(0,3,0)[0].Name}}
+          <br>Address : {{FilterArbitrationPartiesWithIsConteoller(0,3,0)[0].Address}}
+          <br>Email : {{FilterArbitrationPartiesWithIsConteoller(0,3,0)[0].Email}}
+          <br>
+          Mobile No. : {{FilterArbitrationPartiesWithIsConteoller(0,3,0)[0].Mobile}}
+          <br> <span *ngIf="CheckDate(FilterArbitrationPartiesWithIsConteoller(0,3,0)[0].SysTime)"><i>Joined on : {{FilterArbitrationPartiesWithIsConteoller(0,3,0)[0].SysTime | date:'dd-MMM-yyyy'}}</i></span>
+  </p>
+</li>
+<li *ngIf="!!FilterArbitrationPartiesWithIsConteoller(1,3,0) && FilterArbitrationPartiesWithIsConteoller(1,3,0).length>0">12. Arbitrator Nominated by the respondent : 
+  <p>
+  <b>Respondent Arbitrator Name : </b> {{FilterArbitrationPartiesWithIsConteoller(1,3,0)[0].Name}}
+  <br>Address : {{FilterArbitrationPartiesWithIsConteoller(1,3,0)[0].Address}} 
+  <br>Email : {{FilterArbitrationPartiesWithIsConteoller(1,3,0)[0].Email}} 
+  <br>
+  Mobile No. : {{FilterArbitrationPartiesWithIsConteoller(1,3,0)[0].Mobile}}
+  <br> <span *ngIf="CheckDate(FilterArbitrationPartiesWithIsConteoller(1,3,0)[0].SysTime)"><i>Joined on : {{FilterArbitrationPartiesWithIsConteoller(1,3,0)[0].SysTime | date:'dd-MMM-yyyy'}}</i></span>
+
+</p></li>
+
+      </ul>
+
+        <p># For accessing documents attached along with the request for arbitration, please log on to PeaceGate Case Management Dashboard <a (click)="Openlink()" style="cursor: pointer;color:#4487dd"><b>{{appconfig.AdrDashboard}}{{ArbitrationDetails.SecureCode}}</b></a></p>  
+      
+      <p
+      *ngIf="!!FilterArbitrationParties(0,0) && FilterArbitrationParties(0,0).length>0 ">
+        Filed by : {{FilterArbitrationParties(0,0)[0].Name}} (Claimant)<br>
+        Copy to: All parties, lawyers and IIAM </p>
+    </div> 
+    <br>
+      <!-- <div class="col-lg-12" style="text-align: center;padding-bottom: 100px;">
+        <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;" (click)="Save()">Proceed</button>
+    </div> -->
+  </div>
+  <div class="row justify-content-center"  *ngIf="Type==2 &&  !!createddoc">
+    <div class="container" style="margin-top: 50px;"  [innerHtml]="createddoc | safehtml"></div>    
+  </div>  
+</ion-content>

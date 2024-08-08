@@ -1,0 +1,274 @@
+
+
+.search-result{
+	// padding-left:35px; 
+	// padding-top: 50px;;
+}
+.page-header-con{
+	height:0px !important;
+}
+.search-result .col-lg-4 a{
+	width:100%;
+	border:2px solid #CCCCCC;
+	float:left;
+	text-align:left;
+	padding:0px;
+	margin:0px 0px 12px 0px;
+	float:left;
+	height:auto;
+	outline:none !important;
+	position:relative;
+    text-decoration: none  !important;
+}
+
+.search-result .col-lg-4 a .col-lg-8{
+	position:relative;
+}
+.btn {
+	margin-right: 1px;
+}
+.search-result .col-lg-4  a .col-lg-8:after{
+	// content:'View Profile';
+	position:absolute;
+	bottom:-2px;
+	right:13px;
+	width:140px;
+	font-size:14px;
+	font-weight:500;
+	background-color:#113e67;
+	text-align:center;
+	padding:3px 0px;
+	color:#fff;
+	opacity:0;
+	-webkit-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    transition: all 0.4s;
+	border-top-left-radius: 15px;
+}
+
+.search-result .col-lg-4  a:hover .col-lg-8:after{
+	opacity:1;
+}
+
+.search-result .col-lg-4 a:hover{
+	border:2px solid #123e67;
+	 
+}
+
+.search-result .col-lg-4 a span{
+	width:100%;
+	height:130px;
+	/* background:url(assets/images/profile.png) no-repeat  center #6f767c; */
+	float:left;
+	overflow: hidden;
+}
+
+.search-result .col-lg-4 a span img{
+	width:100%;
+	height:130px;
+	object-fit:cover;
+}
+
+.search-result .col-lg-4 .row{
+	padding-left:0px;
+	margin-left:0px;
+}
+
+hr {
+	border: 1px solid #100404; /* Set the border style, width, and color */
+	margin: 20px 0; /* Add some margin for spacing */
+	margin-top: 5px;
+
+  }
+  .btn-scale {
+height: 2rem;
+width: 2rem;
+	text-align: center;
+	font-weight: bold;
+	color: black;
+	font-family: 'Lato', sans-serif;
+  }
+  
+  .btn-scale-asc-1, .btn-scale-desc-10 {
+	background-color: #2cba00;
+  }
+  .rejected-box {
+	transform: scale(0.8); /* Or any transformation to resize the box */
+	opacity: 0.6; /* Optional: Reducing opacity to visually differentiate */
+	transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Apply smooth transition */
+  }
+  
+  .btn-scale-asc-1:hover,
+  .btn-scale-desc-10:hover {
+	// background-color: #123e67;
+  }
+  
+  .btn-scale-asc-2,
+  .btn-scale-desc-9{
+	background-color: #66FF00;
+  }
+  
+  .btn-scale-asc-2:hover,
+  .btn-scale-desc-9:hover{
+	background-color: #59DE00;
+  }
+  
+  .btn-scale-asc-3,
+  .btn-scale-desc-8 {
+	background-color: #a3ff00;
+  }
+  
+  .btn-scale-asc-3:hover,
+  .btn-scale-desc-8:hover {
+	background-color: #85DE00;
+  }
+  
+  .btn-scale-asc-4,
+  .btn-scale-desc-7 {
+	background-color: #CCFF00;
+  }
+  
+  .btn-scale-asc-4:hover,
+  .btn-scale-desc-7:hover {
+	background-color: #B1DE00;
+  }
+  
+  .btn-scale-asc-5,
+  .btn-scale-desc-6 {
+	background-color: #FFFF00;
+  }
+  
+  .btn-scale-asc-5:hover,
+  .btn-scale-desc-6:hover {
+	background-color: #DEDE00;
+  }
+  
+  .btn-scale-asc-6,
+  .btn-scale-desc-5 {
+	background-color: #fff400
+  }
+  .registerbtn{
+	width: 290px !important;
+	border: none;
+	outline: none;
+	background-color: #003a66;
+	color: #fff;
+	text-transform: uppercase;
+	font-weight: 500;
+	font-size: 15px;
+	margin: 0px 0px 0px 0px;
+	padding: 10px 0px;
+	border-radius: 5px !important;
+	transition-duration: 0.3s;
+	margin-top: 15px; 
+  }
+  .btn-scale-asc-6:hover,
+  .btn-scale-desc-5:hover {
+	background-color: #DEB100;
+  }
+  
+  .btn-scale-asc-7,
+  .btn-scale-desc-4 {
+	background-color: #ffc107a6;
+  }
+  
+  .btn-scale-asc-7:hover,
+  .btn-scale-desc-4:hover {
+	background-color: #aede00;
+  }
+  
+  .btn-scale-asc-8,
+  .btn-scale-desc-3 {
+	background-color: #FF6600;
+  }
+  
+  .btn-scale-asc-8:hover,
+  .btn-scale-desc-3:hover {
+	background-color: #DE5900;
+  }
+  
+  .btn-scale-asc-9,
+  .btn-scale-desc-2 {
+	background-color: #ffa500;
+  }
+  
+  .btn-scale-asc-9:hover,
+  .btn-scale-desc-2:hover {
+	background-color: #eb6a49;
+  }
+  
+  .btn-scale-asc-10,
+  .btn-scale-desc-1 {
+	background-color: #FF0000;
+  }
+  
+  .btn-scale-asc-10:hover,
+  .btn-scale-desc-1:hover {
+	background-color: #DE0000;
+  }
+.search-result .col-lg-4 .col-lg-4{
+	padding-left:0px;
+	margin-left:0px;
+}
+
+.search-result .col-lg-4 h5{
+	padding:0px;
+	margin:20px 0px 6px 0px;
+	font-size:18px;
+	font-weight:700;
+    color: #111111;
+}
+
+.search-result .col-lg-4 p{
+	font-size:16px;
+	color:#333333;
+	padding:0px;
+	margin:0px; 
+} 
+@media screen and (max-width: 480px) {
+	.search-result{
+		padding-left:0px !important;
+	}	
+	
+} 
+/* tribunal-constitution.page.scss */
+
+/* ... (other styles) ... */
+
+/* Style for the input field when shown */
+input#rejectReason {
+	width: 100%;
+	padding: 8px;
+	margin-top: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+  }
+  
+  /* ... (other styles) ... */
+  /* Adjust button styles */
+.reject-btn {
+	width: 50%;
+	background-color: rgb(163, 10, 10);
+	color: aliceblue;
+	height: 40px;
+	margin-left: 50%;
+	margin-top: 40px; /* Adjust margin as needed */
+  }
+  
+  /* Make input responsive */
+  .reject-reason-input {
+	text-align: left; /* Ensure the input text is aligned properly */
+	margin-top: 1rem; /* Adjust margin as needed */
+  }
+  
+  /* Media query for responsiveness */
+  @media screen and (max-width: 768px) {
+	/* Adjust styles for smaller screens */
+	.reject-btn {
+	  width: 100%; /* Take full width */
+	  margin-left: 0; /* Remove left margin */
+	}
+  }
+  

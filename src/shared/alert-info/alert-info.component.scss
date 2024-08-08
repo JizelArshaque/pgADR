@@ -1,0 +1,139 @@
+
+.alertmodal-div{
+	position: relative;
+	text-align: center;
+}
+
+.alertmodal-div .close{
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	opacity: 1;
+	font-size: 14px;
+	outline: none;
+}
+
+.alertmodal-div span{
+	width: 70px;
+	height: 70px;
+	background-color: #efefef;
+	display: block;
+	position: relative;
+	left: 50%;
+	margin-left: -35px;
+	border-radius: 50%;
+	color: #ed2732;
+	margin-top: 15px;
+	font-size: 34px;
+	padding-top: 12px;
+}
+
+.alertmodal-div h6{
+	padding: 0;
+	margin: 10px 0px 0px 0px;
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.alertmodal-div p{
+	width: 100%;
+	text-align: center;
+	padding: 0 20px;
+	margin: 6px 0px 15px 0px;
+	font-size: 14px;
+	line-height: 20px;
+	color: #535252;
+}
+
+.alertmodal-div .okbtn{
+	padding: 8px 0px;
+	margin: 0;
+	border: none;
+	width: auto;
+	font-size: 14px;
+	outline: none;
+	font-weight: 500;
+	-webkit-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    transition: all 0.4s;
+}
+
+.alertmodal-div .okbtn:hover{
+	background-color: #ec2430;
+	color: #fff;
+}
+
+.alertmodal-div .col-6 button,
+.alertmodal-div .col-12 button{
+	width: 100%;
+}
+
+.alertmodal-div .row{
+	margin: 0px;
+}
+
+.alertmodal-div .col-6,
+.alertmodal-div .col-12{
+	padding: 0px;
+}
+
+.alertmodal-div .col-6:last-child button{
+	background-color: #e3e1e1;
+}
+
+.alertmodal-div .col-6:last-child button:hover{
+	background-color: #ed2732;
+}
+
+.submitbtn{
+	background-color:#0d3458 !important;
+    color: white;
+    height: 38px;
+    width: 40%;
+	margin-right: 20px;
+    align-items: center;
+	border-radius: 5px;
+}
+
+.submitbtns{
+	background-color:#fda01c !important;
+    color: white;
+    height: 38px;
+    width: 40%;
+    align-items: center;
+	border-radius: 5px;
+}
+
+.headimg{
+	text-align: center;
+    align-items: center;
+    margin-left: 45%;
+}
+.modal{  
+	z-index: 1200 !important;
+}
+.alert-icon-btn{
+	background: none;
+	padding: 40px;
+	color: #0d3458;  
+}
+.alert-icon-btn :hover{
+	color: rgb(174, 179, 174);
+}
+.alert-icon-btn i{
+	font-size: 60px;
+}
+
+
+@media screen and (max-width: 480px) {
+	.alert-icon-btn{
+
+		padding: 20px !important;
+	}
+}
+.review-count{ 
+	color: #aaa; 
+	padding-top: 10px;
+	font-weight: 400;  
+}

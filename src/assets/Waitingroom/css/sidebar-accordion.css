@@ -1,0 +1,79 @@
+.btnMenu {
+	display: none;
+	padding: 20px;
+	display: block;
+	background: #1abc9c;
+	color: #fff;
+}
+
+.btnMenu i.fa {
+	float: right;
+}
+
+.contenedor-menu {
+	width: 100%;
+	min-width: 100%;
+	margin: 0px;
+	display: inline-block;
+	line-height: 18px;
+	padding: 0;
+	margin: 0;
+}
+
+.contenedor-menu .menu {
+	width: 100%;
+}
+
+.contenedor-menu ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.contenedor-menu .menu li a {
+	color: #494949;
+	display: block;
+	padding: 10px 10px;
+	/*background: #f6f7fa;*/
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.contenedor-menu .menu li ul li {
+	padding-left: 25px;
+}
+
+.contenedor-menu .menu li a i:first-child {
+	padding-right: 10px;
+}
+
+.contenedor-menu .menu li a:hover {
+	background: none;
+	color: #fe0710;
+	text-decoration: none;
+}
+
+.contenedor-menu .menu i.fa {
+	font-size: 12px;
+	line-height: 18px;
+	float: right;
+	margin-left: 10px;
+}
+
+.contenedor-menu .menu ul {
+	display: none;
+}
+
+.contenedor-menu .menu ul li a {
+	background: #f6f7fa;
+	color: #666666;
+	font-size: 14px;
+	text-decoration: none;
+}
+
+.contenedor-menu .menu .activado>a {
+	background: none;
+	/*color: #fe0710;*/
+	font-weight: 500;
+	text-decoration: none;
+}

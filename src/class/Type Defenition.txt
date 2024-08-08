@@ -1,0 +1,10 @@
+Type Defenition
+1 Pleading by Party
+2 Application or memo
+3 Disclosure
+4 Vakalat
+5 Arbitration Request (reply Notice)
+6 Arbitral Award
+7 evidence
+8 Notice & PO( Tribunal)
+9 Notice & PO( admin)

@@ -1,0 +1,54 @@
+/* Add your custom styles for the modal here */
+
+
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+/* Add this CSS to position the Save button */
+.fixed-button-placeholder {
+  height: 60px; /* Adjust this height to match the button's height */
+}
+
+.fixed-save-button {
+  position: fixed;
+  bottom: 20px;
+  right: 30%;
+  background-color: rgb(203, 118, 32);
+  z-index: 999;
+  width: 15rem !important;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #000; /* Change the color and style as needed */
+}
+
+.divider::before {
+  margin-right: 10px; /* Adjust the spacing between the line and "OR" text */
+}
+
+.divider::after {
+  margin-left: 10px; /* Adjust the spacing between the line and "OR" text */
+}
+.form-wrapper1 button {
+  width: 50% !important; 
+  margin-bottom: 15px;
+  margin-left: 25%;
+  background: none; 
+  left: 5rem;
+  background: none;
+  height: 45px;
+  -moz-border-radius: 24px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: rgb(231, 222, 224);
+}
+.form-group img{
+  cursor:pointer  !important;
+}

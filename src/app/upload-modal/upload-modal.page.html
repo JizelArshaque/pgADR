@@ -1,0 +1,495 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <app-alert-info></app-alert-info>
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <h4 class="heading-con top-heading" style="width: 25rem; margin-left: 18%; margin-bottom: 17px;"
+          *ngIf="!!FormType && !!DocName">{{DocName}}</h4>
+        <button (click)="back(null)" style="margin-top: 0px;" class="close"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <input type="file" (change)="fileChangePleading($event)" #documentfiles style="display: none" />
+  <input type="file" (change)="fileChangeApplication($event)" #applicationfiles style="display: none" />
+  <input type="file" (change)="fileChangeNoticeandPO($event,3,'Notice and PO (Tribunal)')" #noticeandpoarbitrator style="display: none" />
+  <input type="file" (change)="fileChangeNoticeandPO($event,4,'Notice and PO (Admin)')" #noticeandpoadmin style="display: none" />
+  <input type="file" (change)="fileChangeArbitrationRequest($event,1,'DetailsOfAgreementUrl')" #arbagreement style="display: none" />
+  <input type="file" (change)="fileChangeArbitrationRequest($event,2,'NoticebyClaimantUrl')" #claimantnotice style="display: none" />
+  <input type="file" (change)="fileChangeArbitrationRequest($event,3,'ReplyNoticeByRespondentUrl')" #ReplyNoticeByRespondent style="display: none" />  
+  <input type="file" (change)="fileChangeLawyerAuthorisationUrl($event,2,'LawyerAuthorisationUrl')" #LawyerAuthorisationUrl style="display: none" />
+  <input type="file" (change)="fileChangeLawyerAuthorisationUrl($event,3,'Disclosure Statement')" #DisclosureStatement style="display: none" />
+  <input type="file" multiple="true" (change)="fileChangeExhibits($event,1,'Exhibits')" #exhibitfiles style="display: none" />
+
+ <div class="container form-wrapper1" *ngIf="FormType==1">        <!-- Case Management Procedure for Admin -->
+    <div class="row justify-content-center">
+      <div class="form-group col-12">
+        <label>Select procedures</label>
+        <select class="form-control" [(ngModel)]="selectedProcedure">
+          <option >Comment to Claimant</option>
+          <option >Intimation on defective filing (to Claimant)</option>
+          <option >Generate File Number</option>
+          <option >Dismiss Arbitration</option>
+          <option  *ngIf="!!ArbitrationDetails && ArbitrationDetails.ArbitrationAgreementType!=3">Issue Response</option>
+          <option  *ngIf="!!ArbitrationDetails && ArbitrationDetails.ArbitrationAgreementType!=3">Call for Additional Details</option>
+          <option  *ngIf="!!ArbitrationDetails && ArbitrationDetails.ArbitrationAgreementType!=3">Orders by Admin</option>
+        </select>
+      </div>
+      <div class="form-group col-12" *ngIf="selectedProcedure === 'Dismiss Arbitration' ||selectedProcedure === 'Comment to Claimant' || selectedProcedure ==='Intimation on defective filing (to Claimant)'">
+        <label>{{selectedProcedure === 'Dismiss Arbitration'?'Reason for Dismissal':selectedProcedure === 'Comment to Claimant'?'Comment':'Describe Defect'}} </label>
+        <textarea name="Message" [(ngModel)]="message" type="text" class="form-control"></textarea>
+      </div>
+      <div class="form-group col-12" *ngIf="selectedProcedure === 'Generate File Number' ">
+        <button style="color: aliceblue;" class="btn btn-sm purple-btn" (click)="GenerateFIleNumber(1)">
+          Generate</button>
+      </div>
+      <div class="form-group col-12" *ngIf="selectedProcedure ==='Intimation on defective filing (to Claimant)'">
+        <button style="color: aliceblue;" class="btn btn-sm purple-btn" (click)="GenerateFIleNumber(2)">
+          Send</button>
+      </div>
+      <div class="form-group col-12" *ngIf="selectedProcedure === 'Dismiss Arbitration' ">
+        <button style="color: aliceblue;" class="btn btn-sm purple-btn" (click)="GenerateFIleNumber(3)">
+          Dismiss Arbitration</button>
+      </div>
+      <div class="form-group col-12" *ngIf="selectedProcedure === 'Comment to Claimant' ">
+        <button style="color: aliceblue;" class="btn btn-sm purple-btn" (click)="CommenttoClaimant()"> Send</button>
+      </div>
+    </div>
+  </div>
+  <div class="container  form-wrapper1" *ngIf="FormType==2">      <!-- Application / Memo Filing for Claimant or Respondent -->
+    <div class="row justify-content-center" *ngIf="!DocType">
+      <div class="form-group col-12" (click)="TypeChange($event)">
+        <label>Select Type</label>
+        <select class="form-control" [(ngModel)]="applicationtype">
+          <option>Application</option>
+          <option>Memo</option>
+        </select>
+      </div>
+      <div class="form-group col-12" *ngIf="!!applicationtype">
+        <label>{{applicationtype +' Type'}}</label>
+        <select class="form-control" [(ngModel)]="doctype" *ngIf="applicationtype=='Application'">
+          <option *ngIf="ArbitrationDetails.ArbitrationAgreementType!=3">EA Submission </option>
+          <option *ngIf="ArbitrationDetails.ArbitrationAgreementType!=3">AMA Procedure </option>
+          <option *ngIf="ArbitrationDetails.ArbitrationAgreementType!=3">Scrutiny Board</option>
+          <option *ngIf="ArbitrationDetails.ArbitrationAgreementType!=3">Early dismissal </option>
+          <option>Challenge of Arbitrator</option>
+          <option>Jurisdiction of Tribunal</option>
+          <option>Interim Measure</option>
+          <option>Adding of Parties</option>
+          <option>Adding of Lawyer</option>
+          <option>Settlement and Termination</option>
+          <option>Interpretation of Award</option>
+          <option>Correction of Award</option>
+          <option>Additional Award</option>
+          <option>Post Award Negotiation</option>
+          <option>Miscellaneous</option>
+        </select>
+        <select class="form-control" [(ngModel)]="doctype" *ngIf="applicationtype=='Memo'">
+          <option *ngIf="!!filterarbitrationDocument(8,3,'NOTICE FOR DRAFT ISSUES') && filterarbitrationDocument(8,3,'NOTICE FOR DRAFT ISSUES').length>0">Acceptance & Denials of documents</option>
+          <option *ngIf="!!filterarbitrationDocument(8,3,'NOTICE FOR DRAFT ISSUES') && filterarbitrationDocument(8,3,'NOTICE FOR DRAFT ISSUES').length>0">Draft Issues</option> 
+          <option *ngIf="ArbitrationDetails.ArbitrationAgreementType!=3">List of Witnesses </option>
+          <option *ngIf="!!filterarbitrationDocument(8,3,'NOTICE FOR DRAFT ISSUES') && filterarbitrationDocument(8,3,'NOTICE FOR DRAFT ISSUES').length>0">Cost Memo</option>
+          <option>Miscellaneous</option>
+        </select>
+      </div>
+      <div class="form-group col-12" *ngIf="doctype=='Other'||doctype=='Miscellaneous'">
+        <label>Enter Application Type</label>
+        <input name="User Name" [(ngModel)]="doctypeother" type="text" class="form-control">
+      </div>
+      <div class="form-group col-6" *ngIf="!!doctype && doctype.length>1">
+        <button class="btn btn-sm purple-btn" *ngIf="!!FormType && FormType==2" (click)="documentfiles.click()">Upload
+          {{applicationtype}}</button>
+      </div>
+      <div class="form-group col-6"
+        *ngIf="(!!FormType && FormType==1 && !!doctype && doctype.length>1) ||(!!FormType && FormType==2 && applicationtype=='Application' && !!doctype && doctype.length>1)">
+        <button class="btn btn-sm purple-btn orange-btn" [disabled]="FilterExhibits(0).length==0"
+          (click)="exhibitfiles.click()">Add Exhibits</button>
+      </div>
+      <div class="col-12"
+        *ngIf="(!!FormType && FormType==1 && !!doctype && doctype.length>1) ||(!!FormType && FormType==2 && applicationtype=='Application'&& !!doctype && doctype.length>1) ">
+        <p># Upload your {{doctype}} {{!!FormType && FormType==2?' Application':''}} first, and thereafter upload
+          Exhibits(if any), upload Exhibits order-wise individualy <span
+            *ngIf="!!User && (User.Type==0 || User.Type==2) && User.Side==0">(C1,C2,..)</span><span
+            *ngIf="!!User && (User.Type==0 || User.Type==2) && User.Side==1">(R1,R2,..)</span></p>
+        <!-- <p># Upload Proof Affidavit order-wise individualy (CW1,CW2,..)</p> -->
+
+      </div>
+      <div class="col-lg-3 col-6">
+        <!-- Add Exhibits button (now acts as a file uploader trigger) -->
+      </div>
+      <!-- Display selected file details with serial number -->
+      <div class="col-12">
+        <ul class="list-group" *ngFor="let ex of exhibits; let i = index" (click)="OpenDoc(ex)">
+          <li class="list-group-item" *ngIf="ex.Type>0"><span><i
+                class="fas fa-file file-btn"></i></span>{{ex.FileName}} <span><i (click)="Remove(ex)"
+                class="fas fa-trash trash-btn"></i></span></li>
+          <li class="list-group-item" *ngIf="ex.Type==0"><span><i class="fas fa-file file-btn"></i></span>Exhibit : {{
+            ex.FileName }} <span><i (click)="Remove(ex)" class="fas fa-trash trash-btn"></i></span></li>
+        </ul>
+      </div>
+
+      <div class="col-6" *ngIf="!!exhibits && exhibits.length>0">
+        <button  (click)="UploadArbitrationDocument()" style="  background-color: rgb(203, 118, 32);">Save</button>
+      </div>
+    </div>
+    <div class="row justify-content-center" *ngIf="!!DocType && DocType==3">
+      <div class="form-group col-6" >
+        <button class="btn btn-sm purple-btn" (click)="applicationfiles.click()">Upload Document </button>
+      </div>
+      <div class="form-group col-6" >
+        <button class="btn btn-sm purple-btn orange-btn" [disabled]="FilterExhibits(0).length==0"
+          (click)="exhibitfiles.click()">Add Exhibits</button>
+      </div>
+      <div class="col-12">
+        <p># Upload your document first, and thereafter upload
+          Exhibits(if any), upload Exhibits order-wise individualy <span
+            *ngIf="!!User && (User.Type==0 || User.Type==2) && User.Side==0">(C1,C2,..)</span><span
+            *ngIf="!!User && (User.Type==0 || User.Type==2) && User.Side==1">(R1,R2,..)</span></p>
+
+      </div>
+      <div class="col-lg-3 col-6">
+        <!-- Add Exhibits button (now acts as a file uploader trigger) -->
+      </div>
+      <!-- Display selected file details with serial number -->
+      <div class="col-12">
+        <ul class="list-group" *ngFor="let ex of exhibits; let i = index" (click)="OpenDoc(ex)">
+          <li class="list-group-item" *ngIf="ex.Type>0"><span><i
+                class="fas fa-file file-btn"></i></span>{{ex.FileName}} <span><i (click)="Remove(ex)"
+                class="fas fa-trash trash-btn"></i></span></li>
+          <li class="list-group-item" *ngIf="ex.Type==0"><span><i class="fas fa-file file-btn"></i></span>Exhibit : {{
+            ex.FileName }} <span><i (click)="Remove(ex)" class="fas fa-trash trash-btn"></i></span></li>
+        </ul>
+      </div>
+
+      <div class="col-6" *ngIf="!!exhibits && exhibits.length>0">
+        <button  (click)="UploadArbitrationDocument()" style="  background-color: rgb(203, 118, 32);">Save</button>
+      </div>
+    </div>
+    <div class="row justify-content-center" *ngIf="!!DocType && (DocType==5 || DocType==6)">
+      <div class="form-group col-6" style="padding-top: 100px;"> 
+        <img (click)="CreatewithPGapplication(false)" src="assets/img/create-btn.png" alt="">       
+      </div>
+      <div class="form-group col-6" style="padding-top: 100px;">
+        <img (click)="applicationfiles.click()" src="assets/img/upload-btn.png" alt="">
+        
+      </div>
+    </div>
+  </div>
+  <div class="container  form-wrapper1" *ngIf="FormType==3">     <!-- Disclosure Statement Upload for Arbitrator -->
+    <div *ngIf="usertype === 3">
+      <div class="row justify-content-center" *ngIf="IsConnectwithParty==false">
+        <div class="form-group col-6" style="padding-top: 100px;"> 
+          <img (click)="IsConnectwithParty=!IsConnectwithParty" src="assets/img/create-btn.png" alt="">       
+        </div>
+        <div class="form-group col-6" style="padding-top: 100px;">
+          <img (click)="DisclosureStatement.click()" src="assets/img/upload-btn.png" alt="">
+          
+        </div>
+        <div class="form-group col-6" style="padding-top: 10px;">
+          <a *ngIf="userurl && userurl.length > 0"
+            href="{{appconfig.AssetUrl}}/assets/images/DocumentUploadCDN/{{userurl}}" target="_blank">Uploaded file
+            {{userurl}}</a>
+        </div>
+      </div>
+      <div class="row justify-content-center" *ngIf="IsConnectwithParty==true">
+        <div class="col-12">
+<h5 style="padding-top: 50px;text-align: center;">Do you have any connection with any of the parties? </h5>
+        </div>
+        <div class="col-4"> <button class="btn btn-sm purple-btn" (click)="CreatewithPG(true)">Yes</button></div>
+        <div class=" col-4"> <button class="btn btn-sm purple-btn" (click)="CreatewithPG(false)" style="background-color: rgb(203, 118, 32) !important;">No</button></div>
+      </div>
+      <hr>
+
+    </div>
+
+  </div>
+  <div class="container  form-wrapper1" *ngIf="FormType==4">      <!-- Authorization/Vakalath Upload for Lawyer -->
+
+
+    <div *ngIf="usertype===2 ">
+      <h4 class="row justify-content-center">Please upload Authorization or Vakalath to Continue </h4>
+      <div class="row justify-content-center" *ngIf="!!FormType && (FormType===2 || FormType!=7)">
+        <div class="form-group col-6" >
+          <img (click)="LawyerAuthorisationUrl.click()" src="assets/img/upload-btn.png" alt="">
+          <a *ngIf="userurl && userurl.length>0" href="{{appconfig.AssetUrl}}/assets/images/DocumentUploadCDN/{{userurl}}"
+            target="_blank">Uploaded file {{userurl}}</a>
+        </div>
+      </div>
+      <div *ngIf="userurl===null && this.AuthURL === null " class="divider">OR</div>
+      <hr>
+     
+        <h5 class="col-12" *ngIf="userurl===null && (!!FilterLawyers(userside, usertype) && FilterLawyers(userside, usertype).length>0)">Select the lawyers with whom joint authorisation or vakalath is already filed</h5>
+        <h5 class="col-12" *ngIf="(userurl && userurl.length>0) && (!!FilterLawyers(userside, usertype) && FilterLawyers(userside, usertype).length>0)">Select the lawyers to be connected with this authorisation or vakalath</h5>
+        <div class="form-group col-12" >
+          <!-- <label for="">Advocates</label>  -->
+          <ion-select class="form-control" multiple="{{!!userurl && userurl.length>0}}" [(ngModel)]="selectedID">
+            <ion-select-option *ngFor="let option of FilterLawyers(userside, usertype)"
+              [value]="option.Id">{{ option.Name }}</ion-select-option>
+          </ion-select>
+        </div>
+      <!-- <div class="fixed-button-placeholder"></div> -->
+      <button (click)="saveSelectedData()" style="background-color: rgb(203, 118, 32);">Save</button>
+    </div>
+  </div>
+  <div class="container  form-wrapper1" *ngIf="FormType==5">      <!-- Pleading Document Upload for Parties -->
+    <div class="row justify-content-center" *ngIf="usertype === 2 || usertype === 0">
+      <h4 >Please Upload {{!!doctype && doctype=='Argument Notes'?'Argument Notes':'Pleading Document'}} with {{!!doctype && doctype=='Argument Notes'?'Judgments':'Exhibits'}}</h4>
+      <div class="form-group col-12" > 
+        <label>Select Pleading Type</label> 
+        <select class="form-control" [(ngModel)]="doctype" >
+          <option *ngIf="!!User && (User.Type==0 || User.Type==2) && User.Side==0 && (!CaseManagementProcedure ||(!!CaseManagementProcedure && CaseManagementProcedure.length>0 && (!CaseManagementProcedure[0].ClaimStatementFiledOn || CaseManagementProcedure[0].ClaimStatementFiledOn.length==0)))">Claim Statement</option>
+          <option *ngIf="!!User && (User.Type==0 || User.Type==2) && User.Side==1 && (!!CaseManagementProcedure && CaseManagementProcedure.length>0 && !!CaseManagementProcedure[0].ClaimStatementFiledOn && CaseManagementProcedure[0].ClaimStatementFiledOn.length>0) && (!CaseManagementProcedure[0].DefenceStatementFiledOn || CaseManagementProcedure[0].DefenceStatementFiledOn.length==0)">Defence Statement</option>
+          <option *ngIf="!!User && (User.Type==0 || User.Type==2) && User.Side==1 && (!CaseManagementProcedure ||(!!CaseManagementProcedure && CaseManagementProcedure.length>0 && (!CaseManagementProcedure[0].DefenceStatementFiledOn || CaseManagementProcedure[0].DefenceStatementFiledOn.length==0)))">Defence & Counter Claim</option>
+          <option *ngIf="!!User && (User.Type==0 || User.Type==2) && User.Side==0 && (!!CaseManagementProcedure && CaseManagementProcedure.length>0 && !!CaseManagementProcedure[0].DefenceStatementFiledOn && CaseManagementProcedure[0].DefenceStatementFiledOn.length>0) && (!CaseManagementProcedure[0].ReplyStatementFiledOn || CaseManagementProcedure[0].ReplyStatementFiledOn.length==0)">Reply Statement</option>
+          <option *ngIf="!!User && (User.Type==0 || User.Type==2) && User.Side==1 && (!!CaseManagementProcedure && CaseManagementProcedure.length>0 && !!CaseManagementProcedure[0].ReplyStatementFiledOn && CaseManagementProcedure[0].ReplyStatementFiledOn.length>0) && (!CaseManagementProcedure[0].RejoinderFiledOn || CaseManagementProcedure[0].RejoinderFiledOn.length==0)">Rejoinder</option>
+          <option *ngIf="!!User && (User.Type==0 || User.Type==2) && (!! filterarbitrationDocumentWithDocName(8,'NOTICE FOR DRAFT ISSUES') && filterarbitrationDocumentWithDocName(8,'NOTICE FOR DRAFT ISSUES').length>0)">Argument Notes</option>
+          <option *ngIf="!!User && (User.Type==0 || User.Type==2) ">Other</option>
+        </select>
+      </div>
+      <div class="form-group col-12" *ngIf="!!doctype && doctype=='Other'"><input class="form-control" [(ngModel)]="doctypeother"/></div>
+      <div class="form-group col-6">
+        <button class="btn btn-sm purple-btn" (click)="documentfiles.click()">Upload </button>
+      </div>
+      <div class="form-group col-6" >
+        <button class="btn btn-sm purple-btn orange-btn" [disabled]="FilterExhibits(0).length==0"
+          (click)="exhibitfiles.click()">Add {{!!doctype && doctype=='Argument Notes'?'Judgments':'Exhibits'}}</button>
+      </div>
+      <div class="col-12">
+        <p># Upload your {{!!doctype && doctype=='Argument Notes'?'Argument Notes':'pleading'}} and thereafter upload {{!!doctype && doctype=='Argument Notes'?'Judgments':'Exhibits'}} individualy, if any</p>
+      </div>
+      <div class="col-lg-3 col-6">
+
+
+        <!-- Add Exhibits button (now acts as a file uploader trigger) -->
+      </div>
+      <!-- Display selected file details with serial number -->
+      <div class="col-12">
+        <ul class="list-group" *ngFor="let ex of exhibits; let i = index">
+          <li class="list-group-item" *ngIf="ex.Type>0"><span  (click)="OpenDoc(ex)"><i
+                class="fas fa-file file-btn"></i></span>{{ex.FileName}} <span><i (click)="Removeexhibit(ex)"
+                class="fas fa-trash trash-btn"></i></span></li>
+          <li class="list-group-item" *ngIf="ex.Type==0"><span  (click)="OpenDoc(ex)"><i class="fas fa-file file-btn"></i></span>Exhibit : {{
+            ex.FileName }} <span><i (click)="Removeexhibit(ex)" class="fas fa-trash trash-btn"></i></span></li>
+        </ul>
+      </div>
+      <hr>  
+      <!-- <div class="fixed-button-placeholder"></div> -->
+      <div class="col-6" *ngIf="!!exhibits && exhibits.length>0">
+      <button  (click)="UploadArbitrationDocument()" style="  background-color: rgb(203, 118, 32);">Save</button>
+    </div>
+    </div>
+
+  </div>
+  <div class="container  form-wrapper1" *ngIf="FormType==6">      <!-- Arbitral Award -->
+    <div class="row justify-content-center">
+
+      <div class="form-group col-12" style="padding-top: 10px;">
+        <label>Select Arbitral Award Type</label>
+        <select class="form-control" [(ngModel)]="doctype" >
+          <option >Interim Award</option>
+          <option >Final Award</option>
+          <option >Final Award on Settlement</option>
+          <option >Additional Award</option>
+          <option >Post Award Negotiated Award</option>
+        </select>
+        </div>
+        <div class="form-group col-6" style="padding-top: 10px;cursor: pointer;" *ngIf="!!doctype">
+          <img (click)="CreatewithPG(false)" src="assets/img/create-btn.png" alt="">
+           
+        </div>
+      <div class="form-group col-6" style="padding-top: 10px;cursor: pointer;" *ngIf="!!doctype">
+        <img (click)="ReplyNoticeByRespondent.click()" src="assets/img/upload-btn.png" alt="">
+        
+      </div>
+      <div class="form-group col-6" >
+      <!-- <a *ngIf="userurl && userurl.length > 0"
+        href="{{appconfig.AssetUrl}}/assets/images/DocumentUploadCDN/{{userurl}}" target="_blank">Uploaded file
+        {{userurl}}</a> -->
+      </div>
+    </div>
+    
+
+</div>
+  <div class="container  form-wrapper1" *ngIf="FormType==7">      <!-- Evidence Upload -->
+
+
+    <div *ngIf="usertype===2 || usertype===0">
+      <h4 class="row justify-content-center">Please upload evidence if any </h4>
+      <div class="row justify-content-center">
+        <div class="form-group col-6" style="padding-top: 10px;">
+          <img (click)="documentfiles.click()" src="assets/img/upload-btn.png" alt="">
+
+          <a *ngIf="userurl&&userurl.length>0" href="{{appconfig.AssetUrl}}/assets/images/DocumentUploadCDN/{{userurl}}"
+            target="_blank">Uploaded file {{userurl}}</a>
+
+        </div>
+      </div>
+      <hr>
+
+
+      <!-- <div class="fixed-button-placeholder"></div> -->
+      <button (click)="saveSelectedData()" style="  background-color: rgb(203, 118, 32);">Save</button>
+    </div>
+
+
+
+
+
+
+  </div>
+  <div class="container  form-wrapper1" *ngIf="FormType==8">      <!-- Upload Notice & PO Tribunal -->
+    <div class="row justify-content-center">
+      <div class="form-group col-12" (click)="TypeChange($event)">
+        <label>Select Type</label>
+        <select class="form-control" [(ngModel)]="applicationtype">
+          <option >Notice</option>
+          <option >Procedural Order(PO)</option>
+          <option >Issues</option>
+         
+        </select>
+      </div>
+      <div class="form-group col-12" *ngIf="!!applicationtype && applicationtype=='Notice'">
+        <label>Select {{applicationtype}}</label>
+      <select class="form-control" [(ngModel)]="doctype" >
+        <option *ngIf="!filterarbitrationDocument(8,3,'FIRST SITTING NOTICE') || (!!filterarbitrationDocument(8,3,'FIRST SITTING NOTICE') && filterarbitrationDocument(8,3,'FIRST SITTING NOTICE').length==0)">First Sitting Notice</option>
+        <option *ngIf="!filterarbitrationDocument(8,3,'NOTICE FOR DRAFT ISSUES') || (!!filterarbitrationDocument(8,3,'NOTICE FOR DRAFT ISSUES') && filterarbitrationDocument(8,3,'NOTICE FOR DRAFT ISSUES').length==0)">Notice for Draft Issues</option>
+        <option >Appearance Notice</option>
+        <option >Stamp Notice</option>
+        <option >Misc. Notice</option>
+      </select>
+      </div>
+
+      <div class="form-group col-12" *ngIf="!!applicationtype && applicationtype=='Procedural Order(PO)'">
+        <label>Select {{applicationtype}} in</label>
+        <select class="form-control" [(ngModel)]="doctype" >
+          <option *ngIf="filterarbitrationDocumentWithUniqueApplication(2).length>0">Applications</option>
+          <option *ngIf="(!!filterarbitrationDocument(8,3,'NOTICE FOR DRAFT ISSUES') && filterarbitrationDocument(8,3,'NOTICE FOR DRAFT ISSUES').length>0)">Closing of Final Hearing</option>     
+          <option >Settlement and Termination</option>
+          <option >General Directions</option> 
+        </select>   
+        </div> 
+        <div class="form-group col-12" *ngIf="!!applicationtype && applicationtype=='Procedural Order(PO)' && !!doctype && doctype=='Applications' ">
+          <label>Select Application</label>
+          <select class="form-control"  (change)="ApplicationSelectChange($event)">   
+            <option>Select Application</option> 
+            <option *ngFor="let app of filterarbitrationDocumentWithUniqueApplication(2);" [value]="app.Id">{{app.DocumentName}} - {{app.DocumentNumber}}</option>
+          </select>
+          </div> 
+        <div class="form-group col-12" *ngIf="(!!doctype  && (doctype=='Misc. Notice' || doctype=='General Directions')) "><input class="form-control" [(ngModel)]="doctypeother"/></div>
+
+        <div class="form-group col-6" style="padding-top: 10px;cursor: pointer;" *ngIf="(!!applicationtype && (!!doctype && doctype=='Applications')) ">
+          <img (click)="CreatewithPGapplication(false)" src="assets/img/create-btn.png" alt="">
+        </div>
+        <div class="form-group col-6" style="padding-top: 10px;cursor: pointer;" *ngIf="(!!applicationtype && (!!doctype && doctype!='Applications')) ||  (!!applicationtype && ((applicationtype=='Issues')))">
+          <img (click)="CreatewithPG(false)" src="assets/img/create-btn.png" alt="">
+        </div>
+      <div class="form-group col-6" style="padding-top: 10px;cursor: pointer;" *ngIf="(!!applicationtype && !!doctype) ||  (!!applicationtype && ((applicationtype=='Issues')))">
+        <img (click)="noticeandpoarbitrator.click()" src="assets/img/upload-btn.png" alt="">        
+      </div>
+    </div>
+</div>
+  <div class="container  form-wrapper1" *ngIf="FormType==9">      <!-- Upload Notice & PO Admin -->
+      <div class="row justify-content-center">
+          <div class="form-group col-12" (click)="TypeChange($event)">
+            <label>Select Type</label>
+            <select class="form-control" [(ngModel)]="applicationtype">
+    
+              <option >Notice</option>
+              <option>Procedural Order(PO)</option>
+              <option>Settlement and Termination</option>
+            </select>
+          </div>
+            <div class="form-group col-12"  *ngIf="applicationtype!='Settlement and Termination'">
+              <label>{{applicationtype}} Type</label>
+              <input class="form-control" [(ngModel)]="doctype"/>
+            </div>
+    
+            <div class="form-group col-6" style="padding-top: 10px;cursor: pointer;" *ngIf="!!applicationtype && !!doctype">
+              <img (click)="CreatewithPG(false)" src="assets/img/create-btn.png" alt="">
+               
+            </div>
+          <div class="form-group col-6" style="padding-top: 10px;cursor: pointer;" *ngIf="!!applicationtype && !!doctype">
+            <img (click)="noticeandpoadmin.click()" src="assets/img/upload-btn.png" alt="">
+            
+          </div>
+          <div class="form-group col-6" style="padding-top: 10px;cursor: pointer;" *ngIf="!!applicationtype && applicationtype=='Settlement and Termination' ">
+            <img (click)="CreatewithPG(false)" src="assets/img/create-btn.png" alt="">
+             
+          </div>
+        <div class="form-group col-6" style="padding-top: 10px;cursor: pointer;" *ngIf="!!applicationtype && applicationtype=='Settlement and Termination' ">
+          <img (click)="noticeandpoadmin.click()" src="assets/img/upload-btn.png" alt="">
+          
+        </div>
+          <div class="form-group col-6" >
+          <a *ngIf="userurl && userurl.length > 0"
+            href="{{appconfig.AssetUrl}}/assets/images/DocumentUploadCDN/{{userurl}}" target="_blank">Uploaded file
+            {{userurl}}</a>
+          </div>
+        </div>
+  </div>
+  <div class="container  form-wrapper1" *ngIf="FormType==11">      <!-- Pleading Document Upload for Parties -->
+    <div class="row justify-content-center" *ngIf="usertype === 2 || usertype === 0">
+   <div class="col-12">
+      <p style="text-align: left;margin-top:30px;"># Based on the defect noticed by IIAM Admin, you may upload the correct document or give your reply in the message column.</p>
+    </div>
+
+    
+    
+      <!-- Display selected file details with serial number -->
+      <div class="col-12">
+        <label>Documents uploaded in the Arbitration Request</label>
+        <table class="table table-condensed ">
+          <tr>
+            <td><span style="cursor: pointer;"  (click)="OpenDocument(ArbitrationDetails.DetailsOfAgreementUrl,'DocumentUploadCDN')"> 
+              <i class="fas fa-file file-btn"></i>Arbitration Agreement </span>  </td>
+            <td> <input class="form-control" [(ngModel)]="ArbitrationDetails.DateOfAgreement"  type="date" /></td>
+            <td> <span *ngIf="!!ArbitrationDetails && !ArbitrationDetails.DetailsOfAgreementUrl">
+              <button class="btn btn-sm purple-btn" style="width: 80px !important;margin: 0;float: right;height: 30px;" (click)="arbagreement.click()">Upload </button>
+            </span> <span *ngIf="!!ArbitrationDetails && !!ArbitrationDetails.DetailsOfAgreementUrl">
+              <i (click)="RemoveRequest(1)" class="fas fa-trash trash-btn"></i></span> </td>
+          </tr>  
+          <tr>
+            <td><span style="cursor: pointer;" (click)="OpenDocument(ArbitrationDetails.NoticebyClaimantUrl,'DocumentUploadCDN')"><i class="fas fa-file file-btn"></i>Notice
+              of Arbitration by Claimant </span> </td>
+            <td> <input class="form-control" type="date" [(ngModel)]="ArbitrationDetails.DateOfClaimantNotice"  /></td>
+            <td> <span *ngIf="!!ArbitrationDetails && !ArbitrationDetails.NoticebyClaimantUrl">
+              <button class="btn btn-sm purple-btn" style="width: 80px !important;margin: 0;float: right;height: 30px;" (click)="claimantnotice.click()">Upload </button>
+            </span> <span *ngIf="!!ArbitrationDetails && !!ArbitrationDetails.NoticebyClaimantUrl">
+              <i (click)="RemoveRequest(2)" class="fas fa-trash trash-btn"></i></span> </td>
+          </tr> 
+          <tr>
+            <td><span style="cursor: pointer;" (click)="OpenDocument(ArbitrationDetails.ReplyNoticeByRespondentUrl,'DocumentUploadCDN')"> 
+              <i class="fas fa-file file-btn"></i>Reply Notice By Respondent  </span>  </td>    
+            <td> <input class="form-control" type="date" [(ngModel)]="ArbitrationDetails.DateOfRespondentNotice"  /></td>
+            <td> <span *ngIf="!!ArbitrationDetails && !ArbitrationDetails.ReplyNoticeByRespondentUrl">
+              <button class="btn btn-sm purple-btn" style="width: 80px !important;margin: 0;float: right;height: 30px;" (click)="ReplyNoticeByRespondent.click()">Upload </button>
+            </span> <span *ngIf="!!ArbitrationDetails && !!ArbitrationDetails.ReplyNoticeByRespondentUrl">
+              <i (click)="RemoveRequest(3)" class="fas fa-trash trash-btn"></i></span> </td>
+          </tr> 
+        </table>
+
+      </div>
+      <div class="form-group col-12" >
+        <label>Message</label>
+        <textarea name="Message" [(ngModel)]="message" type="text" class="form-control"></textarea>
+      </div> 
+    <br>
+      <div class="form-group col-12" >
+        <button style="color: aliceblue;" class="btn btn-sm purple-btn" (click)="SaveArbitrationRequest()">
+          Save</button>
+      </div>
+    </div>
+
+  </div>
+</ion-content>
+<!-- <ion-footer *ngIf="!!FormType && FormType==1 ">
+  <ion-toolbar>
+    <div class="row justify-content-center">
+      <div class="form-wrapper1 col-10" style="width: 20rem; padding: 10px;">
+        <button (click)="SubmitDocuments()" class="btn btn-sm purple-btn">Submit</button>
+
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-footer> -->

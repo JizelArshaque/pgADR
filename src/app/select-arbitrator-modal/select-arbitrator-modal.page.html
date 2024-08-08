@@ -1,0 +1,82 @@
+<ion-header [translucent]="true" >
+  <ion-toolbar  
+  >
+  <div class="page-wrapper-div">
+    <div >
+        <button style="margin-top: 18px; height: 50px;" class="backbtn" (click)="back()"> <i class="fas fa-chevron-left"></i></button>
+        
+    </div>
+    <h2 class="page-heading" (click)="GetAllarbitrators()">Arbitratral Tribunal</h2>
+    <div class="container-fluid ">
+        <div class="row">
+
+            <div class="search-result">
+                <div class="row">
+
+                    <div class="col-lg-4 d-flex justify-content-center" *ngFor="let item of ArbitratorList"
+                        (click)="MediatorProfile(item)">
+                        <a>
+                            <div class="row justify-content-center">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-4">
+                                    <span>
+                                        <img src="{{appconfig.AssetUrl}}/assets/images/User/{{item.ImageUrl}}"
+                                            onerror="this.src='assets/img/noimage.jpg'" loading="lazy" />
+                                    </span>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-8">
+                                    <h5 class="capitalize">{{item.Name}} </h5>
+                                    <!-- <p *ngIf="item.ApcamMediationCertificate.length>0" >{{item.ApcamMediationCertificate}}</p>
+                                    <p *ngIf="item.MediationCertificate.length>0" >{{item.MediationCertificate}}</p>  -->
+                                                    
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- <div class="row justify-content-center" > 
+      <div class="col-lg-12" >
+                <h4 class="heading-con top-heading" style="width: 25rem; margin-left: 18%; margin-bottom: 17px;" >Select Arbitrator</h4> 
+        <button (click)="back(null)" style="margin-top: 0px;" class="close"><i class="fas fa-times"></i></button>
+      </div>
+    </div>   -->
+  </ion-toolbar>
+</ion-header>
+<ion-content>  
+  <ion-list>
+    <ion-item>
+      <ion-label style="text-align: center;">Choose Arbitrators</ion-label>
+     <ion-select multiple="true" cancelText="Cancel" okText="Select" [(ngModel)]="NoOfTribunalsSelected" (ionChange)="onSelectionChange()">
+  <ion-select-option *ngFor="let arbitrator of Arbitrators" [value]="arbitrator.Id" [disabled]="isOptionDisabled(arbitrator)">
+    {{ arbitrator.Name }}
+  </ion-select-option>
+</ion-select>
+
+      
+      
+      
+    </ion-item>
+  </ion-list>
+
+  
+
+ 
+  
+</ion-content>
+<ion-footer>
+  <div class="row justify-content-center">
+    <div class="form-wrapper col-10" style="width: 20rem; padding: 10px;">
+      <button (click)="SubmitDispute()" class="btn btn-sm purple-btn"
+       >Submit</button> 
+        
+    </div>
+  </div>
+</ion-footer>
+
+
+
+

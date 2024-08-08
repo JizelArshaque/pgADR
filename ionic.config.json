@@ -1,0 +1,7 @@
+{
+  "name": "PGVIDEOCALL",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

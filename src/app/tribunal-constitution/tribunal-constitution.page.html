@@ -1,0 +1,160 @@
+<body *ngIf="Type===0 && ArbitratorList.length>0" style="overflow: auto;">
+  <ion-content>
+    <app-alert-info></app-alert-info>
+    <div class="page-wrapper-div">
+      <div class="page-header-con">
+        <button style="margin-top: 18px; height: 50px;" class="backbtn" (click)="back()">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+      <h2 class="page-heading">Arbitral Tribunal</h2>
+      <div style="text-align: center;">
+        <p>As per Rule 4A of the IIAM Arbitration Rules, we are giving a list of 3 names of prospective arbitrators. <br>
+            You may select the arbitrators from the following list giving your preference from 1-5 (1 being the lowest and 5 being the highest). <br>
+            You can also object to any name by giving your reason for the same.</p>
+    </div>
+    <br><br>
+      <div class="container-fluid">
+          <div class="search-result">
+              <div class="row"  >
+                <ng-container *ngFor="let item of ArbitratorList">
+                <div class="col-lg-4 d-flex justify-content-center" >                 
+                         <a >
+                          <div class="row justify-content-center" >
+                              <div class="col-lg-4 col-md-4 col-sm-4 col-4">
+                                <span style="height: 170px;">
+                                      <img src="{{appconfig.AssetUrl}}/assets/images/User/{{item.UserId}}.jpg" style="width: 10rem; height: 10rem;" />
+                                      
+                                    </span>
+                                    <button (click)="viewprofile(item.SecretCode,item.Name)" class="btn btn-scale btn-scale-asc-11" style="  width: 100%;
+                                    background-color: #113e67;
+                                    color: aliceblue;
+                                    height: 47px;
+                                    margin-top: -10px;">
+                                      View Profiles &nbsp;
+                                    </button> 
+                              </div> 
+                              <div class="col-lg-8 col-md-8 col-sm-8 col-8" > 
+                                <!-- <h4>
+                                  <font><i class="fas fa-star"></i></font> 0 Feedbacks
+                                </h4> -->
+                                  <h5 class="capitalize">{{item.Name}} </h5> 
+                                  <p  *ngIf="item.Email.length>0" >{{item.Email}}</p> <br>
+                                
+                                  <div class="chart-scale">
+                                      <button (click)="Ratings(1,item.Id,$event)"  id="{{ 'b1'+item.Id}}" class="btn btn-scale btn-scale-asc-9" style="color: black;border: 1px solid   #113e67;"> 1  </button> 
+                                      <button (click)="Ratings(2,item.Id,$event)" id="{{ 'b2'+item.Id}}"class="btn btn-scale btn-scale-asc-7" style="color: black;border: 1px solid   #113e67;">2</button>
+                                      <button (click)="Ratings(3,item.Id,$event)" id="{{ 'b3'+item.Id}}" class="btn btn-scale btn-scale-asc-5" style="color: black;border: 1px solid   #113e67;">3</button> 
+                                      <button (click)="Ratings(4,item.Id,$event)" id="{{ 'b4'+item.Id}}" class="btn btn-scale btn-scale-asc-3" style="color: black;border: 1px solid   #113e67;">4</button> 
+                                      <button (click)="Ratings(5,item.Id,$event)" id="{{ 'b5'+item.Id}}" class="btn btn-scale btn-scale-asc-1" style="color: black;border: 1px solid   #113e67;">5</button>
+                                      <!-- <button (click)="Reject(item)" class="btn btn-scale btn-scale-asc-11" style=" width: 6rem; background-color: black; color: aliceblue;">
+                                          Object&nbsp;<i style="color: red;" class="fa-solid fa-xmark"></i>
+                                        </button> -->
+                                        <button (click)="Reject(item)" class="btn btn-scale btn-scale-asc-11 reject-btn" >
+                                          Object &nbsp;<i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                        
+                                        <div *ngIf="item.showRejectInput" class="reject-reason-input">
+                                          <label for="rejectReason"><strong>Reason for Objection:</strong></label>
+                                          <input (change)="Ratings(-1,item.Id,$event)" type="text" id="rejectReason"  [(ngModel)]="item.Reason" placeholder="Enter reason" />
+                                        </div>
+                                        
+                                      
+                                      
+                  
+                                  </div> 
+                              </div>
+                          </div>
+                      </a>
+                  </div>   
+                </ng-container>    
+              </div>
+          </div>
+          <div class="col-lg-12 col-sm-12 d-flex justify-content-center">
+            <button 
+              (click)="InsertTribunalConstitutionPreference()" 
+              class="registerbtn"
+       
+            >
+              Submit Response
+            </button>
+          </div>
+          
+      </div>
+    </div>
+  </ion-content>
+
+</body>
+
+
+<body *ngIf="Type===4">
+  
+  <ion-content>
+    <div class="page-wrapper-div">
+      <div class="page-header-con">
+        <button style="margin-top: 18px; height: 50px;" class="backbtn" (click)="back()">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+      <h2 class="page-heading">Arbitral Tribunal</h2>
+     <br> <br>
+      <div class="container-fluid">
+          <div class="search-result">
+              <div class="row"  >
+                <ng-container *ngFor="let item of ArbitratorList">
+                <div class="col-lg-4 d-flex justify-content-center" >                 
+                         <a >
+                          <div class="row justify-content-center" >
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-4">
+                              <span style="height: 170px;">
+                                    <img src="{{appconfig.AssetUrl}}/assets/images/User/{{item.UserId}}.jpg" style="width: 10rem; height: 10rem;" />
+                                    
+                                  </span>
+                                  <button (click)="viewprofile(item.SecretCode,item.Name)" class="btn btn-scale btn-scale-asc-11" style="  width: 100%;
+                                  background-color: #113e67;
+                                  color: aliceblue;
+                                  height: 47px;
+                                  margin-top: -10px;">
+                                    View Profile &nbsp;
+                                  </button> 
+                            </div>  
+                              <div class="col-lg-8 col-md-8 col-sm-8 col-8" > 
+                                <!-- <h4>
+                                  <font><i class="fas fa-star"></i></font> 0 Feedbacks
+                                </h4> -->
+                                  <h5 class="capitalize">{{item.Name}} </h5> 
+                                  <p *ngIf="item.Email.length>0" >{{item.Email}}</p>
+                                
+                                
+                                  <div class="chart-scale">
+                              
+                                       <h4 ><strong>Average Score: {{item.Preference}}%</strong></h4></div>
+
+                                  
+                                       <button (click)="confirmApprove(item.Id)" class="btn btn-scale btn-scale-asc-11 reject-btn" style="background-color: green;">
+                                        Appoint &nbsp;<i class="fa-solid fa-check"></i>
+                                      </button>
+                                      
+
+                                     
+                                      
+
+                                     
+                                    
+                                    
+                
+                                </div> 
+                              </div>
+                    
+                      </a>
+                  </div>   
+                </ng-container>    
+              </div>
+          </div>
+          
+          
+      </div>
+    </div>
+  
+  </ion-content>
+</body>

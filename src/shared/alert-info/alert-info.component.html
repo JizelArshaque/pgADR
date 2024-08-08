@@ -1,0 +1,163 @@
+<!-- <body > -->
+
+<div [class]="BodyClass" *ngIf="message">
+
+  <div [class]="BackFade"></div>
+
+  <!-- ==============================1.Success Alert================================= -->
+
+  <div [class]="WarningClass" *ngIf="message.type==1" id="exampleModalsuccess" [style]="StyleClass" tabindex="-1"
+    role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content alert-box">
+        <div class="modal-header ">
+          <img class="headimg" src="assets/img/peacegate-icon.jpg" alt="peacegate">
+          <button type="button" class="close" (click)="message.closeFn()" data-dismiss="modal" aria-label="Close"><i
+              class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body kathirmandapam-alert">
+          <div class="alert-top">
+            <p class="text-center">{{message.text}}</p>
+          </div>
+          <div class="row justify-content-center">
+            <button class="submitbtn" (click)="message.yesFn()">{{message.yesBtn}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ==============================2.Warning Alert================================= -->
+
+  
+  <div [class]="WarningClass" *ngIf="message.type==2" id="exampleModal" [style]="StyleClass" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content alert-box">
+        <div class="modal-header " style="text-align: center;">
+          <img style="text-align: center;" src="assets/img/peacegate-icon.jpg" alt="peacegate">
+          <button type="button" (click)="message.closeFn()" class="close" data-dismiss="modal" aria-label="Close"><i
+              class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body kathirmandapam-alert">
+          <div class="alert-top">
+
+            <p class="text-center">{{message.text}}</p>
+          </div>
+
+          <div class="row justify-content-center">
+            <button class="submitbtn" (click)="message.yesFn()">{{message.yesBtn}}</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==============================3.Error Alert================================= -->
+  <div [class]="WarningClass" *ngIf="message.type==3" [style]="StyleClass" id="exampleModalerror" tabindex="-1"
+    role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content alert-box">
+        <div class="modal-header ">
+          <img class="headimg" src="assets/img/peacegate-icon.jpg" alt="peacegate">
+          <button type="button" class="close" (click)="message.closeFn()" data-dismiss="modal" aria-label="Close"><i
+              class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body kathirmandapam-alert">
+          <div class="alert-top">
+            <p class="text-center">{{message.text}}</p>
+          </div>
+          <div class="row justify-content-center">
+            <button class="submitbtn" (click)="message.yesFn()">{{message.yesBtn}}</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==============================4.Confirmation Alert================================= -->
+  <div [class]="WarningClass" *ngIf="message.type==4" [style]="StyleClass" id="exampleModalconfirm" tabindex="-1"
+    role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content alert-box">
+        <div class="modal-header ">
+          <img class="headimg" src="assets/img/peacegate-icon.jpg" alt="peacegate">
+          <button type="button" class="close" (click)="message.closeFn()" data-dismiss="modal" aria-label="Close"><i
+              class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body kathirmandapam-alert">
+          <div class="alert-top">
+            <p class="text-center" [innerHtml]="message.text"></p>
+          </div>
+          <div class="row justify-content-center">
+            <button class="submitbtn" type="button" (click)="message.yesFn()">{{message.yesBtn}}</button>
+            <button class="submitbtns" data-dismiss="modal" type="button" (click)="message.closeFn()"
+              aria-label="Close">{{message.noBtn}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==============================5.Confirmation with Remarks Alert================================= -->
+  <div [class]="WarningClass" *ngIf="message.type==5" id="exampleModalsuccess" [style]="StyleClass" tabindex="-1"
+    role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content alert-box">
+
+        <div class="modal-body kathirmandapam-alert">
+          <div class="alert-top">
+            <button type="button" class="close" (click)="message.yesFn()" data-dismiss="modal" aria-label="Close"><i
+                class="fas fa-times"></i></button>
+            <p [innerHtml]="message.text"></p>
+          </div>
+          <div class="col-12">
+            <ion-item>
+              <ion-label position="floating">Add Remarks</ion-label>
+              <ion-textarea name='' [(ngModel)]="remarks"></ion-textarea>
+            </ion-item>
+          </div> <br>
+          <div class="row justify-content-center">
+            <button class="submitbtn" (click)="message.yesFn(remarks)">{{message.yesBtn}}</button>
+            <button class="submitbtns" data-dismiss="modal" (click)="message.closeFn()"
+              aria-label="Close">{{message.noBtn}}</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================5.Ratings Alert================================= -->
+  <div [class]="WarningClass" *ngIf="message.type==6" id="exampleModalsuccess" [style]="StyleClass" tabindex="-1"
+    role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content alert-box">
+
+        <div class="modal-body kathirmandapam-alert">
+          <div class="alert-top">
+            <button type="button" class="close" (click)="message.yesFn()" data-dismiss="modal" aria-label="Close"><i
+                class="fas fa-times"></i></button>
+            <p [innerHtml]="message.text"></p>
+          </div>
+          <div class="row justify-content-center">
+           
+<button class="alert-icon-btn" (click)="message.yesFn(0)"> <p>Not for me </p><i class="fas fa-thumbs-down"></i><p class="review-count">11</p></button>
+<button class="alert-icon-btn" (click)="message.yesFn(1)"><p>I like it </p><i class="fas fa-thumbs-up"></i><p class="review-count">1145</p></button>
+<button class="alert-icon-btn" (click)="message.yesFn(2)"><p>I love it </p><i class="fas fa-heart"></i><p class="review-count">1500</p></button>
+
+
+          </div> <br> 
+        </div>
+ 
+      </div>
+    </div>
+  </div>
+
+ 
+</div>
+<!-- </body> -->

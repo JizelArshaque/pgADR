@@ -1,0 +1,39 @@
+import { ArbitrationParties } from './AdditionalParty';
+
+export class Mediation {
+  UserId: number = 0;
+  Id: number = 0;
+  TypeofArbitration: number = 0;
+  Institution: number = 0;
+  Region: number = 0;
+  FileNumber: string = '';
+  ArbitrationAgreementType: number = 0;
+  Seat: string = '';
+  Mode: number = 0;
+  NumberofArbitrator: number = 0;
+  VenueCountry: string = '';
+  VenueState: string = '';
+  VenueCity: string = '';
+  VenuePincod: string = '';
+  VenueContactName: string = '';
+  CenterMobile: string = '';
+  CenterId: number = 0;
+  CenterName: string = '';
+  CenterAddress: string = '';
+  CenterEmail: string = '';
+  DateOfAgreement: string = '';
+  DetailsOfAgreementUrl: string = '';
+  DateOfClaimantNotice: string = '';
+  NoticebyClaimantUrl: string = '';
+  ReplyNoticeStatus: number = 0;
+  DateOfRespondentNotice: string = '';
+  RespontentArbitratorStatus: number = 0;
+  ReplyNoticeByRespondentUrl: string = '';
+  DisputeSynopsis: string = '';
+  DisputeValue: string = '';
+  FeeAmount: number = 0;
+  PaymentCode: string = '';
+  PaymentStatus: number = 0;
+  SecureCode: string = '';
+  ArbitrationParties: ArbitrationParties[] = [];
+}

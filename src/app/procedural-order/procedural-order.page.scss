@@ -1,0 +1,286 @@
+li{
+    list-style: none !important;
+}
+
+.activestage-wrap {
+    margin-top: 35px;
+    margin-bottom: 65px;
+    width: 100%;
+    display: inline-block;
+}
+
+.activestage-wrap h6 {
+    width: 100%;
+    text-align: center;
+    padding: -10px;
+    margin: 4px 0px 0px 0px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--headingColor);
+}
+
+.activestage-wrap .row {
+    margin: 0px;
+}
+
+.activestage-wrap .row .col-lg-3 {
+    padding: 0;
+    position: relative;
+    padding-top: 25px;
+    
+    -ms-flex: 0 0 20%;
+    flex: 0 0 20%;
+    max-width: 20%;
+    border-radius: 20px; /* Adjust the value as desired */
+}
+
+
+.activestage-wrap .row .col-lg-3 span {
+    width: 38px;
+    height: 38px;
+    background: #24c1e8;
+    border: #24c1e8;
+    border-radius: 20px;
+    position: absolute;
+    left: 50%;
+    margin-left: -18px;
+    top: -17px;
+    content: '';
+    z-index: 10;
+    text-align: center;
+    line-height: 34px;
+}
+.stepper-wrapper {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .stepper-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    flex: 1;
+  
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
+  }
+  
+  .stepper-item::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+    top: 20px;
+    left: -100%;
+    width: 50rem ;
+    z-index: 2;
+  }
+  
+  .stepper-item::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+    top: 20px;
+    left: 50%;
+    z-index: 2;
+  }
+  
+  .stepper-item .step-counter {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ccc;
+  margin-bottom: 6px;
+  
+
+  /* Add circle border */
+}
+.stepper-item .step-active {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ccc;
+    margin-bottom: 6px;
+      background-size: 100% !important;
+      -webkit-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+      -moz-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+      -ms-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+      animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+      border-radius: 50%; /* Make the shape circular */
+      box-shadow: 0 0 0 0 #11375a;
+  
+    /* Add circle border */
+    border: 2px solid #000; /* You can adjust the width and color of the border to your preference */
+  }
+  
+  .stepper-item.active {
+    background-size: 100% !important;
+    -webkit-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+    -moz-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+    -ms-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+    animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+    border-radius: 50%; /* Make the shape circular */
+    box-shadow: 0 0 0 0 #11375a;
+    
+  }
+  
+  
+  .stepper-item.completed .step-counter {
+    background-color: #4bb543;
+  }
+  
+  .stepper-item.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 13rem;
+    top: 20px;
+    left: 0;
+    z-index: 3;
+  }
+  
+  .stepper-item:first-child::before {
+    content: none;
+  }
+  .stepper-item:last-child::after {
+    content: none;
+  }
+.activestage-wrap .row .col-lg-3:last-child span {
+    background: #fff;
+}
+
+.activestage-wrap .row .col-lg-3 hr {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border: none;
+    height: 2px;
+    background: var(--DarkBlueColor);
+    position: absolute;
+    left: -50%;
+    top: 0px;
+}
+
+.activestage-wrap .row .col-lg-3.active span {
+    background: green;
+    border-color: var(--BlueColor);
+}
+
+.activestage-wrap .row .col-lg-3.active span i {
+    color: #fff;
+}
+
+.activestage-wrap .row .col-lg-3.active hr {
+    background: var(--BlueColor);
+}
+
+.active-anim span {
+    background-size: 100% !important;
+    -webkit-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+    -moz-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+    -ms-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+    animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+    box-shadow: 0 0 0 0 rgba(85, 203, 207, 0.5);
+}
+
+@-webkit-keyframes pulse {
+    to {
+        box-shadow: 0 0 0 10px rgba(102, 189, 81, 0);
+    }
+}
+
+@-moz-keyframes pulse {
+    to {
+        box-shadow: 0 0 0 10px rgba(102, 189, 81, 0);
+    }
+}
+
+@-ms-keyframes pulse {
+    to {
+        box-shadow: 0 0 0 10px rgba(102, 189, 81, 0);
+    }
+}
+
+@keyframes pulse {
+    to {
+        box-shadow: 0 0 0 10px rgba(102, 189, 81, 0);
+    }
+}
+
+
+
+@media screen and (max-width: 1024px) {
+    .activestage-wrap .row {
+        overflow-y: auto;
+        white-space: nowrap;
+        display: block;
+        padding-top: 20px;
+    }
+    .containers{
+        margin-left: -12% !important;
+        padding: 10px;
+
+    }
+    .activestage-wrap .row .col-lg-3 {
+        display: inline-block;
+        white-space: normal;
+    }
+}
+@keyframes circleAnimation {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.5);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+@media screen and (max-width: 980px) {
+    .containers{
+        margin-left: -30% !important;
+        padding: 110px;
+    }  
+}
+
+@media screen and (max-width: 520px) {
+   
+    .containers{
+    margin-left: -35% !important;
+    padding: 10px;
+}
+    .activestage-wrap h6 {
+        font-size: 12px;
+    }
+    
+
+    .activestage-wrap {
+        margin-bottom: 30px;
+        margin-top: 25px;
+    }
+
+    
+    .activestage-wrap .row .col-lg-3:last-child span {
+        background: var(--LightBg);
+    }
+    h4{text-align: center !important;}
+} 

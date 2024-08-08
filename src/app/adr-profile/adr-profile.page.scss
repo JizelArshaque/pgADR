@@ -1,0 +1,96 @@
+.adrbutton{
+    width: 250px !important;
+    border: none;
+    outline: none;
+    background-color: #003a66 !important;
+    color: #fff !important;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 15px;
+    margin: 0px 0px 0px 0px;
+    padding: 10px 0px;
+    border-radius: 5px !important;
+    transition-duration: 0.3s;
+    margin-top: 15px; 
+    text-align: center;
+    }
+    
+    .iiam-profile-page .repeat-row-pro{
+        padding:0px;
+        margin:0px;
+        border:none;
+    }
+    
+    
+    .justify-content-center{
+    justify-content: center!important;
+    
+    }
+    
+    .iiam-profile-page .repeat-row-pro .col-lg-6{
+    border-bottom:1px dashed #bcc5d0;
+    padding:13px 15px;
+    text-align:left;
+    }
+    
+    .profile-head-wrapper{
+    width:100%;
+    background:#e7ebf0;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    }
+    
+    .profile-head-wrapper ul{
+    padding:0px;
+    margin:15px 0px 0px 0px;
+    width:96%;
+    text-align:left;
+    border-bottom:2px solid #123d66;
+    border-top:2px solid #123d66;
+    display:block;
+    text-align:center;
+    float:left;
+    }
+    
+    .profile-head-wrapper ul li{
+    list-style:none;
+    width:auto;
+    padding:5px 15px;
+    margin:0px;
+    display:inline-block;
+    color:#123d66;
+    font-size:15px;
+    font-weight:700;
+    text-transform:uppercase;
+    }
+    
+    .profile-head-wrapper h2{
+    width:100%;
+    text-align:center;
+    padding:10px;
+    margin:30px 0px 4px 0px;
+    font-weight:700;
+    font-size:24px;
+    }
+    
+    .profile-head-wrapper h6{
+    width:100%;
+    text-align:center;
+    padding:8px;
+    margin:0px;
+    font-weight:500;
+    font-size:15px;
+    text-transform:uppercase;
+    }
+    
+    .profile-head-wrapper h6 font:nth-child(2){
+    position:relative;
+    padding-left:10px;
+    }
+    
+    .profile-head-wrapper h6 font:nth-child(2):before{
+    position:absolute;
+    content:',';
+    left:0px;
+    bottom:0px;
+    }

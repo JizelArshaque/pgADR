@@ -1,0 +1,127 @@
+<ion-content> 
+  <body style="overflow: auto;">
+   
+      <div class="page-wrapper-div">
+        <div class="page-header-con">
+          <button class="backbtn" (click)="back()"> <i class="fas fa-chevron-left"></i></button>
+          <img [routerLink]="['/home']" src="assets/img/peacegate-icon.jpg" alt="peacegate">
+          <!-- <button class="menubtn"><img src="assets/img/menu.svg" alt=""></button> -->
+        </div>
+        <h2 class="page-heading" >Arbitrator Profile</h2>
+        <div class="container service-single form-wrapper">
+          <div class="row justify-content-center">
+            <div class="container page-container iiam-profile-page">
+  
+              <div class="row justify-content-center">
+                <div class="col-lg-8">
+                  <div class="profile-head-wrapper">
+                    <div class="row justify-content-center">
+                      <div class="col-lg-3 col-md-4 col-7">
+                        <span>
+                          <img [src]="ImageData" alt="peacegate">
+                        </span>
+                      </div>
+  
+                      <div class="col-lg-9 col-md-12">
+                        <h2>{{userDetails.Name}} </h2>
+                        <ul>
+                          <li>
+                            <span *ngIf="userDetails.MediatorStatus==1"><b>Mediator</b></span>
+                            <span *ngIf="userDetails.IsProjectMediator==1"><b>, Project Mediator</b></span>
+                            <span *ngIf="userDetails.IsReviewer==1"><b>, Reviewer</b></span>
+                          </li>
+                        </ul> 
+                        <ul style="border: none;">
+                          <li *ngIf="userDetails.MediationCertificate.length>0" (click)="OpenCertificate(1)"><a
+                              style="cursor: pointer;"><i class="fas fa-eye"></i> Mediator Certificate</a></li>
+                          <li *ngIf="userDetails.ApcamMediationCertificate.length>0" (click)="OpenCertificate(3)"><a
+                              style="cursor: pointer;"><i class="fas fa-eye"></i>APCAM Mediator Certificate</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="repeat-row-pro">
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 col-md-6 col-sm-6">
+                                      <p><b>Neutral/ADR ID :</b> [PG/{{userDetails.Id}}/{{userDetails.SysTime|date:'yyyy'}}] </p>
+                  </div>
+                  <div class="col-lg-6 col-md-6">
+                    <p><b>Languages :</b>
+                      {{userDetails.Languages}}
+                    </p>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="repeat-row-pro">
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 col-md-6 col-sm-6">
+                    <p><b>Location : </b>{{userDetails.District}}, {{userDetails.State}}, {{userDetails.Country}} </p>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"
+                    *ngIf="userDetails.MediatorStatus==1 && userDetails.MediatorTrainingDetails">
+                    <p><b>Mediation Training Details :</b> {{userDetails.MediatorTrainingDetails}} </p>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"
+                    *ngIf="userDetails.MediatorStatus==1 && userDetails.MediationStyle">
+                    <p><b>Mediation Styles :</b> {{userDetails.MediationStyle}} </p>
+                  </div>
+                </div>
+              </div>
+              <div class="repeat-row-pro">
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 col-md-6 col-sm-6"
+                    *ngIf="userDetails.MediatorStatus==1 && userDetails.MediationCertificate">
+                    <p><b>Mediator Certification :</b> {{userDetails.MediationCertificate}} </p>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6"
+                    *ngIf="userDetails.MediatorStatus==1 && userDetails.ApcamMediationCertificate">
+                    <p><b>APCAM Mediation Certification :</b> {{userDetails.ApcamMediationCertificate}} </p>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="repeat-row-pro">
+                <div class="row justify-content-center">
+                </div>
+              </div>
+              <div class="repeat-row-pro">
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 col-md-6">
+                    <p><b>Professional Details : </b>
+                      {{userDetails.ProfessionalDetails}}
+                    </p>
+                  </div>
+                  <div class="col-lg-6 col-md-6">
+                    <p><b>Feedback Digest : </b> 
+                      <font *ngIf="userDetails.MediatorDigest.length<2">Not updated by reviewer.</font>
+                      <font *ngIf="userDetails.MediatorDigest.length>2">{{userDetails.MediatorDigest}}</font>
+                    </p>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="repeat-row-pro">
+                <div class="row justify-content-center">
+                  <div class="col-lg-12 col-md-12">
+                    <h4>Biodata :</h4>
+                    <p>{{userDetails.Biodata}}</p>
+                  </div>
+                </div>
+  
+                <br />
+  
+  
+  
+              </div>
+              <!-- <div class="col-lg-12 d-flex justify-content-center"><button class="chatbutton"
+                  (click)="SelectMediator()">Select</button></div> -->
+  
+  
+            </div>
+          </div>
+        </div>
+      </div> 
+  </body></ion-content>

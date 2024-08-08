@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <div class="row justify-content-center" > 
+      <div class="col-lg-12">
+       
+        <h4 class="heading-con top-heading" style="width: 25rem; margin-left: 18%; margin-bottom: 17px;"> Profile</h4> 
+        <button (click)="back()"  class="close"><i class="fas fa-times"></i></button>
+      </div> 
+    </div> 
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="row justify-content-center">
+  <div class="col-12 form-wrapper1" *ngIf="!!party">  
+    <ul class="list-group">
+      <li class="list-group-item" *ngIf="party.Name"><span><i class="fas fa-user file-btn"></i></span>{{ party.Name }}<span style="font-size: 12px;">({{ GetPartyType() }})</span></li>
+      
+      <li class="list-group-item" *ngIf="party.Email" (click)="directaccessemail()"><span><i class="fas fa-envelope file-btn"></i></span>{{ party.Email }}</li>
+      
+      <li class="list-group-item" *ngIf="party.Mobile" (click)="directaccessphone()"><span><i class="fas fa-mobile file-btn"></i></span>{{ party.Mobile }}</li>
+      
+      <li class="list-group-item" *ngIf="party.Address" (click)="directaccesslocation()"><span><i class="fas fa-map-marker file-btn"></i></span>{{ party.Address }}</li>
+    </ul>
+    
+    <br> 
+
+
+    <div class="row justify-content-center"  *ngIf="(party.Type === 3 || party.Type === 2) &&  party.AuthorisationUrl ">
+      <div class="form-group col-1"></div>
+      <div class="col-5" *ngIf="party.AuthorisationUrl !">
+        <div class="text-center">
+          <button class="btn btn-sm purple-btn orange-btn" (click)="OpenDoc()">View {{ party.Type === 3 ? 'Disclosure' : 'Vakalath' }}</button>
+        </div>
+      </div>
+      <div class="col-5" *ngIf="User.IsController==1 ||(User.Side==0 && User.Type==0 && !! ArbitrationParties && ArbitrationParties.length==0)">
+        <div class="text-center">
+          <button style="background-color: #163a5c;"  (click)="ArbitrationPartyAdd(party)">Edit</button>
+        </div>
+      </div>
+      <div class="col-1"></div>
+    </div>
+
+    <div class="row justify-content-center" *ngIf="party.AuthorisationUrl == null">
+      <div class="form-group col-3"></div>
+     
+      <div class="col-6" *ngIf="User.IsController==1 ||(User.Side==0 && User.Type==0 && !! ArbitrationParties && ArbitrationParties.length==0)">
+        <div class="text-center">
+          <button style="background-color: #163a5c;"  (click)="ArbitrationPartyAdd(party)">Edit</button>
+        </div>
+      </div>
+      <div class="col-3"></div>
+    </div>
+    
+
+  </div>   
+</div>
+</ion-content>

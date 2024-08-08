@@ -1,0 +1,162 @@
+<ion-content  style="overflow: auto;">
+  <body>
+    <app-alert-info></app-alert-info>
+      <div class="page-wrapper-div">
+        <div class="page-header-con">
+          <button class="backbtn" (click)="back()"> <i class="fas fa-chevron-left"></i></button>
+          <img (click)="goHome()" src="assets/img/peacegate-icon.jpg" alt="peacegate">
+          <!-- <button class="menubtn"><img src="assets/img/menu.svg" alt=""></button> -->
+        </div> <br>
+
+        <h2 class="page-heading">Neutral/ADR Professional Profile</h2>
+  
+        <div class="container service-single form-wrapper">
+          <div class="row justify-content-center">
+            <div class="container page-container iiam-profile-page">
+              <div class="panel-body">
+                <div class="row justify-content-center">
+                  <div class="col-lg-10"> 
+                    <div class="profile-head-wrapper">
+                      <div class="row justify-content-center">
+                        <div class="col-lg-3 col-md-4 col-7">
+                          <span>
+                            <img [src]="ImageData" alt="peacegate">
+                          </span>
+                        </div>
+  
+                        <div class="col-lg-9 col-md-12">
+                          <h2>{{userDetails.Name}} </h2>
+                          <!-- <h6>
+                            <font> {{userDetails.Address}} </font>
+                          </h6> -->
+                          <ul>
+                            <li>
+                              <span *ngIf="userDetails.MediatorStatus==1"><b>Mediator</b></span>
+                              <span *ngIf="userDetails.ArbitratorStatus==1"><b><span *ngIf="userDetails.MediatorStatus==1">, </span>Arbitrator</b></span>
+                              <span *ngIf="userDetails.MediationAdvocateStatus==1"><b><span *ngIf="userDetails.MediatorStatus==1 || userDetails.ArbitratorStatus==1">, </span> Mediation Advocate</b></span>
+                              <span *ngIf="userDetails.EmmergencyArbitrator==1 && userDetails.ArbitratorStatus==1"><b><span *ngIf="userDetails.ArbitratorStatus==1">, </span> Emergency Arbitrator</b></span>
+                              <span *ngIf="userDetails.IsProjectMediator==1 && userDetails.MediatorStatus==1"><b><span *ngIf="userDetails.MediatorStatus==1">, </span> Project Mediator</b></span>
+                              <span *ngIf="userDetails.IsReviewer==1 && userDetails.MediatorStatus==1"><b>, Reviewer</b></span>
+                            </li>
+                          </ul>
+                          <ul style="border: none;">    
+                            <li *ngIf="userDetails.MediationCertificate.length>0 && userDetails.MediatorStatus==1" (click)="OpenCertificate(1)"><a style="cursor: pointer;"><i class="fas fa-eye"></i> Mediator Certificate</a></li> 
+                            <li *ngIf="userDetails.ArbitratorCategory.length>0 && userDetails.ArbitratorStatus==1" (click)="OpenCertificate(2)"><a style="cursor: pointer;"><i class="fas fa-eye"></i> Arbitrator Certificate</a></li>
+                            <li *ngIf="userDetails.ApcamMediationCertificate.length>0 && userDetails.MediatorStatus==1" (click)="OpenCertificate(3)"><a style="cursor: pointer;"><i class="fas fa-eye"></i>APCAM Mediator Certificate</a></li> 
+                            <li *ngIf="userDetails.ApcamArbitratorCategory.length>0 && userDetails.ArbitratorStatus==1" (click)="OpenCertificate(4)"><a style="cursor: pointer;"><i class="fas fa-eye"></i>APCAM Arbitrator Certificate</a></li>
+                          </ul> 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="repeat-row-pro">
+                  <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <p><b>Name :</b> {{userDetails.Name}} </p>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <!-- //Commented and added by maria because of production error on 4/12/2022 -->
+                      <!-- <p><b>Neutral/ADR ID :</b> [PG/{{userDetails.Id}}/{{userDetails.Systime|date:'yyyy'}}] </p> -->
+                      <p><b>Neutral/ADR ID :</b> [PG/{{userDetails.Id}}/{{userDetails.Systime|date:'yyyy'}}] </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="repeat-row-pro">
+                  <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <p><b>Location : </b>{{userDetails.District}}, {{userDetails.State}}, {{userDetails.Country}} </p>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <p><b>Languages : </b> {{userDetails.Languages}} </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="repeat-row-pro">
+                  <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <p><b>Professional Details :</b> {{userDetails.ProfessionalDetails}} </p>
+                    </div>
+                    <!--code added by sabitha--------------01-Apr-2021--------------->
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <p><b>Centres :</b> {{userDetails.Centres}} </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="repeat-row-pro">
+                  <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="userDetails.MediatorStatus==1 && userDetails.MediatorTrainingDetails">
+                      <p><b>Mediation Training Details :</b> {{userDetails.MediatorTrainingDetails}} </p>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="userDetails.MediatorStatus==1 && userDetails.MediationStyle">
+                      <p><b>Mediation Styles :</b> {{userDetails.MediationStyle}} </p>
+                    </div> 
+                    <div class="col-lg-6 col-md-6 col-sm-6"
+                    *ngIf="userDetails.MediationAdvocateStatus==1 && userDetails.MediationAdvocateCategory">
+                    <p><b>Mediation Advocate Certification:</b> {{userDetails.MediationAdvocateCategory}} </p>
+                  </div>
+                  </div>
+                </div>
+                <div class="repeat-row-pro">
+                  <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="userDetails.MediatorStatus==1 && userDetails.MediationCertificate">
+                      <p><b>Mediator Certification :</b> {{userDetails.MediationCertificate}} </p>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="userDetails.MediatorStatus==1 && userDetails.ApcamMediationCertificate">
+                      <p><b>APCAM Mediation Certification :</b> {{userDetails.ApcamMediationCertificate}} </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="repeat-row-pro">
+                  <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="userDetails.ArbitratorStatus==1 && userDetails.ArbitratorTrainingDetails">
+                      <p><b>Arbitrator Training Details :</b> {{userDetails.ArbitratorTrainingDetails}} </p>
+                    </div>
+  
+                    <div class="col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="userDetails.ArbitratorStatus==1 && userDetails.ArbitratorCategory">
+                      <p><b>Arbitrator Certification :</b> {{userDetails.ArbitratorCategory}} </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="repeat-row-pro">
+                  <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-6 col-sm-6"
+                  *ngIf="userDetails.ArbitratorStatus==1 && userDetails.ApcamArbitratorCategory">
+                  <p><b>APCAM Arbitrator Certification:</b> {{userDetails.ApcamArbitratorCategory}} </p>
+                </div>
+  
+                <div class="col-lg-6 col-md-6 col-sm-6"
+                  *ngIf="userDetails.MediationAdvocateStatus==1 && userDetails.MediationAdvocateTrainingDetails">
+                  <p><b>Mediation Advocate Training Details :</b> {{userDetails.MediationAdvocateTrainingDetails}} </p>
+                </div>
+                  </div></div>
+                  <div class="repeat-row-pro">
+                    <div class="row justify-content-center">
+           
+                <!--code added by sabitha--------------01-Apr-2021--------------->
+  
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                  <p><b>Biodata :</b> {{userDetails.Biodata}} </p>
+                </div>
+                    </div>
+                  </div>
+  
+              </div>
+              <div class="row justify-content-center">
+                <div class="form-wrapper col-10" style="width: 20rem; padding: 10px;">
+                  <button (click)="confirmApproveforExpedited(userDetails)" class="btn btn-sm purple-btn"
+                   >Nominate </button>                 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </body>
+  </ion-content>
