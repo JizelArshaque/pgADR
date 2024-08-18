@@ -424,13 +424,13 @@ export class ArbitrationPartyAddPage implements OnInit {
       if (!!data && data.length > 0 && data[0].Error == 0) {
         // Response is null, show a success message as an alert
         alert("Inserted Successfully");
-        // window.location.reload()
+        window.location.reload()
         this.back()
 
       } else {
         // Insertion failed, show an error message
         alert("Error while save details.");
-        // window.location.reload()
+        window.location.reload()
       }
     });
 

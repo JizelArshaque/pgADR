@@ -5,7 +5,7 @@ export class AppConfig {
   // imagelink:string = 'http://localhost:8100/'; //test
   // ChatServerLink = "http://localhost:3005"
       url:string='https://adrapi.initstore.com/api';
-      AssetUrl:string='https://pgadmin.initstore.com';
+      AssetUrl:string='https://adrapi.initstore.com';
       Link:string='https://pg.initstore.com';
        videocalllayoutlink:string = 'https://adrnew.initstore.com/dashboard/'; //test
       AdrDashboard='https://adrnew.initstore.com/dashboard/';

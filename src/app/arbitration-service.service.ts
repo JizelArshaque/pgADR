@@ -41,7 +41,7 @@ export class ArbitrationServiceService {
   
 
     let options = { headers: headers };
-    return this.http.post<any>(this.appConfig.url +'/Arbitration/UpdateArbitrationProcess',arb, options).pipe(map(res=>res));
+    return this.http.post<any>(this.appConfig.url +'/Arbitration/InsertArbitration',arb, options).pipe(map(res=>res));
   } 
   GetArbitrationDetailsWithSecreteCode(SecreteCode:any)
   {  
@@ -163,10 +163,12 @@ export class ArbitrationServiceService {
   spGetAllTribunalForConstitution(ArbitrationPartyId:number,UserId:number)
 {
   
-  let headers = new HttpHeaders();
-  headers.append("Accept", 'application/json');
-  headers.append('Content-Type', 'application/json');
-  headers.append('Authorization', 'Bearer ' + this.decryptiondata);
+  this.GetDecryptedData();
+  
+  let headers = new HttpHeaders()
+    .set("Accept", 'application/json')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + this.decryptiondata);
 
   let options = { headers: headers };
   return this.http.get(this.appConfig.url + '/ArbitrationTribunalConstitution/spGetAllTribunalForConstitution?arbId='+ArbitrationPartyId+'&UserId='+UserId, options).pipe<any>(map(res => res));
@@ -192,6 +194,7 @@ export class ArbitrationServiceService {
       .set('Authorization', 'Bearer ' + this.decryptiondata);
 
     let options = { headers: headers };
+    debugger
     return this.http.get<any>(this.appConfig.url +'/Arbitration/spGetAllArbitrationDocuments?arbiddoc='+ArbId, options).pipe(map(res=>res));
   } 
 
@@ -339,7 +342,7 @@ export class ArbitrationServiceService {
       .set('Authorization', 'Bearer ' + this.decryptiondata);
   
     let options = { headers: headers };
-    return this.http.post<any>(this.appConfig.url +'/ArbitrationDocumentDetails/UploadDocumentCdn',document, options).pipe(map(res=>res)); 
+    return this.http.post<any>(this.appConfig.url +'/ArbitrationDocumentDetails/ArbitrationDocumentUpload',document, options).pipe(map(res=>res)); 
   }
   GetScrunityBoardDetails() 
   {
@@ -425,7 +428,7 @@ export class ArbitrationServiceService {
       .set('Authorization', 'Bearer ' + this.decryptiondata);
   
     let options = { headers: headers };
-    return this.http.get<any>(this.appConfig.url +'/Arbitration?Id='+Id+'&SecretCode='+SecretCode, options).pipe(map(res=>res));
+    return this.http.get<any>(this.appConfig.url +'/Arbitration/SpInsertAuthorisationSecretCode?Id='+Id+'&SecretCode='+SecretCode, options).pipe(map(res=>res));
   } 
   InsertExhibits(exhibits:any)
   {  
@@ -555,11 +558,16 @@ export class ArbitrationServiceService {
   }
   CommentClaimant(message:string,email:string,name:string,arbid:any)
   {  
-     let headers = new HttpHeaders();
-    headers.append("Accept", 'application/json');
-    headers.append('Content-Type', 'application/json');
+      
+    this.GetDecryptedData();
+  
+    let headers = new HttpHeaders()
+      .set("Accept", 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + this.decryptiondata);
+
     let options = { headers: headers };
-    return this.http.get<any>(this.appConfig.url +'/Arbitration?message='+message+'&email='+email+'&name='+name+"&arbitrationid="+arbid, options).pipe(map(res=>res)); 
+    return this.http.get<any>(this.appConfig.url +'/Arbitration/SendMessageToClaimant?message='+message+'&email='+email+'&name='+name+"&arbitrationid="+arbid, options).pipe(map(res=>res)); 
   }
   SpReportIssue(ReportIssue:any)
   

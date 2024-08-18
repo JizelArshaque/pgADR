@@ -143,9 +143,7 @@ export class AdrProfilePage implements OnInit {
 
     this.arbitrationservice.spAppointTribunalforExpedited(JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).Id, this.TId, this.Name, this.Email, this.Mobile, this.Address, this.ArbitratorType, this.ArbitratorSide, this.Country, this.State, this.City).subscribe((data: any) => {
 
-alert(1)
       if (!!data) {
-        alert(data[0].Id)
         if (data[0].Id > 1 && data[0].Error === 0) {
           
                     this.alertservice.Alert("Arbitrator Appointed!",3,()=>{},()=>{},);

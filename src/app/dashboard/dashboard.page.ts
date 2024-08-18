@@ -657,6 +657,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
     this.arbitrationservice.GetArbitrationDetailsWithSecreteCode(this.SecreteCode).subscribe(data => {
       if (!!data && data.length > 0) {
         this.ArbitrationDetails = data[0];
+        console.log("================atls",this.ArbitrationDetails)
         this.ReplyNoticeByRespondentUrl = data[0].ReplyNoticeByRespondentUrl;
 
 
@@ -682,20 +683,20 @@ export class DashboardPage implements OnInit, AfterViewInit {
           this.GetAllArbitrationParties();
           this.GetAllArbitrationDocuments();
 
-          // setInterval(() => {
+          setInterval(() => {
 
-          //   this.GetAllChats()
-          //   this.GetAllArbitrationPartiesonly();
-          //   //  this.GetMyData();
-          //   this.currentTimeforchecking = this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
-          // }, 20000); //
+            this.GetAllChats()
+            this.GetAllArbitrationPartiesonly();
+            //  this.GetMyData();
+            this.currentTimeforchecking = this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
+          }, 20000); //
 
           this.VideoCallId = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).Id;
           this.LoginUserId = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id;
-          // this.interval1 = setInterval(() => {
-          //   // this.GetAllArbitrationPartiesonly();
-          //   this.GetMyArbitrationPartyDetails();
-          // }, 20000);
+          this.interval1 = setInterval(() => {
+            // this.GetAllArbitrationPartiesonly();
+            this.GetMyArbitrationPartyDetails();
+          }, 20000);
 
         } else {
           // alert("Invalid link !");
@@ -800,7 +801,10 @@ export class DashboardPage implements OnInit, AfterViewInit {
 
     this.arbitrationservice.spGetAllArbitrationCaseManagement(this.ArbitrationDetails.Id).subscribe(data => {
       if (!!data && data.length > 0) {
+
         this.CaseManagementProcedure = <Array<any>>data;
+        console.log(this.CaseManagementProcedure,"==========case===")
+        debugger
       }
     });
   }
@@ -838,8 +842,6 @@ export class DashboardPage implements OnInit, AfterViewInit {
           if (!!data && data.length > 0) {
             this.ArbitrationParties = <Array<any>>data;
             console.log(this.ArbitrationParties,"====ArbitrationParties=====")
-            resolve(true); // Resolve the promise immediately after setting ArbitrationParties
-  
             this.Claimants = this.ArbitrationParties.filter(x => (x.Type === 0 || x.Type === 2) && x.Side === 0);
             this.Respondants = this.ArbitrationParties.filter(x => (x.Type === 0 || x.Type === 2) && x.Side === 1);
             this.Arbitrators = this.ArbitrationParties.filter(x => x.Type === 3 && x.Side === 0);
@@ -920,7 +922,10 @@ export class DashboardPage implements OnInit, AfterViewInit {
                     this.IsVideo = false;
                   }
                 }
+                resolve(true);
               });
+            } else {
+              resolve(false);
             }
           } else {
             resolve(false);
@@ -933,7 +938,6 @@ export class DashboardPage implements OnInit, AfterViewInit {
       }
     });
   }
-  
   
 
   GetAllArbitrationPartiesonly() {
@@ -2377,6 +2381,9 @@ doc=this.DraftAwards[0].DocumentName;
     this.arbitrationservice.spGetAllArbitrationDocuments(this.ArbitrationDetails.Id).subscribe(data => {
       if (!!data && data.length > 0) {
         this.ArbitrationDocs = <Array<any>>data;
+        debugger
+        console.log(this.ArbitrationDocs,"================docs============")
+        debugger
         this.DraftAwards = this.ArbitrationDocs.filter(x => x.Status == 2);
       //  this.ArbitrationDocs = this.ArbitrationDocs.filter(x => x.Status == 0);
         this.dashboarddate = [...new Map(this.ArbitrationDocs.map(item => [item['Date'], item])).values()];
@@ -2469,6 +2476,7 @@ doc=this.DraftAwards[0].DocumentName;
     return this.ArbitrationDocs.filter(x => x.IsMailer == 1 && x.Date == date);
   }
   filterarbitrationDocument(segment: any, partytype: any) {
+    
     return this.ArbitrationDocs.filter(x => x.Segment == segment && x.CreatorType == partytype && x.IsMailer == 0);
   }
   filterarbitrationDocumentWithSegment(segment: any) {
@@ -2518,6 +2526,7 @@ doc=this.DraftAwards[0].DocumentName;
     return this.ArbitrationDocs.filter(x => x.Segment == segment && x.DocType == doctype && x.Date == date && x.IsMailer == 0);
   }
   filterarbitrationDocumentWithDateForApplication(segment: any, date: any) {
+
     return this.ArbitrationDocs.filter(x => x.Segment == segment && x.ReferenceDocumentId == 0 && x.Date == date && x.IsMailer == 0);
   }
   filterarbitrationDocumentWithUniqueApplication(segment: any) {
@@ -4332,6 +4341,7 @@ doc=this.DraftAwards[0].DocumentName;
 
   }
   changeTab(tab: any) {
+    this.GetAllArbitrationDocuments()
     this.Tab = tab;
 
   }

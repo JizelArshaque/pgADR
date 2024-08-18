@@ -1192,3 +1192,41 @@ a {
     font-weight: 600 !important;
   }
 }
+.status-container {
+  display: flex;
+  gap: 10px;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #000; /* Ensures the text color is black */
+}
+
+.status-item::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 3px;
+}
+
+.red::before {
+  background-color: red;
+}
+
+.orange::before {
+  background-color: orange;
+}
+
+.blue::before {
+  background-color: blue;
+}
+
+.green::before {
+  background-color: green;
+}
