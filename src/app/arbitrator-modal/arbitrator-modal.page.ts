@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+// import { ModalController, NavParams } from '@ionic/angular';
 
 import { DocumentUploadCDN } from 'src/class/DocumentUploadCDN';
 import { DocViewerPage } from '../doc-viewer/doc-viewer.page';
@@ -10,6 +10,8 @@ import { Location } from '@angular/common';
 import { Router, NavigationExtras } from '@angular/router';
 import { ArbitrationServiceService } from '../arbitration-service.service';
 import { AlertService } from 'src/shared/alert-info/alert.service';
+import { IonicModule, LoadingController, ModalController, NavController, NavParams } from '@ionic/angular';
+
 
 
 @Component({
@@ -78,7 +80,8 @@ export class ArbitratorModalPage implements OnInit {
   AppointedArbitrator: any
   reason: string = '';
   IsMessage: number = 0;
-  constructor( public alertservice: AlertService,private router: Router,private location: Location, private modalController: ModalController, private arbitrationservice: ArbitrationServiceService, public navParams: NavParams) {
+  isButtonDisabled = false;
+  constructor( public alertservice: AlertService,private router: Router,private location: Location, private modalController: ModalController, private arbitrationservice: ArbitrationServiceService, public navParams: NavParams,private loadingCtrl: LoadingController) {
     this.GetAllADRProfessional();
     this.GetAllConstitutionalTribunal();
     if (this.navParams.get("Arbitration")) {
@@ -148,29 +151,42 @@ export class ArbitratorModalPage implements OnInit {
 
     }
   }
-  removeSelected() {
+  async removeSelected() {
+    // Show the loader
+    const loading = await this.loadingCtrl.create({
+      message: 'Please wait...'
+    });
+    await loading.present();
+  
     if (!!this.AppointedArbitrator) {
-      this.arbitrationservice.GenerateArbitrationFileNumber(this.ArbitrationDetails.Id, this.IsMessage, this.reason).subscribe(data => {
-        if (!!data) {
-          if (this.IsMessage == 4) {
-            alert("Defects in Disclosure Notified.");
-
+      this.arbitrationservice.GenerateArbitrationFileNumber(this.ArbitrationDetails.Id, this.IsMessage, this.reason).subscribe({
+        next: (data) => {
+          if (!!data) {
+            if (this.IsMessage == 4) {
+              alert("Defects in Disclosure Notified.");
+            } else if (this.IsMessage == 5) {
+              alert("Arbitrator Removed.");
+            }
+            this.selectedArbitrator = null; 
+            this.AppointedArbitrator = null;
+            this.back();
           }
-          else if (this.IsMessage == 5) {
-            alert("Arbitrator Removed.");
-
-          }
-          this.selectedArbitrator=null; 
-          this.AppointedArbitrator=null;
-        this.back()
+          loading.dismiss(); // Dismiss the loader after processing
+        },
+        error: (err) => {
+          loading.dismiss(); // Ensure loader is dismissed on error
+          console.error('Error:', err);
+          alert("An error occurred. Please try again.");
         }
       });
+    } else if (!!this.selectedArbitrator) {
+      this.selectedArbitrator = null;
+      loading.dismiss(); // Dismiss the loader if no API call is made
+    } else {
+      loading.dismiss(); // Dismiss the loader if no condition is met
     }
-    else if(!!this.selectedArbitrator){
-      this.selectedArbitrator=null;
-    }
-
   }
+  
 
   viewProfile(selectedId: any) {
     const secureCode = selectedId;
@@ -588,15 +604,39 @@ export class ArbitratorModalPage implements OnInit {
         return '';
     }
   }
- 
-  ConstituteArbitrator() {
-    this.arbitrationservice.ConstituteTribunalExpedited(this.ArbitrationDetails.Id, JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id).subscribe(data => {
-      if (!!data && data.Id > 0) {
-        alert("Arbitrator Appointed.");
-        this.back();
+ // Appoint Arbitrator
+  async ConstituteArbitrator() {
+    this.isButtonDisabled=true
+    let loading = await this.loadingCtrl.create({
+      message: 'Please wait...'
+    });
+    await loading.present();
+
+    console.log( this.ArbitrationDetails.Id, 
+      JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id,"joi")
+    debugger;
+  
+    this.arbitrationservice.ConstituteTribunalExpedited(
+      this.ArbitrationDetails.Id, 
+      JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id
+    ).subscribe({
+      next: (data) => {
+        loading.dismiss(); // Dismiss the loader after the API response
+        this.isButtonDisabled=false
+        if (!!data && data.Id > 0) {
+          alert("Arbitrator Appointed.");
+          this.back();
+        }
+      },
+      error: (err) => {
+        loading.dismiss(); // Dismiss the loader even if there's an error
+        this.isButtonDisabled=false
+        console.error('Error constituting arbitrator:', err);
+        alert("There was an error appointing the arbitrator. Please try again.");
       }
     });
   }
+  
   ShowMessage(type: any) {
     this.IsMessage = type;
 

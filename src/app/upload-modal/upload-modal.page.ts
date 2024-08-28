@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
 import { ArbitrationServiceService } from '../arbitration-service.service';
 import { DocumentUploadCDN } from 'src/class/DocumentUploadCDN';
 import { DocViewerPage } from '../doc-viewer/doc-viewer.page';
@@ -8,6 +7,9 @@ import { AddLaweyers } from 'src/class/AddLawyers';
 import { Videocalluser } from 'src/service/Videocalluser.service';
 import { DatePipe } from '@angular/common';
 import { AlertService } from 'src/shared/alert-info/alert.service';
+import { IonicModule, LoadingController, ModalController, NavController, NavParams } from '@ionic/angular';
+
+
 
 
 @Component({
@@ -61,8 +63,10 @@ export class UploadModalPage implements OnInit {
   DocType: any;
   ReferenceDocument: any;
   CaseManagementProcedure: any[]=[];
+  isButtonDisabled = false;
 
-  constructor(public alertservice: AlertService, public videocallUserservice: Videocalluser, private modalController: ModalController, private arbitrationservice: ArbitrationServiceService, public navParams: NavParams) {
+
+  constructor(public alertservice: AlertService, public videocallUserservice: Videocalluser, private modalController: ModalController, private arbitrationservice: ArbitrationServiceService, public navParams: NavParams,private loadingCtrl: LoadingController) {
     if (this.navParams.get("Arbitration")) {
       this.ArbitrationDetails = this.navParams.get("Arbitration");
       this.ArbitrationParties = this.navParams.get("ArbitrationParties");
@@ -219,7 +223,9 @@ this.applicationtype=this.navParams.get("Applicationtype");
       "Id": this.selectedID
     };
     let url = this.userurl;
+    debugger
     if (this.userurl == null) {
+      debugger
       url = this.FilterArbitrationParties(this.userside, this.usertype).find(x => x.Id == this.selectedID).AuthorisationUrl;
       desiredData = {
         "IdList": [{ "Id": JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id }],
@@ -227,12 +233,14 @@ this.applicationtype=this.navParams.get("Applicationtype");
       };
     }
     else {
+      debugger
       desiredData = {
         "IdList": currentData.Id.map(id => ({ "Id": id })),
         "SecretCode": url
       };
     }
     this.arbitrationservice.InsertAuthorisationofMultipleLawyers(desiredData).subscribe((data: any) => {
+      debugger
       if (data) {
         alert("Document Uploaded");
         window.location.reload();
@@ -497,25 +505,57 @@ this.applicationtype=this.navParams.get("Applicationtype");
     }
 
   }
-  GenerateFIleNumber(type: any) {
-    this.arbitrationservice.GenerateArbitrationFileNumber(this.ArbitrationDetails.Id, type, this.message).subscribe((data: any) => {
-      if (!!data && data.Id > 0) {
-        if (type == 1) {
-          alert("File Number Generated and sent!");
+  async GenerateFIleNumber(type: any) {
+    this.isButtonDisabled = true;
+    const loading = await this.loadingCtrl.create({
+      message: 'Please wait...'
+    });
+    await loading.present();
+  
+    this.arbitrationservice.GenerateArbitrationFileNumber(this.ArbitrationDetails.Id, type, this.message).subscribe({
+      next: (data: any) => {
+        loading.dismiss();
+        this.isButtonDisabled = false;
+  
+        if (!!data && data.Id > 0) {
+          switch (type) {
+            case 1:
+              alert("File Number Generated and sent!");
+              break;
+            case 2:
+              alert("Defective filing intimation sent!");
+              break;
+            case 3:
+              alert("Arbitration has been Dismissed and intimation sent!");
+              break;
+            default:
+              alert("Unknown operation.");
+          }
+          this.back(null);
         }
-        else if (type == 2) {
-          alert("Defective filing intimation sent!");
-        }
-        else if (type == 3) {
-          alert("Arbitration has been Dismissed and intimation sent!");
-        }
-        this.back(null);
+      },
+      error: (err) => {
+        loading.dismiss();
+        this.isButtonDisabled = false;
+        console.error('Error generating file number:', err);
+        alert("There was an error processing your request. Please try again.");
       }
     });
   }
-  CommenttoClaimant() {
-    this.arbitrationservice.CommentClaimant(this.message, this.ArbitrationParties.filter(x => x.Type == 0 && x.Side == 0)[0].Email, this.ArbitrationParties.filter(x => x.Type == 0 && x.Side == 0)[0].Name, this.ArbitrationDetails.Id).subscribe((data: any) => {
-      if (!!data && data.Id > 0) {
+  
+ async CommenttoClaimant() {  
+
+  this.isButtonDisabled = true;
+    const loading = await this.loadingCtrl.create({
+      message: 'Please wait...'
+    });
+    await loading.present();
+    this.arbitrationservice.CommentClaimant(this.message, this.ArbitrationParties.filter(x => x.Type == 0 && x.Side == 0)[0].Email,this.ArbitrationParties.filter(x => x.Type == 0 && x.Side == 0)[0].Mobile, this.ArbitrationParties.filter(x => x.Type == 0 && x.Side == 0)[0].Name, this.ArbitrationDetails.Id).subscribe((data: any) => {
+      loading.dismiss();
+      this.isButtonDisabled = false;
+
+      if (!!data && data[0].Id > 0) {
+       
         alert("Comment Sent! ");
         this.back(null);
       }
@@ -580,53 +620,48 @@ this.applicationtype=this.navParams.get("Applicationtype");
       }
     })
   }
-  UploadArbitrationDocument() {
+  async UploadArbitrationDocument() {
     if (!!this.exhibits && this.exhibits.length > 0) {
-      if (this.exhibits.filter(x => x.Type == 0).length == 0) {
-        if (confirm("are you sure to Upload " + this.doctype + " without exhibits ?")) {
-          let doc = this.exhibits.filter(x => x.DocType != 0)[0];
-          this.arbitrationservice.UploadArbitrationDocument(doc).subscribe((data: any) => {
-            if (data) {
-              if (data.Id > 0 && data.Error == 0) {
-                // if (this.exhibits.filter(x => x.Type != 0).length > 0) {
-                //   this.exhibits.find(x => x.Type != 0).Id = data.Id;
-                // }
-                // this.SavePleadingsandExhibits();
-                alert(this.doctype + " submitted successfully");
-          this.back(null);
-
-              } else {
-                this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
-              }
-            }
-            else {
-              this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
-            }
-          });
-        }
-
+      const noExhibits = this.exhibits.filter(x => x.Type == 0).length == 0;
+  
+      if (noExhibits) {
+        const confirmed = confirm(`Are you sure you want to upload ${this.doctype} without exhibits?`);
+        if (!confirmed) return;
       }
-      else {
-        let doc = this.exhibits.filter(x => x.DocType != 0)[0];
-        this.arbitrationservice.UploadArbitrationDocument(doc).subscribe((data: any) => {
-          if (data) {
-            if (data.Id > 0 && data.Error == 0) {
-              if (this.exhibits.filter(x => x.Type != 0).length > 0) {
-                this.exhibits.find(x => x.Type != 0).Id = data.Id;
-              }
+      this.isButtonDisabled = true;
+      const doc = this.exhibits.filter(x => x.DocType != 0)[0];
+      const loading = await this.loadingCtrl.create({
+        message: 'Please wait...'
+      });
+      await loading.present();
+  
+      this.arbitrationservice.UploadArbitrationDocument(doc).subscribe({
+        next: (data: any) => {
+          loading.dismiss();
+          this.isButtonDisabled = false;
+  
+          if (data && data.Id > 0 && data.Error == 0) {
+            if (!noExhibits) {
+              this.exhibits.find(x => x.Type != 0).Id = data.Id;
               this.SavePleadingsandExhibits();
-
-            } else {
-              this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
             }
+            alert(`${this.doctype} submitted successfully`);
+            this.back(null);
+          } else {
+            this.alertservice.Alert("Error While Upload", 3, () => { }, () => { });
           }
-          else {
-            this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
-          }
-        });
-      }
+        },
+        error: (err) => {
+          loading.dismiss();
+          this.isButtonDisabled = false;
+
+          console.error('Error uploading document:', err);
+          this.alertservice.Alert("Error While Upload", 3, () => { }, () => { });
+        }
+      });
     }
   }
+  
   UploadDocumentCDN(doc: any) {
     this.arbitrationservice.UploadDocumentCDN(doc).subscribe((data: any) => {
       if (data) {

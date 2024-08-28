@@ -21,7 +21,7 @@
 
               <ion-row >
                
-                <div class="form-group col-lg-6 col-md-12">
+                <div class="form-group col-lg-6 col-md-12" >
                   <label >Email<font>*</font>
                   </label>
                   <input type="text" class="form-control" [(ngModel)]="Email" (change)="SearchEmail()" />
@@ -92,9 +92,11 @@
                 
                 <div class="form-group  col-lg-4 col-md-12">
                   <label>Country*</label>
+                 
                   <ionic-selectable class="form-control" [(ngModel)]="cntry" [items]="Country" itemValueField="id"
-                    itemTextField="name" [canSearch]="true" (onChange)="GetAllStates($event)">
+                    itemTextField="name" [canSearch]="true" (onChange)="GetAllStates($event)" >
                   </ionic-selectable>
+                  
 
                 </div>
                 <div class="form-group  col-lg-4 col-md-12">
@@ -118,7 +120,7 @@
                     <ion-col col-12>
                       <div class="row">
                       <div class="col-6">
-                        <button class="btn purple-btn" (click)="AdditionalPartyAdd()" *ngIf="PartyType !== 2">Save</button>
+                        <button class="btn purple-btn" (click)="AdditionalPartyAdd()" *ngIf="PartyType !== 2"  [disabled]="isButtonDisabled">Save</button>
 
                         <button  class="btn purple-btn" (click)="AdditionalLawyerAdd()"  *ngIf="PartyType==2">Save Lawyer</button>
                         

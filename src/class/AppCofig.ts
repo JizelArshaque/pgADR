@@ -15,6 +15,8 @@ export class AppConfig {
       tinymce_key:string='oy0eq7kh654au69k6y1iwhshbfd072aui99snyhsiwb6iu0y';
       DigitalCardLink:string='https://card.peacegate.in/digital-card';
       SocketServerLink="https://socket.sopanam.in";
+      AdminAssets="https://pgadmin.initstore.com"
+      AdminpgURL="https://pgadmin.initstore.com/api"
 
       // url:string='https://admin.peacegate.in/api';  
       // AssetUrl:string='https://admin.peacegate.in';

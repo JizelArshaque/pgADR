@@ -1,5 +1,7 @@
 import { HostListener, Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+
+import { IonicModule, LoadingController, ModalController, NavController, NavParams } from '@ionic/angular';
+
 import { ArbitrationServiceService } from '../arbitration-service.service';
 import { AppConfig } from 'src/class/AppCofig';
 import { DatePipe, DecimalPipe } from '@angular/common';
@@ -51,7 +53,8 @@ export class ProceduralOrderPage implements OnInit {
   ReferenceDocument: any;
   CaseManagementProcedure: any[] = [];
   ArbitrationDocs: any[] = [];
-  constructor(private router: Router,private alertservice:AlertService, private modalController: ModalController, private arbitrationservice: ArbitrationServiceService, public navParams: NavParams) {
+  isButtonDisabled = false;
+  constructor(private loadingCtrl: LoadingController,private router: Router,private alertservice:AlertService, private modalController: ModalController, private arbitrationservice: ArbitrationServiceService, public navParams: NavParams) {
     if (this.navParams.get("ArbitrationDetails")) {
       this.ArbitrationDetails = this.navParams.get("ArbitrationDetails");
       this.ArbitrationParties = this.navParams.get("ArbitrationParties");
@@ -504,11 +507,15 @@ export class ProceduralOrderPage implements OnInit {
     }
   }
   }
-  CreateDocument() {
+  async CreateDocument() {
+    this.isButtonDisabled = true;
+    let loading = await this.loadingCtrl.create({
+        message: 'Please wait...'
+    });
+    await loading.present();
 
-   // if (this.Type == 10) {
-      this.doc.CaseManagement = this.CaseManagementDetails;
-   // }
+    // Set document properties
+    this.doc.CaseManagement = this.CaseManagementDetails;
     this.doc.ArbitrationId = this.ArbitrationDetails.Id;
     this.doc.Side = this.user.Side;
     this.doc.UserId = this.user.Id;
@@ -520,17 +527,38 @@ export class ProceduralOrderPage implements OnInit {
     this.doc.Name = this.user.Name;
     this.doc.Email = this.user.Email;
     this.doc.Mobile = this.user.Mobile;
-    if (!!this.ReferenceDocument) { this.doc.ReferenceDocumentId = this.ReferenceDocument.Id; } else { this.doc.ReferenceDocumentId = 0; }
-    if (!this.doc.ScheduleDate || (!!this.doc.ScheduleDate && this.doc.ScheduleDate.length < 2)) {
-      this.doc.ScheduleDate = '01-Jan-1901';
+
+    // Handle reference document
+    this.doc.ReferenceDocumentId = !!this.ReferenceDocument ? this.ReferenceDocument.Id : 0;
+
+    // Handle ScheduleDate
+    if (!this.doc.ScheduleDate || (this.doc.ScheduleDate.length < 2)) {
+        this.doc.ScheduleDate = '01-Jan-1901';
     }
-    this.arbitrationservice.UploadArbitrationDocument(this.doc).subscribe((data) => {
-      if (!!data && data.Id > 0 && data.Error == 0) {
-        alert("Document Created Successfully ");
-        this.back();
-      }
-    });
-  }
+console.log(this.doc) ;debugger
+
+
+    // API call to upload the document
+    this.arbitrationservice.UploadArbitrationDocument(this.doc).subscribe(
+        (data) => {
+            loading.dismiss();
+            this.isButtonDisabled = false; // Dismiss the loader after the API response
+
+            if (!!data && data.Id > 0 && data.Error == 0) {
+                alert("Document Created Successfully");
+                this.back();
+            } else {
+                alert("Error creating document");
+            }
+        },
+        (error) => {
+          this.isButtonDisabled = false;
+            loading.dismiss(); // Dismiss the loader even if there's an error
+            alert("An error occurred while creating the document!");
+        }
+    );
+}
+
 
   CheckEditorDisable() {
     if (this.Tab == 4) {

@@ -1,7 +1,7 @@
 
 import { Component, ElementRef, OnInit, ViewChild, Renderer2, HostListener, AfterViewInit, RendererStyleFlags2 } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { AlertController, IonContent, ModalController, PopoverController, ToastController } from '@ionic/angular';
+import { AlertController, IonContent, ModalController, PopoverController, ToastController,LoadingController } from '@ionic/angular';
 // import { IMediaTrack, IRemoteUser } from 'ngx-agora-sdk-ng';
 import { DatePipe } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -31,6 +31,7 @@ import { AlertService } from 'src/shared/alert-info/alert.service';
 import { ReportIssue } from 'src/class/ReportIssue';
 import { DocumentUploadCDN } from 'src/class/DocumentUploadCDN';
 import { TokenEncryptionService } from '../././../service/token-encryption.service';
+
 
 
 
@@ -341,6 +342,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
   DraftAwards: any[] = [];
   AllScrutinyComments: any[] = [];
   ArbitrationDetailId: any;
+  filteredDates: any[] = [];
 
   constructor(private elementRef: ElementRef, private toastController: ToastController, private renderer: Renderer2, private el: ElementRef, private popoverController: PopoverController, public loginservice: LoginService,
     public videochatservice: TestProvider, public videocallUserservice: Videocalluser,
@@ -348,7 +350,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
     private activatedRoute: ActivatedRoute, private arbitrationservice: ArbitrationServiceService,
     private modalService: NgbModal, private router: Router, public alertservice: AlertService,
     public videostream: RtcstreamService, private datePipe: DatePipe,
-    private TokenEncryptionService: TokenEncryptionService,
+    private TokenEncryptionService: TokenEncryptionService,private loadingCtrl: LoadingController
 
   ) {
     this.initializeAudioTrack();
@@ -635,7 +637,6 @@ export class DashboardPage implements OnInit, AfterViewInit {
   }
 
   GetAllArbitrationDetailsId(){
-    debugger
 
     this.arbitrationservice.GetArbitrationIdWithSecreteCode(this.SecreteCode).subscribe(data => {
       if (data) {
@@ -727,14 +728,22 @@ export class DashboardPage implements OnInit, AfterViewInit {
   // }
 
   async openArbitrationModal() {
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Please wait...'
+    });
+    await loading.present();
+  
+    // Fetch arbitration parties
     const arbitrationPartiesFetched = await this.GetAllArbitrationParties();
   
     if (arbitrationPartiesFetched) {
-      console.log(" this.ArbitrationParties", this.ArbitrationParties);
-      debugger;
+      console.log("this.ArbitrationParties", this.ArbitrationParties);
+  
+      // Create and present the modal
       const modal = await this.modalController.create({
         component: ArbitratorModalPage,
-        cssClass: 'my-modal',
+        cssClass: 'my-modal,',
         componentProps: {
           Arbitration: this.ArbitrationDetails,
           ArbitrationParties: this.ArbitrationParties,
@@ -745,7 +754,15 @@ export class DashboardPage implements OnInit, AfterViewInit {
         // Handle data returned from the modal
       });
   
+      // Dismiss the loader before presenting the modal
+      loading.dismiss();
+  
       await modal.present();
+    } else {
+      // If fetching arbitration parties fails, dismiss the loader
+      loading.dismiss();
+      // Optionally, show an error message
+      this.alertservice.Alert("Failed to load arbitration parties. Please try again.", 3, () => { }, () => { });
     }
   }
   
@@ -804,7 +821,6 @@ export class DashboardPage implements OnInit, AfterViewInit {
 
         this.CaseManagementProcedure = <Array<any>>data;
         console.log(this.CaseManagementProcedure,"==========case===")
-        debugger
       }
     });
   }
@@ -1438,7 +1454,6 @@ doc=this.DraftAwards[0].DocumentName;
 
           localStorage.setItem("ADR_Dashboard_User", JSON.stringify(this.Logindata));
 
-          debugger
           this.GetAllArbitrationDetails()
           // this.GetMyArbitrationPartyDetails()
           // // this.GetAllArbitrationDetails()
@@ -1801,10 +1816,13 @@ doc=this.DraftAwards[0].DocumentName;
       await modal.present();
     }
   }
-
+  simple(){
+    alert("clicked")
+  }
 
 
   async OpenCreatedDoc(type: any, doc: any) {
+    console.log("!@#$%^^^^^^^^^^^^")
     const modal = await this.modalController.create({
       component: DocViewerPage, cssClass: 'my-modal',
       // You can pass data to the modal using the componentProps option if needed
@@ -2154,6 +2172,8 @@ doc=this.DraftAwards[0].DocumentName;
     }
   }
   toggleCollapse11() {
+    
+
     if (this.collapsed11 == 'collapse') {
       this.collapsed11 = ''
     } else {
@@ -2368,6 +2388,7 @@ doc=this.DraftAwards[0].DocumentName;
     }
   }
   OpenDocument(filename: any, path: any) {
+    console.log(filename,path,"file name=================")
 
     this.isMenuVisible = false;
     this.document_class = 'document-wrapper visible-document';
@@ -2377,13 +2398,36 @@ doc=this.DraftAwards[0].DocumentName;
     //}
 
   }
+
+  OpenDocumentforArbitrationRequest(filename: any, path: any) {
+
+    this.isMenuVisible = false;
+    this.document_class = 'document-wrapper visible-document';
+    this.selecteddocument = this.appconfig.AdminAssets + "/assets/images/" + path + '/' + filename;
+    //if (this.IsVideo) {
+    this.isPeacegatePaddingLeft = true;
+    //}
+
+  }
+
+
   GetAllArbitrationDocuments() {
     this.arbitrationservice.spGetAllArbitrationDocuments(this.ArbitrationDetails.Id).subscribe(data => {
       if (!!data && data.length > 0) {
         this.ArbitrationDocs = <Array<any>>data;
-        debugger
         console.log(this.ArbitrationDocs,"================docs============")
-        debugger
+        this.filteredDates = this.FilterDashboardDatesWithSegments(1);
+
+        // Check if the array has more than one element and trim it to only the first one
+        this.filteredDates = this.FilterDashboardDatesWithSegments(1);
+
+        // Check if the array has exactly two elements
+        if (this.filteredDates.length === 2) {
+          this.filteredDates.shift(); // Remove the first element
+        }
+        
+        
+        
         this.DraftAwards = this.ArbitrationDocs.filter(x => x.Status == 2);
       //  this.ArbitrationDocs = this.ArbitrationDocs.filter(x => x.Status == 0);
         this.dashboarddate = [...new Map(this.ArbitrationDocs.map(item => [item['Date'], item])).values()];
@@ -2416,6 +2460,8 @@ doc=this.DraftAwards[0].DocumentName;
       }
       dashboarddate = [...new Map(dashboarddate.map(item => [item['Date'], item])).values()];
       dashboarddate = dashboarddate.sort((a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime());
+      
+      
       return dashboarddate;
     }
     else if (type == 2) {
@@ -3259,6 +3305,7 @@ doc=this.DraftAwards[0].DocumentName;
 
     });
     modal.onDidDismiss().then((modelData) => {
+      this.GetAllArbitrationPartiesonly()
       this.GetAllArbitrationParties();
     });
     await modal.present();
@@ -4363,7 +4410,7 @@ doc=this.DraftAwards[0].DocumentName;
       case 6:
         return 'Fee Payment';
       case 7:
-        return 'Feedback';
+        return 'Parties';
       case 8:
         return 'My Notes';
       default:

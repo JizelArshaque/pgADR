@@ -28,7 +28,7 @@ export class ArbitrationServiceService {
     this.decryptiondata = this.tokenservice.DecryptToken();
   }
 
-
+//core
   UpdateArebitration(arb:any)
   {  
     this.GetDecryptedData();
@@ -43,6 +43,17 @@ export class ArbitrationServiceService {
     let options = { headers: headers };
     return this.http.post<any>(this.appConfig.url +'/Arbitration/InsertArbitration',arb, options).pipe(map(res=>res));
   } 
+
+  //old Api
+  // UpdateArebitration(arb:any)
+  // {  
+  //    let headers = new HttpHeaders();
+  //   headers.append("Accept", 'application/json');
+  //   headers.append('Content-Type', 'application/json');
+  //   let options = { headers: headers };
+  //   return this.http.post<any>(this.appConfig.AdminpgURL +'/Arbitration',arb, options).pipe(map(res=>res));
+  // } 
+
   GetArbitrationDetailsWithSecreteCode(SecreteCode:any)
   {  
     this.GetDecryptedData();
@@ -385,13 +396,14 @@ export class ArbitrationServiceService {
   }
   InsertAuthorisationofMultipleLawyers(Lawyers:any)
   {
-    this.GetDecryptedData()
-    
-      let headers = new HttpHeaders();
-    headers.append("Accept", 'application/json');
-    headers.append('Content-Type', 'application/json');
-    let options ={ headers: headers };
-    return this.http.post<any>(this.appConfig.url +'/LawyerAuth/SpInserLawyerVakalat',Lawyers, options).pipe(map(res=>res)); 
+    this.GetDecryptedData();
+  
+  let headers = new HttpHeaders()
+    .set("Accept", 'application/json')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + this.decryptiondata);
+  let options = { headers: headers };
+    return this.http.post<any>(this.appConfig.url +'/LawyerAuth/InsertLawyerVakalat',Lawyers, options).pipe(map(res=>res)); 
   }
   GetAllGeneralSettings()
   {
@@ -556,7 +568,7 @@ export class ArbitrationServiceService {
     let options = { headers: headers };
     return this.http.get<any>(this.appConfig.url +'/Arbitration/Generatefilenumber?arbidfilenumber='+id+'&type='+type+'&message='+ encodeURIComponent(message) , options).pipe(map(res=>res)); 
   }
-  CommentClaimant(message:string,email:string,name:string,arbid:any)
+  CommentClaimant(message:string,email:string,Mobile:string,name:string,arbid:any)
   {  
       
     this.GetDecryptedData();
@@ -567,7 +579,7 @@ export class ArbitrationServiceService {
       .set('Authorization', 'Bearer ' + this.decryptiondata);
 
     let options = { headers: headers };
-    return this.http.get<any>(this.appConfig.url +'/Arbitration/SendMessageToClaimant?message='+message+'&email='+email+'&name='+name+"&arbitrationid="+arbid, options).pipe(map(res=>res)); 
+    return this.http.get<any>(this.appConfig.url +'/Arbitration/SendMessageToClaimant?message='+message+'&email='+email+'&name='+name+'&Mobile='+Mobile+"&arbitrationid="+arbid, options).pipe(map(res=>res)); 
   }
   SpReportIssue(ReportIssue:any)
   

@@ -653,14 +653,16 @@
               effect was given to the Arbitrator/Presiding Arbitrator on [date]. This date shall be considered as the
               “Date of Reference”.
             </li><br>
-            <li><b>6. Time schedule of arbitration:
+            <li><b>6. Time schedule of arbitration1:
               </b></li><br>
-            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before
-              [date] as per {{ArbitrationDetails.ArbitrationAgreementType==3? 'Rule 10(a) of the IIAM Expedited
-              Arbitration Rules':*ngIf="ArbitrationDetails.ArbitrationAgreementType==2?'Rule 11(d)(iv) of the IIAM
-              Arbitration Rules, since
-              the parties had opted Fast-track procedure':'Rule 14 of the IIAM Arbitration Rules'}}.
-            </li><br>
+            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before [date] as per 
+              {{ ArbitrationDetails.ArbitrationAgreementType == 3 ? 
+                  'Rule 10(a) of the IIAM Expedited Arbitration Rules' : 
+                  ArbitrationDetails.ArbitrationAgreementType == 2 ? 
+                  'Rule 11(d)(iv) of the IIAM Arbitration Rules, since the parties had opted for Fast-track procedure' : 
+                  'Rule 14 of the IIAM Arbitration Rules' 
+              }}.
+                    </li><br>
             <li>6.2 [In case IIAM or the parties have extended the time schedule]
               IIAM/Parties had agreed to extend the time schedule of arbitration vide Procedural Order No. [ ] dated [ ]
               and it was decided to complete the proceedings on or before [date].
@@ -899,14 +901,16 @@
               effect was given to the Arbitrator/Presiding Arbitrator on [date]. This date shall be considered as the
               “Date of Reference”.
             </li><br>
-            <li><b>6. Time schedule of arbitration:
+            <li><b>
               </b></li><br>
-            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before
-              [date] as per {{ArbitrationDetails.ArbitrationAgreementType==3? 'Rule 10(a) of the IIAM Expedited
-              Arbitration Rules':*ngIf="ArbitrationDetails.ArbitrationAgreementType==2?'Rule 11(d)(iv) of the IIAM
-              Arbitration Rules, since
-              the parties had opted Fast-track procedure':'Rule 14 of the IIAM Arbitration Rules'}}.
-            </li><br>
+            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before [date] as per 
+              {{ ArbitrationDetails.ArbitrationAgreementType == 3 ? 
+                  'Rule 10(a) of the IIAM Expedited Arbitration Rules' : 
+                  ArbitrationDetails.ArbitrationAgreementType == 2 ? 
+                  'Rule 11(d)(iv) of the IIAM Arbitration Rules, since the parties had opted for Fast-track procedure' : 
+                  'Rule 14 of the IIAM Arbitration Rules' 
+              }}.
+              </li><br>
             <li>6.2 [In case IIAM or the parties have extended the time schedule]
               IIAM/Parties had agreed to extend the time schedule of arbitration vide Procedural Order No. [ ] dated [ ]
               and it was decided to complete the proceedings on or before [date].
@@ -1145,10 +1149,10 @@
               effect was given to the Arbitrator/Presiding Arbitrator on [date]. This date shall be considered as the
               “Date of Reference”.
             </li><br>
-            <li><b>6. Time schedule of arbitration:
+            <li><b>6. Time schedule of arbitration2:
               </b></li><br>
             <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before
-              [date] as per {{ArbitrationDetails.ArbitrationAgreementType==3? 'Rule 10(a) of the IIAM Expedited
+              [date] as per {{ArbitrationDetails.ArbitrationAgreementType==3? 'Rule 10(a) ofs the IIAM Expedited
               Arbitration Rules':*ngIf="ArbitrationDetails.ArbitrationAgreementType==2?'Rule 11(d)(iv) of the IIAM
               Arbitration Rules, since
               the parties had opted Fast-track procedure':'Rule 14 of the IIAM Arbitration Rules'}}.
@@ -1391,13 +1395,17 @@
               effect was given to the Arbitrator/Presiding Arbitrator on [date]. This date shall be considered as the
               “Date of Reference”.
             </li><br>
-            <li><b>6. Time schedule of arbitration:
+            <li><b>6. Time schedule of arbitration4:
               </b></li><br>
-            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before
-              [date] as per {{ArbitrationDetails.ArbitrationAgreementType==3? 'Rule 10(a) of the IIAM Expedited
-              Arbitration Rules':*ngIf="ArbitrationDetails.ArbitrationAgreementType==2?'Rule 11(d)(iv) of the IIAM
-              Arbitration Rules, since
-              the parties had opted Fast-track procedure':'Rule 14 of the IIAM Arbitration Rules'}}.
+            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before [date] as per 
+              {{ 
+                ArbitrationDetails.ArbitrationAgreementType == 3 ? 
+                  'Rule 10(a) of the IIAM Expedited Arbitration Rules' : 
+                  ArbitrationDetails.ArbitrationAgreementType == 2 ? 
+                  'Rule 11(d)(iv) of the IIAM Arbitration Rules, since the parties had opted for Fast-track procedure' : 
+                  'Rule 14 of the IIAM Arbitration Rules' 
+              }}.
+              
             </li><br>
             <li>6.2 [In case IIAM or the parties have extended the time schedule]
               IIAM/Parties had agreed to extend the time schedule of arbitration vide Procedural Order No. [ ] dated [ ]
@@ -1637,13 +1645,17 @@
               effect was given to the Arbitrator/Presiding Arbitrator on [date]. This date shall be considered as the
               “Date of Reference”.
             </li><br>
-            <li><b>6. Time schedule of arbitration:
+            <li><b>6. Time schedule of arbitration3:
               </b></li><br>
-            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before
-              [date] as per {{ArbitrationDetails.ArbitrationAgreementType==3? 'Rule 10(a) of the IIAM Expedited
-              Arbitration Rules':*ngIf="ArbitrationDetails.ArbitrationAgreementType==2?'Rule 11(d)(iv) of the IIAM
-              Arbitration Rules, since
-              the parties had opted Fast-track procedure':'Rule 14 of the IIAM Arbitration Rules'}}.
+            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before [date] as per 
+              {{ 
+                ArbitrationDetails.ArbitrationAgreementType == 3 ? 
+                  'Rule 10(a) of the IIAM Expedited Arbitration Rules' : 
+                  ArbitrationDetails.ArbitrationAgreementType == 2 ? 
+                  'Rule 11(d)(iv) of the IIAM Arbitration Rules, since the parties had opted for Fast-track procedure' : 
+                  'Rule 14 of the IIAM Arbitration Rules' 
+              }}.
+              
             </li><br>
             <li>6.2 [In case IIAM or the parties have extended the time schedule]
               IIAM/Parties had agreed to extend the time schedule of arbitration vide Procedural Order No. [ ] dated [ ]
@@ -2119,7 +2131,7 @@
 
     <div style="margin-bottom: 100px;;" class="container  form-wrapper"
       *ngIf="Tab==2 && (!!Type && (Type>7 || Type==2 ||(Type==8 && ApplicationType=='Notice' && DocName=='Notice for Draft Issues')))">
-      <div class="row justify-content-center">
+      <div class="row justify-content-center" style="margin-top: 90px;">
         <div class="form-group col-6" *ngIf="Type==2 ">
           <label>Objection Filing Date</label>
           <input name="User Name" [(ngModel)]="CaseManagementDetails.ClaimStatementFilingDate" type="date"
@@ -2198,7 +2210,7 @@
       <br><br>  <br><br>
       <div class="row justify-content-center" style="margin-bottom: 100px;">
         <div class="col-lg-12" style="text-align: center;" *ngIf="Type!=6">
-          <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;" (click)="Save()">Submit</button>
+          <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;" (click)="Save()"  [disabled]="isButtonDisabled">Submits</button>
           <br>
           <br>
           <br>

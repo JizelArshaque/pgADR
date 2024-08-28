@@ -66,6 +66,8 @@ export class ArbitrationPartyAddPage implements OnInit {
   District: any[] = [];
   cntry: any;
   IsController: number = 0;
+  isButtonDisabled = false;
+  isLoading = false;
   stat: any;
   city: any;
   SecreteCode: any;
@@ -90,6 +92,12 @@ export class ArbitrationPartyAddPage implements OnInit {
       this.Mobile = this.additionalpartyedit.Mobile
       this.Side = this.additionalpartyedit.Side
       this.PartyType = this.additionalpartyedit.Type
+      this.cntry=  this.additionalpartyedit.Country
+      this.stat =this.additionalpartyedit.State
+      this.city=this.additionalpartyedit.City
+
+
+      debugger
       this.Address = this.additionalpartyedit.Address
       this.Designation = this.additionalpartyedit.Designation
       this.AppearFor = this.additionalpartyedit.AppearFor
@@ -102,10 +110,12 @@ export class ArbitrationPartyAddPage implements OnInit {
     }
     if (this.navParams.get("Side")) {
       this.Side = this.navParams.get("Side");
+      debugger
 
     }
     if (this.navParams.get("ArbitrationParties")) {
       this.ArbitrationParties = this.navParams.get("ArbitrationParties");
+      debugger
     }
 
 
@@ -165,6 +175,7 @@ export class ArbitrationPartyAddPage implements OnInit {
           that.Name = data[0].Name;
           that.Mobile = data[0].Mobile;
           that.UserId = data[0].Id;
+         
         }
       }
       else {
@@ -175,106 +186,91 @@ export class ArbitrationPartyAddPage implements OnInit {
 
 
 
-  AdditionalPartyAdd() {
-    this.additionalparty.Side = this.Side
-    if ((this.PartyType === 0 && this.Side === 0) || (this.PartyType === 0 && this.Side === 1)) {
-      if (!this.Email) {
-        alert("Please enter Email");
-        return;
-      }
-      if (!this.Name) {
-        alert("Please enter Name");
-        return;
-      }
-      if (!this.Address) {
-        alert("Please enter Address");
-        return;
-      }
-      if (!this.Country) {
-        alert("Please enter Country");
-        return;
-      }
-      if (!this.State) {
-        alert("Please enter State");
-        return;
-      }
-      if (!this.District) {
-        alert("Please enter District");
-        return;
-      }
-    } else if (this.PartyType === 0 && this.Side === 0) {
-      if (!this.Email) {
-        alert("Please enter Email");
-        return;
-      }
-      if (!this.Name) {
-        alert("Please enter Name");
-        return;
-      }
-      if (!this.Address) {
-        alert("Please enter Address");
-        return;
-      }
-      if (!this.Country) {
-        alert("Please enter Country");
-        return;
-      }
-      if (!this.State) {
-        alert("Please enter State");
-        return;
-      }
-      if (!this.District) {
-        alert("Please enter District");
-        return;
-      }
-      // if (!this.Side) {
-      //   alert("Please enter Side");
-      //   return;
-      // }
-      if (!this.additionalparty.AppearFor) {
-        alert("Please enter Appearing For");
-        return;
-      }
-      // if (!this.AuthorisationUrl) {
-      //   alert("Please enter Lawyer Authorisation Url");
-      //   return;
-      // }
-    } else if (this.PartyType === 5) {
-      if (!this.Email) {
-        alert("Please enter Email");
-        return;
-      }
-      if (!this.Name) {
-        alert("Please enter Name");
-        return;
-      }
-      if (!this.Designation) {
-        alert("Please enter Name");
-        return;
-      }
-      if (!this.Address) {
-        alert("Please enter Address");
-        return;
-      }
-      if (!this.Country) {
-        alert("Please enter Country");
-        return;
-      }
-      if (!this.State) {
-        alert("Please enter State");
-        return;
-      }
-      if (!this.District) {
-        alert("Please enter District");
-        return;
-      }
-      if (!this.PartyType) {
-        alert("Please enter Type");
-        return;
-      }
-    }
+  async AdditionalPartyAdd() {
+   
+    this.additionalparty.Side = this.Side;
 
-    // If all mandatory fields are entered, proceed with the insertion
+    // Validation checks
+    if ((this.PartyType === 0 && this.Side === 0) || (this.PartyType === 0 && this.Side === 1)) {
+        if (!this.Email) {
+            alert("Please enter Email");
+           
+            return;
+        }
+        if (!this.Name) {
+            alert("Please enter Name");
+          
+            return;
+        }
+        if (!this.Address) {
+            alert("Please enter Address");
+            
+            return;
+        }
+        if (!this.cntry) {
+            alert("Please enter Country");
+           
+            return;
+        }
+        if (!this.stat) {
+            alert("Please enter State");
+           
+            return;
+        }
+        if (!this.city) {
+            alert("Please enter city");
+            
+            return;
+        }
+    } else if (this.PartyType === 5) {
+        if (!this.Email) {
+            alert("Please enter Email");
+           
+            return;
+        }
+        if (!this.Name) {
+            alert("Please enter Name");
+          
+            return;
+        }
+        if (!this.Designation) {
+            alert("Please enter Designation");
+            
+            return;
+        }
+        if (!this.Address) {
+            alert("Please enter Address");
+          
+            return;
+        }
+        if (!this.cntry) {
+            alert("Please enter Country");
+            
+            return;
+        }
+        if (!this.State) {
+            alert("Please enter State");
+           
+            return;
+        }
+        if (!this.city) {
+            alert("Please enter city");
+           
+            return;
+        }
+        if (!this.PartyType) {
+            alert("Please enter Type");
+           
+            return;
+        }
+    }
+    let loading = await this.loadingCtrl.create({
+      message: 'Please wait...'
+  });
+  await loading.present();
+
+
+    // Assign values to additionalparty object
     this.additionalparty.Name = this.Name;
     this.additionalparty.Mobile = this.Mobile;
     this.additionalparty.Email = this.Email;
@@ -283,35 +279,44 @@ export class ArbitrationPartyAddPage implements OnInit {
     this.additionalparty.Side = this.Side;
     this.additionalparty.IsController = this.IsController;
     this.additionalparty.Type = this.PartyType;
-    this.additionalparty.ArbitrationId = this.ArbitrationId
+    this.additionalparty.ArbitrationId = this.ArbitrationId;
     this.additionalparty.AddedBy = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id;
 
-    // alert(this.additionalparty.AddedBy)
-    this.ArbitrationService.InsertArbitrationParty(this.additionalparty).subscribe((data: any) => {
-      if (!!data && data.length > 0) {
-        // Response is null, show a success message as an alert
-        if (data[0].Error == 0) {
-          alert("Inserted Successfully");
-          this.back();
-        }
-        else if (data[0].Error == 111) {
-          alert("Error: Party with email already registered !!");
-        }
-        else {
-          alert("Error while saving!!" + data[0].Error.toString());
-        }
-        // Refresh the page
-        // location.reload();
-      } else {
-        alert("Error while saving!!");
-      }
-    });
+    // API call to insert the party
+    this.ArbitrationService.InsertArbitrationParty(this.additionalparty).subscribe(
+        (data: any) => {
+            loading.dismiss(); // Dismiss the loader after the API response
 
-  }
+            if (!!data && data.length > 0) {
+                if (data[0].Error == 0) {
+                    alert("Inserted Successfully");
+                    this.back();
+                } else if (data[0].Error == 111) {
+                    alert("Error: Party with email already registered!!");
+                } else {
+                    alert("Error while saving!! " + data[0].Error.toString());
+                }
+            } else {
+                alert("Error while saving!!");
+            }
+        },
+        (error) => {
+            loading.dismiss(); // Dismiss the loader even if there's an error
+            alert("An error occurred while saving the data!");
+        }
+    );
+}
 
-  AdditionalLawyerAdd() {
 
-    if ((this.PartyType === 0 && this.Side === 0) || (this.PartyType === 0 && this.Side === 1)) {
+
+
+ async AdditionalLawyerAdd() {
+
+   
+    debugger
+
+    if ( this.PartyType === 2 && this.Side === 1) {
+      debugger
       if (!this.Email) {
         alert("Please enter Email");
         return;
@@ -324,19 +329,25 @@ export class ArbitrationPartyAddPage implements OnInit {
         alert("Please enter Address");
         return;
       }
-      if (!this.Country) {
+      if (!this.cntry) {
         alert("Please enter Country");
         return;
       }
-      if (!this.State) {
+      if (!this.stat) {
         alert("Please enter State");
         return;
       }
-      if (!this.District) {
-        alert("Please enter District");
+      if (!this.city) {
+        alert("Please enter city");
         return;
       }
-    } else if (this.PartyType === 0 && this.Side === 0) {
+      // if (!this.additionalparty.AppearFor) {
+      //   debugger
+      //   alert("editibg");
+      //   return;
+      // }
+    } else if (this.PartyType === 2 && this.Side === 0) {
+      debugger
       if (!this.Email) {
         alert("Please enter Email");
         return;
@@ -346,27 +357,29 @@ export class ArbitrationPartyAddPage implements OnInit {
         return;
       }
       if (!this.Address) {
+        debugger
         alert("Please enter Address");
         return;
       }
-      if (!this.Country) {
+      if (!this.cntry) {
         alert("Please enter Country");
         return;
       }
-      if (!this.State) {
+      if (!this.stat) {
         alert("Please enter State");
         return;
       }
-      if (!this.District) {
-        alert("Please enter District");
+      if (!this.city) {
+        alert("Please enter city");
         return;
       }
       // if (!this.Side) {
       //   alert("Please enter Side");
       //   return;
       // }
+      debugger
       if (!this.additionalparty.AppearFor) {
-        alert("Please enter Appearing For");
+        alert("Please enter Appearing");
         return;
       }
       // if (!this.AuthorisationUrl) {
@@ -390,16 +403,16 @@ export class ArbitrationPartyAddPage implements OnInit {
         alert("Please enter Address");
         return;
       }
-      if (!this.Country) {
+      if (!this.cntry) {
         alert("Please enter Country");
         return;
       }
-      if (!this.State) {
+      if (!this.stat) {
         alert("Please enter State");
         return;
       }
-      if (!this.District) {
-        alert("Please enter District");
+      if (!this.city) {
+        alert("Please enter city");
         return;
       }
       if (!this.PartyType) {
@@ -407,6 +420,13 @@ export class ArbitrationPartyAddPage implements OnInit {
         return;
       }
     }
+
+    debugger
+
+    let loading = await this.loadingCtrl.create({
+      message: 'Please wait...'
+  });
+  await loading.present();
 
     // If all mandatory fields are entered, proceed with the insertion
     this.additionalparty.Name = this.Name;
@@ -417,21 +437,33 @@ export class ArbitrationPartyAddPage implements OnInit {
     this.additionalparty.Side = this.additionalparty.Side;
     this.additionalparty.AuthorisationUrl = this.SecreteCode;
     this.additionalparty.Type = this.PartyType;
+
     this.additionalparty.ArbitrationId = this.ArbitrationId
     this.additionalparty.AddedBy = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id;
     // alert(this.additionalparty.AddedBy)
     this.ArbitrationService.InsertArbitrationParty(this.additionalparty).subscribe((data: any) => {
-      if (!!data && data.length > 0 && data[0].Error == 0) {
-        // Response is null, show a success message as an alert
-        alert("Inserted Successfully");
-        window.location.reload()
-        this.back()
+      loading.dismiss(); // Dismiss the loader after the API response
 
+      if (!!data && data.length > 0) {
+        if (data[0].Error == 0) {
+          // Response is null, show a success message as an alert
+          alert("Inserted Successfully");
+          window.location.reload();
+          this.back();
+        } else if (data[0].Error == 111) {
+          // Show specific alert message for error code 111
+          alert("The party mentioned in this email already exists");
+        } else {
+          // Insertion failed, show a generic error message
+          alert("Error while saving details.");
+          window.location.reload();
+        }
       } else {
-        // Insertion failed, show an error message
-        alert("Error while save details.");
-        window.location.reload()
+        // Handle case when data is null or empty
+        alert("No data received.");
+        window.location.reload();
       }
+      
     });
 
   }
