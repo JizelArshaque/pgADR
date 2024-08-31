@@ -130,7 +130,10 @@ export class ProceduralOrderPage implements OnInit {
       }
     }
 
+   
+
   }
+  
   @HostListener('window:popstate', ['$event'])
   onPopState(event: Event) {
     // Get the secure code from local storage
@@ -243,7 +246,12 @@ export class ProceduralOrderPage implements OnInit {
     result.setMonth(result.getMonth() + month);
     return result;
   }
-  ngOnInit() {
+  ngOnInit(): void {
+    // Set timeout to call Edit and change Tab after 20 seconds (20000 milliseconds)
+    setTimeout(() => {
+      this.Edit();     // Call the Edit method
+      this.Tab = 4;    // Set Tab to 4
+    },2500);
   }
   back() {
     this.modalController.dismiss(true);
@@ -348,23 +356,30 @@ export class ProceduralOrderPage implements OnInit {
     }
   }
   Save() {
+    debugger
     if (this.Tab == 0) {
+      debugger
       if (this.Type == 10) {
+        debugger
         this.Tab = 1;
       }
       else if (this.Type == 8 || this.Type == 9 || (this.Type == 2 && this.DocumentType != 6)) {
+        debugger
         this.Tab = 2;
       }
       else {
+        debugger
         this.Edit();
         this.Tab = 4;
       }
     }
     else if (this.Tab == 1) {
+      debugger
       this.Schedule();
       this.Tab = 2;
     }
     else if (this.Tab == 2) {
+      debugger
       if (this.Type == 10) {
         if ((!!this.CaseManagementDetails.NextPostingDateAndTime && this.CaseManagementDetails.NextPostingDateAndTime.length > 0) &&
           (!!this.CaseManagementDetails.NameandAddressofVenue && this.CaseManagementDetails.NameandAddressofVenue.length > 0)) {
@@ -395,6 +410,7 @@ export class ProceduralOrderPage implements OnInit {
 
     }
     else if (this.Tab == 3) {
+      debugger
       this.Edit();
       setTimeout(() => {
         this.Tab = 4;
@@ -402,6 +418,7 @@ export class ProceduralOrderPage implements OnInit {
 
     }
     else if (this.Tab == 4) {
+      debugger
       this.CreateDocument();
     }
   }

@@ -31,8 +31,8 @@ export class DocViewerPage implements OnInit {
     const printContent:any = document.getElementById("print_div_doc");
     var MainWindow:any = window.open('', '', 'height=500,width=800');
     MainWindow.document.write('<html><head><title></title>');
-    MainWindow.document.write('<link rel="stylesheet" type="text/css" href="assets/css/print.css">')
-    MainWindow.document.write("<link rel=\"stylesheet\" href=\"assets/css/print.css\" type=\"text/css\" media=\"print\" />");
+    // MainWindow.document.write('<link rel="stylesheet" type="text/css" href="assets/css/print.css">')
+    //MainWindow.document.write("<link rel=\"stylesheet\" href=\"assets/css/print.css\" type=\"text/css\" media=\"print\" />");
     MainWindow.document.write('<style type="text/css">.border{border:.25px solid  black;}</style>');
     MainWindow.document.write('</head><body onload="window.print();window.close()">');
     MainWindow.document.write(printContent.innerHTML);

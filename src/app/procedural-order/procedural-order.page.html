@@ -1783,7 +1783,7 @@
           <br>
           The {{ReferenceDocument.Side==FilterArbitrationParties(0,0)[0].Side? 'Claimant' : 'Respondent'}} has filed
           {{ReferenceDocument.DocumentNumber}} with respect to {{ReferenceDocument.DocumentName}}. <br><br>
-    [Give your reasoning for allowing or dismissing the application.]<br><br>
+    
           {{ReferenceDocument.Side==FilterArbitrationParties(0,0)[0].Side? 'Respondent' : 'Claimant'}} shall file
           objection on or before <span style="color: #e20f0f;"
             *ngIf="!this.CaseManagementDetails.ClaimStatementFilingDate || (!!this.CaseManagementDetails.ClaimStatementFilingDate && this.CaseManagementDetails.ClaimStatementFilingDate.length==0)">
@@ -2015,7 +2015,7 @@
       <br>
       <div class="col-lg-6" style="text-align: center;padding-bottom: 100px;">
         <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;"
-          (click)="Save()">{{Tab==0?'Edit':'Proceed'}}</button>
+          (click)="Save()">{{Tab==0?'Edit':'Proceed'}}123</button>
       </div>
      
     </div>
@@ -2210,7 +2210,7 @@
       <br><br>  <br><br>
       <div class="row justify-content-center" style="margin-bottom: 100px;">
         <div class="col-lg-12" style="text-align: center;" *ngIf="Type!=6">
-          <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;" (click)="Save()"  [disabled]="isButtonDisabled">Submits</button>
+          <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;" (click)="Save()"  [disabled]="isButtonDisabled">Submit</button>
           <br>
           <br>
           <br>

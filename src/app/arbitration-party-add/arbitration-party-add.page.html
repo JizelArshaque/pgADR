@@ -91,23 +91,23 @@
                 
                 
                 <div class="form-group  col-lg-4 col-md-12">
-                  <label>Country*</label>
+                  <label>Country12* </label>
                  
-                  <ionic-selectable class="form-control" [(ngModel)]="cntry" [items]="Country" itemValueField="id"
-                    itemTextField="name" [canSearch]="true" (onChange)="GetAllStates($event)" >
+                  <ionic-selectable class="form-control" [(ngModel)]="selectedCountry" [items]="Country" itemValueField="id"
+                    itemTextField="name" [canSearch]="true" (onChange)="GetAllStates(selectedCountry)" >
                   </ionic-selectable>
                   
 
                 </div>
                 <div class="form-group  col-lg-4 col-md-12">
                   <label>State*</label>
-                  <ionic-selectable class="form-control" [(ngModel)]="stat" [items]="State" itemValueField="id"
-                    itemTextField="name" [canSearch]="true" (onChange)="GetAllCities($event)">
+                  <ionic-selectable class="form-control" [(ngModel)]="selectedState" [items]="State" itemValueField="id"
+                    itemTextField="name" [canSearch]="true" (onChange)="GetAllCities(selectedState)">
                   </ionic-selectable>
                 </div>
                 <div class="form-group  col-lg-4 col-md-12">
                   <label>City*</label>
-                  <ionic-selectable class="form-control" [(ngModel)]="city" [items]="District" itemValueField="id"
+                  <ionic-selectable class="form-control" [(ngModel)]="selectedCity" [items]="District" itemValueField="id"
                     itemTextField="name" [canSearch]="true" (onChange)="GetCity($event)">
                   </ionic-selectable>
                 </div>

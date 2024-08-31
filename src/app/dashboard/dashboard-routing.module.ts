@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: DashboardPage,
+  },
+  {
+    path: ':secureCode',  // Dynamic parameter
+    component: DashboardPage,
   }
 ];
 

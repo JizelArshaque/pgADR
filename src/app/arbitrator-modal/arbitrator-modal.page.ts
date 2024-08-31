@@ -490,6 +490,7 @@ export class ArbitratorModalPage implements OnInit {
     });
   }
   OpenADRProfile(item:any, type:any) {
+    this.modalController.dismiss(0);
     let navigationextra: NavigationExtras = {
       state: {
         UserDetails: item, Type: type
@@ -551,8 +552,8 @@ export class ArbitratorModalPage implements OnInit {
     });
   }
   back() {
-    // const secureCode = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).SecureCode;  
-    // this.router.navigate(['/dashboard'+'/'+secureCode]);
+    const secureCode = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).SecureCode;  
+    this.router.navigate(['/dashboard', secureCode]);
     this.modalController.dismiss();     
   }
   async OpenDoc(ex: any) {
@@ -569,6 +570,8 @@ export class ArbitratorModalPage implements OnInit {
     });
     await modal.present();
   }
+
+
   TypeChange(event: any) {
     this.doctype = '';
     this.docname = '';

@@ -80,6 +80,9 @@ export class ArbitrationPartyAddPage implements OnInit {
   ArbitrationDetails: any;
   ArbitrationParties: any[] = [];
   showDoYouNeedToAddControlCheckbox: boolean = false;
+  selectedCountry: any;
+  selectedState: any;
+  selectedCity: any;
   constructor(public alertservice: AlertService, private router: Router, private route: ActivatedRoute, private modalCtrl: ModalController, private loadingCtrl: LoadingController, public navCtrl: NavController, public navParams: NavParams,
     private validservice: ValidationService, private countryservice: CountryServiceService, private ArbitrationService: ArbitrationServiceService) {
 
@@ -87,6 +90,7 @@ export class ArbitrationPartyAddPage implements OnInit {
 
     if (this.navParams.get("ArbitrationEdit")) {
       this.additionalpartyedit = this.navParams.get("ArbitrationEdit");
+      console.log(this.additionalpartyedit,"============edit============")
       this.Name = this.additionalpartyedit.Name
       this.Email = this.additionalpartyedit.Email
       this.Mobile = this.additionalpartyedit.Mobile
@@ -96,8 +100,6 @@ export class ArbitrationPartyAddPage implements OnInit {
       this.stat =this.additionalpartyedit.State
       this.city=this.additionalpartyedit.City
 
-
-      debugger
       this.Address = this.additionalpartyedit.Address
       this.Designation = this.additionalpartyedit.Designation
       this.AppearFor = this.additionalpartyedit.AppearFor
@@ -142,6 +144,8 @@ export class ArbitrationPartyAddPage implements OnInit {
 
   ionViewWillEnter() {
     this.GetAllCountry();
+   
+  
 
   }
 
@@ -191,6 +195,9 @@ export class ArbitrationPartyAddPage implements OnInit {
     this.additionalparty.Side = this.Side;
 
     // Validation checks
+console.log(this.cntry,"contry");
+
+    debugger
     if ((this.PartyType === 0 && this.Side === 0) || (this.PartyType === 0 && this.Side === 1)) {
         if (!this.Email) {
             alert("Please enter Email");
@@ -207,17 +214,17 @@ export class ArbitrationPartyAddPage implements OnInit {
             
             return;
         }
-        if (!this.cntry) {
+        if (!this.selectedCountry) {
             alert("Please enter Country");
            
             return;
         }
-        if (!this.stat) {
+        if (!this.selectedState) {
             alert("Please enter State");
            
             return;
         }
-        if (!this.city) {
+        if (!this.selectedCity) {
             alert("Please enter city");
             
             return;
@@ -243,17 +250,17 @@ export class ArbitrationPartyAddPage implements OnInit {
           
             return;
         }
-        if (!this.cntry) {
+        if (!this.selectedCountry) {
             alert("Please enter Country");
             
             return;
         }
-        if (!this.State) {
+        if (!this.selectedState) {
             alert("Please enter State");
            
             return;
         }
-        if (!this.city) {
+        if (!this.selectedCity) {
             alert("Please enter city");
            
             return;
@@ -329,15 +336,15 @@ export class ArbitrationPartyAddPage implements OnInit {
         alert("Please enter Address");
         return;
       }
-      if (!this.cntry) {
+      if (!this.selectedCountry) {
         alert("Please enter Country");
         return;
       }
-      if (!this.stat) {
+      if (!this.selectedState) {
         alert("Please enter State");
         return;
       }
-      if (!this.city) {
+      if (!this.selectedCity) {
         alert("Please enter city");
         return;
       }
@@ -361,15 +368,15 @@ export class ArbitrationPartyAddPage implements OnInit {
         alert("Please enter Address");
         return;
       }
-      if (!this.cntry) {
+      if (!this.selectedCountry) {
         alert("Please enter Country");
         return;
       }
-      if (!this.stat) {
+      if (!this.selectedState) {
         alert("Please enter State");
         return;
       }
-      if (!this.city) {
+      if (!this.selectedCity) {
         alert("Please enter city");
         return;
       }
@@ -403,15 +410,15 @@ export class ArbitrationPartyAddPage implements OnInit {
         alert("Please enter Address");
         return;
       }
-      if (!this.cntry) {
+      if (!this.selectedCountry) {
         alert("Please enter Country");
         return;
       }
-      if (!this.stat) {
+      if (!this.selectedState) {
         alert("Please enter State");
         return;
       }
-      if (!this.city) {
+      if (!this.selectedCity) {
         alert("Please enter city");
         return;
       }
@@ -492,26 +499,47 @@ export class ArbitrationPartyAddPage implements OnInit {
   GetAllCountry() {
     this.countryservice.GetAllCountryFromJSON().subscribe((data: any) => {
       this.Country = <Array<any>>data;
+      this.selectedCountry = this.Country?.find(country => country.name === this.cntry);
+      debugger
+  this.GetAllStates(this.selectedCountry);
+      debugger
     });
   }
   //added by nazrin 3/5/23
-  GetAllStates(event: {
-    component: IonicSelectableComponent, value: any
-  }) {
-    this.additionalparty.Country = event.value.name;
-    this.countryservice.GetAllStatesFromJSON().subscribe((data: any) => {
-      this.State = data.filter((x: any) => x.country_id == event.value.id);
-    });
+  GetAllStates(selectedCountry: any) {
+    debugger
+    if (selectedCountry) {
+      // Assign selected country name to additionalparty.Country
+      this.additionalparty.Country = selectedCountry.name; 
+  
+      // Fetch states based on the selected country
+      this.countryservice.GetAllStatesFromJSON().subscribe((data: any) => {
+        // Filter states by the selected country ID
+        this.State = data?.filter((x: any) => x.country_id == selectedCountry.id);
+        this.selectedState = this.State?.find(state => state.name === this.stat);
+
+        this.GetAllCities(this.selectedState);
+        debugger
+      });
+    }
   }
+  
   //added by nazrin 3/5/23
-  GetAllCities(event: {
-    component: IonicSelectableComponent, value: any
-  }) {
-    this.additionalparty.State = event.value.name;
-    this.countryservice.GetAllCitiesFromJSON().subscribe((data: any) => {
-      this.District = data.filter((x: any) => x.state_id == event.value.id);
-    });
+  GetAllCities(selectedState: any) {
+    if (selectedState) {
+      // Assign selected state name to additionalparty.State
+      this.additionalparty.State = selectedState.name;
+  
+      // Fetch cities based on the selected state
+      this.countryservice.GetAllCitiesFromJSON().subscribe((data: any) => {
+        // Filter cities by the selected state ID
+        this.District = data.filter((x: any) => x.state_id == selectedState.id);
+        this.selectedCity = this.District?.find(citys => citys.name === this.city);
+        debugger
+      });
+    }
   }
+  
   AppearForChange(event: { component: IonicSelectableComponent, value: any }) {
     this.additionalparty.AppearFor = event.value.Name;
     this.additionalparty.Side = this.ArbitrationParties.find(x => x.Id == event.value.Id).Side;
@@ -527,26 +555,26 @@ export class ArbitrationPartyAddPage implements OnInit {
     this.additionalparty.City = event.value.name;
   }
   //added by nazrin 3/5/23
-  GetAllState(country: any) {
-    this.additionalparty.Country = this.cntry;
-    this.countryservice.GetAllStatesFromJSON().subscribe((data: any) => {
-      this.State = data.filter((x: any) => x.country_id == country.id);
-      if (this.additionalparty.State) {
-        this.stat = this.State.filter(x => x.name == this.additionalparty.State)[0];
-        this.GetAllCityData(this.stat);
-      }
-    });
-  }
+  // GetAllState(country: any) {
+  //   this.additionalparty.Country = this.cntry;
+  //   this.countryservice.GetAllStatesFromJSON().subscribe((data: any) => {
+  //     this.State = data.filter((x: any) => x.country_id == country.id);
+  //     if (this.additionalparty.State) {
+  //       this.stat = this.State.filter(x => x.name == this.additionalparty.State)[0];
+  //       this.GetAllCityData(this.stat);
+  //     }
+  //   });
+  // }
   //added by nazrin 3/5/23
-  GetAllCityData(state: any) {
-    this.countryservice.GetAllCitiesFromJSON().subscribe((data: any) => {
-      this.District = data.filter((x: any) => x.state_id == state.id);
-      if (this.additionalparty.City) {
-        this.city = this.District.filter(x => x.name == this.additionalparty.City)[0];
-      }
+  // GetAllCityData(state: any) {
+  //   this.countryservice.GetAllCitiesFromJSON().subscribe((data: any) => {
+  //     this.District = data.filter((x: any) => x.state_id == state.id);
+  //     if (this.additionalparty.City) {
+  //       this.city = this.District.filter(x => x.name == this.additionalparty.City)[0];
+  //     }
 
-    });
-  }
+  //   });
+  // }
 
   fileChange(event: any, type: any, description: any) {
     let fileList: FileList = event.target.files;

@@ -743,7 +743,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
       // Create and present the modal
       const modal = await this.modalController.create({
         component: ArbitratorModalPage,
-        cssClass: 'my-modal,',
+        cssClass: 'my-modal',
         componentProps: {
           Arbitration: this.ArbitrationDetails,
           ArbitrationParties: this.ArbitrationParties,
@@ -4418,6 +4418,8 @@ doc=this.DraftAwards[0].DocumentName;
     }
   }
   GetApplicationColor(application: any) {
+
+    console.log(application,"==============cm================")
     if (this.ArbitrationDocs.filter(x => x.Segment == 2 && x.ReferenceDocumentId == application.Id && x.IsMailer == 0 && x.DocType == 6).length > 0) {
       return 'green';
     }

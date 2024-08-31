@@ -1,6 +1,7 @@
 import { Compiler, Component } from '@angular/core';
 import { AppConfig } from 'src/class/AppCofig';
 import { LoginService } from 'src/service/login.service';
+import { ScreenOrientationService } from 'src/service/screen-orientation.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { LoginService } from 'src/service/login.service';
 })
 export class AppComponent {
   appConfig=new AppConfig();
-  constructor(private compiler:Compiler,public loginservice:LoginService) {this.CheckAppVersion();}
+  constructor(private compiler:Compiler,public loginservice:LoginService,private screenOrientationService: ScreenOrientationService) {this.CheckAppVersion();}
 
   CheckAppVersion() {
     this.loginservice.GetAppVersion().subscribe((data:any) => {

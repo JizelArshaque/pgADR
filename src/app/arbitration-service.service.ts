@@ -386,11 +386,12 @@ export class ArbitrationServiceService {
 }
   DeleteDocumentCDN(documentid:any)
   {  
-     let headers = new HttpHeaders();
-    headers.append("Accept", 'application/json');
-    headers.append('Content-Type', 'application/json'); 
-    headers.append('Authorization', 'Bearer ' + this.decryptiondata);
-
+    this.GetDecryptedData();
+  
+    let headers = new HttpHeaders()
+      .set("Accept", 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + this.decryptiondata);
     let options = { headers: headers };
     return this.http.get<any>(this.appConfig.url +'/ArbitrationFileUpload/spDeleteDocumentUploadCDN?delDocId='+documentid, options).pipe(map(res=>res)); 
   }

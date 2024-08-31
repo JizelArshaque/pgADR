@@ -16,9 +16,17 @@ export class ProfileDetailsPage implements OnInit {
   appconfig = new AppConfig();
   User: any;
   ArbDoc: any;
+  ArbitrationDetailslocalStoragr: any;
+  ArbitrationDetailslocalStorage: any;
+  ArbitrationStage: any;
   constructor(private router: Router, public navParams: NavParams, private modalController: ModalController, private modalCtrl: ModalController) {
     if (this.navParams.get("ArbitrationParty")) {
       this.party = this.navParams.get("ArbitrationParty");
+      console.log(this.party,"party=======================")
+      this.ArbitrationDetailslocalStorage = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`);
+      this.ArbitrationStage= this.ArbitrationDetailslocalStorage.ArbitrationStage
+      console.log( this.ArbitrationStage,"stagee")
+
       if (localStorage.getItem("ADR_Dashboard_User")) {
         this.User = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`);
       }

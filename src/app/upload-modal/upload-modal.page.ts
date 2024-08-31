@@ -28,6 +28,7 @@ export class UploadModalPage implements OnInit {
   datepipe = new DatePipe('en-IND');
   selectedFile: File | null = null;
   showAdditionalUploadOptions: boolean = false;
+  uploadbutton:boolean=false;
   doccdn = new DocumentUploadCDN();
   User: any;
   VideoCallId: any;
@@ -256,6 +257,7 @@ this.applicationtype=this.navParams.get("Applicationtype");
     if (confirm("Are you sure to delete this file ?")) {
       const index = this.exhibits.indexOf(exhibit);
       if (index !== -1) {
+       
         this.exhibits.splice(index, 1); // Remove the exhibit from the array
         // Perform any additional deletion actions or update logic here as needed
       }
@@ -263,16 +265,46 @@ this.applicationtype=this.navParams.get("Applicationtype");
   }
 
   Remove(ex: any) {
-    if (this.exhibits.find(x => x.Id == ex.Id)) {
-      this.arbitrationservice.DeleteDocumentCDN(ex.Id).subscribe((data: any) => {
-        if (!!data) {
-          this.exhibits = this.exhibits.filter(x => x.Id == ex.Id);
-        }
-        else {
-          alert("Error while delete file");
-        }
-      });
+
+    if (confirm("Are you sure to delete this file ?")) {
+
+      if (this.exhibits.find(x => x.Id == ex.Id)) {
+        this.arbitrationservice.DeleteDocumentCDN(ex.Id).subscribe((data: any) => {
+          if (!!data) {
+            this.exhibits = this.exhibits.filter(x => x.Id == ex.Id);
+            
+      const index = this.exhibits.indexOf(ex);
+      if (index !== -1) {
+        this.uploadbutton=false
+        this.exhibits.splice(index, 1); // Remove the exhibit from the array
+        // Perform any additional deletion actions or update logic here as needed
+      }
+  
+          }
+          else {
+            alert("Error while delete file");
+          }
+        });
+      }
+
+
+
+
+
     }
+
+
+    // if (this.exhibits.find(x => x.Id == ex.Id)) {
+    //   this.arbitrationservice.DeleteDocumentCDN(ex.Id).subscribe((data: any) => {
+    //     if (!!data) {
+    //       this.exhibits = this.exhibits.filter(x => x.Id == ex.Id);
+
+    //     }
+    //     else {
+    //       alert("Error while delete file");
+    //     }
+    //   });
+    // }
   }
   fileChangeLawyerAuthorisationUrl(event: any, type: any, description: any) {
     // alert('auth')
@@ -365,6 +397,9 @@ this.applicationtype=this.navParams.get("Applicationtype");
               this.doccdn.Description = (this.doctype == 'Other' || this.doctype == 'Miscellaneous') ? this.doctypeother : this.doctype;
               this.doccdn.DocName = (this.doctype == 'Other' || this.doctype == 'Miscellaneous') ? this.doctypeother : this.doctype;
               this.doccdn.UserId = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id;
+              this.uploadbutton=true
+
+
               this.UploadDocumentCDN(this.doccdn);
             });
         }
@@ -628,6 +663,48 @@ this.applicationtype=this.navParams.get("Applicationtype");
         const confirmed = confirm(`Are you sure you want to upload ${this.doctype} without exhibits?`);
         if (!confirmed) return;
       }
+      this.isButtonDisabled = true;
+      const doc = this.exhibits.filter(x => x.DocType != 0)[0];
+      const loading = await this.loadingCtrl.create({
+        message: 'Please wait...'
+      });
+      await loading.present();
+  
+      this.arbitrationservice.UploadArbitrationDocument(doc).subscribe({
+        next: (data: any) => {
+          loading.dismiss();
+          this.isButtonDisabled = false;
+  
+          if (data && data.Id > 0 && data.Error == 0) {
+            if (!noExhibits) {
+              this.exhibits.find(x => x.Type != 0).Id = data.Id;
+              this.SavePleadingsandExhibits();
+            }
+            alert(`${this.doctype} submitted successfully`);
+            this.back(null);
+          } else {
+            this.alertservice.Alert("Error While Upload", 3, () => { }, () => { });
+          }
+        },
+        error: (err) => {
+          loading.dismiss();
+          this.isButtonDisabled = false;
+
+          console.error('Error uploading document:', err);
+          this.alertservice.Alert("Error While Upload", 3, () => { }, () => { });
+        }
+      });
+    }
+  }
+
+  async UploadArbitrationDocumentForMemo() {
+    if (!!this.exhibits && this.exhibits.length > 0) {
+      const noExhibits = this.exhibits.filter(x => x.Type == 0).length == 0;
+  
+      // if (noExhibits) {
+      //   const confirmed = confirm(`Are you sure you want to upload ${this.doctype} without exhibits?`);
+      //   if (!confirmed) return;
+      // }
       this.isButtonDisabled = true;
       const doc = this.exhibits.filter(x => x.DocType != 0)[0];
       const loading = await this.loadingCtrl.create({

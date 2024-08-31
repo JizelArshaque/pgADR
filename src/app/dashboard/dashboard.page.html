@@ -369,11 +369,16 @@
 
                 <div
                   class="col-3"
-                  *ngIf="(Type==5 || Type==4) && (!!ArbitrationDetails && !!ArbitrationDetails.ArbitrationStage && ArbitrationDetails.ArbitrationStage<7)"
+                  *ngIf="(Type == 5 || Type == 4) 
+                  && (!!ArbitrationDetails 
+                      && !!ArbitrationDetails.ArbitrationStage 
+                      && ArbitrationDetails.ArbitrationStage >= 5 
+                      && ArbitrationDetails.ArbitrationStage < 7)"
                 >
                   <button
                     (click)="openArbitrationModal()"
                     class="btn btn-link-main"
+                    
                   >
                     <i class="fas fa-plus"></i>
                   </button>
@@ -604,7 +609,11 @@
                   Pleadings by Parties
                 </button>
               </div>
-              <div class="col-3" *ngIf="User.Type==2 || User.Type==0">
+              <!--  plleding by party only show before appoint draft issue -->
+              <div
+                class="col-3"
+                *ngIf="(User.Type == 2 || User.Type == 0) && ArbitrationDetails.ArbitrationStage < 20"
+              >
                 <button (click)="openUploadModal(5)" class="btn btn-link-main">
                   <i class="fas fa-plus"></i>
                 </button>
@@ -1496,10 +1505,7 @@
                 </div>
               </div>
               <!-- <button (click)="simple()">clickme</button> -->
-              <div
-                class="timeline-section"
-                *ngFor="let dt of filteredDates;"
-              >
+              <div class="timeline-section" *ngFor="let dt of filteredDates;">
                 <div class="timeline-date">{{dt.Date|date:'dd-MMM-yyyy'}}</div>
                 <div class="row">
                   <div
@@ -1515,13 +1521,10 @@
                         Arbitration Request
                       </div>
 
-                     
                       <div class="box-content">
                         <button
                           class="subbtn box-item"
-                         
                           (click)="OpenCreatedDoc(1,'')"
-                        
                         >
                           - View Request
                         </button>
@@ -1704,10 +1707,13 @@
                 class="col-lg-12 justify-content-center"
                 *ngIf="User.Type==0 || User.Type==2"
               >
+                <!-- only show before final awrd -->
                 <div
                   class="timeline-date col-lg-6"
                   style="cursor: pointer; text-align: center; width: 200px"
-                  *ngIf="(!! filterarbitrationDocumentWithDocName(8,'NOTICE FOR DRAFT ISSUES') && filterarbitrationDocumentWithDocName(8,'NOTICE FOR DRAFT ISSUES').length>0)"
+                  *ngIf="!!filterarbitrationDocumentWithDocName(8, 'NOTICE FOR DRAFT ISSUES') 
+       && filterarbitrationDocumentWithDocName(8, 'NOTICE FOR DRAFT ISSUES').length > 0 
+       && ArbitrationDetails.ArbitrationStage < 27"
                   (click)="openUploadModalForDocumentFiling(5,'Argument Notes','')"
                 >
                   <span style="cursor: pointer; display: block"
@@ -1722,7 +1728,9 @@
                     width: 200px;
                     margin-left: 10px;
                   "
-                  *ngIf="(!! filterarbitrationDocumentWithDocName(8,'NOTICE FOR DRAFT ISSUES') && filterarbitrationDocumentWithDocName(8,'NOTICE FOR DRAFT ISSUES').length>0)"
+                  *ngIf="!!filterarbitrationDocumentWithDocName(8, 'NOTICE FOR DRAFT ISSUES') 
+                 && filterarbitrationDocumentWithDocName(8, 'NOTICE FOR DRAFT ISSUES').length > 0 
+                 && ArbitrationDetails.ArbitrationStage < 27"
                   (click)="openUploadModalForDocumentFiling(2,'Cost Memo','Memo')"
                 >
                   <span style="cursor: pointer">File Cost Memo</span>
@@ -2157,8 +2165,6 @@
         && filterarbitrationDocumentWithDateandDocName(8, 3, dt.Date, 'NOTICE FOR DRAFT ISSUES').length > 0) 
     : (!!filterarbitrationDocumentWithDateandDocName(8, 3, dt.Date, 'NOTICE FOR DRAFT ISSUES') 
         && filterarbitrationDocumentWithDateandDocName(8, 3, dt.Date, 'NOTICE FOR DRAFT ISSUES').length > 0)"
-
-                
                   >
                     <div class="timeline-box">
                       <div class="box-title">
@@ -2525,9 +2531,7 @@
               class="status-container"
               *ngIf="(!! filterarbitrationDocumentWithUniqueApplication(2) && filterarbitrationDocumentWithUniqueApplication(2).length>0)"
             >
-              <div class="status-item red">
-                New Application. PO Pending 
-              </div>
+              <div class="status-item red">New Application. PO Pending</div>
               <div class="status-item orange">PO Passed. Counter Pending</div>
               <div class="status-item blue">Counter Filed. Order Pending</div>
               <div class="status-item green">Application Closed</div>
@@ -2789,8 +2793,7 @@
                           </button>
                           <button class="subbtn box-item">
                             3. The claimant and respondent(s) equally shall
-                            deposit
-                            {{CaseManagementProcedure[0].ArbitratorFee *
+                            deposit {{CaseManagementProcedure[0].ArbitratorFee *
                             (30/100) |number:'1.2-2'}} (30%) towards arbitrator
                             fee and
                             {{CaseManagementProcedure[0].AdministrativeFee
@@ -3017,137 +3020,162 @@
             </div> -->
 
             <div class="container">
-                <div class="row ">
-
+              <div class="row">
                 <!-- claiments -->
-                  <div class="col-sm-3 box-content">
-                    <div class="timeline-box">
-                        <div class="box-title d-flex align-items-center">
-                            <i class="fa fa-asterisk text-success" aria-hidden="true"></i>
-                            <span>Claimants</span>
-                            <div
-                              class="col-3 ml-auto"
-                              *ngIf=" IsController === 1 || (User.Type==0 && User.Side==0 && !!FilterArbitrationPartiesWithIsConteoller(0,3,1) && FilterArbitrationPartiesWithIsConteoller(0,3,1).length==0)"
-                            >
-                              <button
-                                (click)="ArbitrationPartyAdd(0, 0)"
-                                class="btn btn-link-main"
-                                style="color: white;"
-                              >
-                                <i class="fas fa-plus"></i>
-                              </button>
-                            </div>
-                          </div>
-                          
+                <div class="col-sm-3 box-content">
+                  <div class="timeline-box">
+                    <div class="box-title d-flex align-items-center">
+                      <i
+                        class="fa fa-asterisk text-success"
+                        aria-hidden="true"
+                      ></i>
+                      <span>Claimants</span>
+                      <div
+                        class="col-3 ml-auto"
+                        *ngIf="(IsController === 1 || (User.Type == 0 && User.Side == 0 && !!FilterArbitrationPartiesWithIsConteoller(0, 3, 1) && FilterArbitrationPartiesWithIsConteoller(0, 3, 1).length == 0)) && ArbitrationDetails.ArbitrationStage < 23"
 
-              
-                      <div class="box-content">
-                        <button class="subbtn box-item" *ngFor="let cm of FilterArbitrationParties(0,0)"
-                (click)="openProfileModal(cm)">{{cm.Name}}</button>
+                      >
+                        <button
+                          (click)="ArbitrationPartyAdd(0, 0)"
+                          class="btn btn-link-main"
+                          style="color: white"
+                        >
+                          <i class="fas fa-plus"></i>
+                        </button>
                       </div>
                     </div>
-                  </div>
-<!-- Respondants -->
 
-                  <div class="col-sm-3">
-                    <div class="timeline-box">
-                        <div class="box-title d-flex align-items-center">
-                            <i class="fa fa-asterisk text-success" aria-hidden="true"></i>
-                            <span>Respondants</span>
-                            <div
-                              class="col-3 ml-auto"
-                              *ngIf="IsController === 1 || (User.Type==0 && User.Side==0 && !!FilterArbitrationPartiesWithIsConteoller(0,3,1) && FilterArbitrationPartiesWithIsConteoller(0,3,1).length==0)"
-                            >
-                              <button
-                                (click)="ArbitrationPartyAdd(1,0)"
-                                class="btn btn-link-main"
-                                style="color: white;"
-                              >
-                                <i class="fas fa-plus"></i>
-                              </button>
-                            </div>
-                          </div>
-                          
-
-              
-                      <div class="box-content">
-                        <button class="subbtn box-item" *ngFor="let res of FilterArbitrationParties(1,0)"
-                (click)="openProfileModal(res)">{{res.Name}}</button>
-                      </div>
+                    <div class="box-content">
+                      <button
+                        class="subbtn box-item"
+                        *ngFor="let cm of FilterArbitrationParties(0,0)"
+                        (click)="openProfileModal(cm)"
+                      >
+                        {{cm.Name}}
+                      </button>
                     </div>
                   </div>
-                  <!-- lawyer -->
-                  <div class="col-sm-3">
-                    <div class="timeline-box">
-                        <div class="box-title d-flex align-items-center">
-                            <i class="fa fa-asterisk text-success" aria-hidden="true"></i>
-                            <span>lawyer</span>
-                            <div
-                              class="col-3 ml-auto"
-                              *ngIf=" IsController === 1 || (User.Type==0 && User.Side==0 && !!FilterArbitrationPartiesWithIsConteoller(0,3,1) && FilterArbitrationPartiesWithIsConteoller(0,3,1).length==0)"
-                            >
-                              <button
-                                (click)="ArbitrationPartyAdd(0, 2)"
-                                class="btn btn-link-main"
-                                style="color: white;"
-                              >
-                                <i class="fas fa-plus"></i>
-                              </button>
-                            </div>
-                          </div>
-                          
+                </div>
+                <!-- Respondants -->
 
-              
-                      <div class="box-content">
-                        <div *ngIf="FilterArbitrationPartiesWithType(2).length > 0; else noArbitrationParties">
-                            <button class="subbtn box-item" *ngFor="let res of FilterArbitrationPartiesWithType(2)"
-                                    (click)="openProfileModal(res)">{{res.Name}}{{res.Side == 0 ? '(C)' : '(R)'}}</button>
-                          </div>
-                          <ng-template #noArbitrationParties>
-                            <p>No lawyers have been added yet</p>
-                          </ng-template>
-                          
+                <div class="col-sm-3">
+                  <div class="timeline-box">
+                    <div class="box-title d-flex align-items-center">
+                      <i
+                        class="fa fa-asterisk text-success"
+                        aria-hidden="true"
+                      ></i>
+                      <span>Respondants</span>
+                      <div
+                        class="col-3 ml-auto"
+                        *ngIf="(IsController === 1 || (User.Type == 0 && User.Side == 0 && !!FilterArbitrationPartiesWithIsConteoller(0, 3, 1) && FilterArbitrationPartiesWithIsConteoller(0, 3, 1).length == 0)) && ArbitrationDetails.ArbitrationStage < 23"
+                      >
+                        <button
+                          (click)="ArbitrationPartyAdd(1,0)"
+                          class="btn btn-link-main"
+                          style="color: white"
+                        >
+                          <i class="fas fa-plus"></i>
+                        </button>
                       </div>
                     </div>
+
+                    <div class="box-content">
+                      <button
+                        class="subbtn box-item"
+                        *ngFor="let res of FilterArbitrationParties(1,0)"
+                        (click)="openProfileModal(res)"
+                      >
+                        {{res.Name}}
+                      </button>
+                    </div>
                   </div>
+                </div>
+                <!-- lawyer -->
+                <div class="col-sm-3">
+                  <div class="timeline-box">
+                    <div class="box-title d-flex align-items-center">
+                      <i
+                        class="fa fa-asterisk text-success"
+                        aria-hidden="true"
+                      ></i>
+                      <span>lawyer</span>
+                      <div
+                        class="col-3 ml-auto"
+                        *ngIf="(IsController === 1 || (User.Type == 0 && User.Side == 0 && !!FilterArbitrationPartiesWithIsConteoller(0, 3, 1) && FilterArbitrationPartiesWithIsConteoller(0, 3, 1).length == 0)) && ArbitrationDetails.ArbitrationStage < 23"
 
-                  <!-- Administrative Section -->
-                  <div class="col-sm-3">
-                    <div class="timeline-box">
-                        <div class="box-title d-flex align-items-center">
-                            <i class="fa fa-asterisk text-success" aria-hidden="true"></i>
-                            <span>Administrative Section</span>
-                            <div
-                              class="col-3 ml-auto"
-                              *ngIf=" IsController === 1"
-                            >
-                              <button
-                                (click)="ArbitrationPartyAdd(0, 5)"
-                                class="btn btn-link-main"
-                                style="color: white;"
-                              >
-                                <i class="fas fa-plus"></i>
-                              </button>
-                            </div>
-                          </div>
-                          
-
-              
-                      <div class="box-content">
-                        <div *ngIf="FilterArbitrationPartiesWithType(5).length > 0; else noLawyers">
-                            <button class="subbtn box-item" *ngFor="let res of FilterArbitrationPartiesWithType(5)"
-                                    (click)="openProfileModal(res)">{{res.Name}}</button>
-                          </div>
-                          <ng-template #noLawyers>
-                            <p>No Administrative Section have been added yet</p>
-                          </ng-template>
-                          
+                      >
+                        <button
+                          (click)="ArbitrationPartyAdd(0, 2)"
+                          class="btn btn-link-main"
+                          style="color: white"
+                        >
+                          <i class="fas fa-plus"></i>
+                        </button>
                       </div>
+                    </div>
+
+                    <div class="box-content">
+                      <div
+                        *ngIf="FilterArbitrationPartiesWithType(2).length > 0; else noArbitrationParties"
+                      >
+                        <button
+                          class="subbtn box-item"
+                          *ngFor="let res of FilterArbitrationPartiesWithType(2)"
+                          (click)="openProfileModal(res)"
+                        >
+                          {{res.Name}}{{res.Side == 0 ? '(C)' : '(R)'}}
+                        </button>
+                      </div>
+                      <ng-template #noArbitrationParties>
+                        <p>No lawyers have been added yet</p>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Administrative Section -->
+                <div class="col-sm-3">
+                  <div class="timeline-box">
+                    <div class="box-title d-flex align-items-center">
+                      <i
+                        class="fa fa-asterisk text-success"
+                        aria-hidden="true"
+                      ></i>
+                      <span>Administrative Section</span>
+                      <div class="col-3 ml-auto" *ngIf="IsController === 1 && ArbitrationDetails.ArbitrationStage < 23"
+                      >
+                        <button
+                          (click)="ArbitrationPartyAdd(0, 5)"
+                          class="btn btn-link-main"
+                          style="color: white"
+                        >
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="box-content">
+                      <div
+                        *ngIf="FilterArbitrationPartiesWithType(5).length > 0; else noLawyers"
+                      >
+                        <button
+                          class="subbtn box-item"
+                          *ngFor="let res of FilterArbitrationPartiesWithType(5)"
+                          (click)="openProfileModal(res)"
+                        >
+                          {{res.Name}}
+                        </button>
+                      </div>
+                      <ng-template #noLawyers>
+                        <p>No Administrative Section have been added yet</p>
+                      </ng-template>
                     </div>
                   </div>
                 </div>
               </div>
-              
+            </div>
+
             <!-- <div *ngIf="!!FilterDashboardDatesWithSegments(5) && FilterDashboardDatesWithSegments(5).length==0">
             <h4 style="text-align: center;">Section not yet started.</h4>
         </div> -->
