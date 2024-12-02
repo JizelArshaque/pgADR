@@ -1,7 +1,7 @@
 
 import { Component, ElementRef, OnInit, ViewChild, Renderer2, HostListener, AfterViewInit, RendererStyleFlags2 } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { AlertController, IonContent, ModalController, PopoverController, ToastController,LoadingController } from '@ionic/angular';
+import { AlertController, IonContent, ModalController, PopoverController, ToastController, LoadingController } from '@ionic/angular';
 // import { IMediaTrack, IRemoteUser } from 'ngx-agora-sdk-ng';
 import { DatePipe } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -31,6 +31,9 @@ import { AlertService } from 'src/shared/alert-info/alert.service';
 import { ReportIssue } from 'src/class/ReportIssue';
 import { DocumentUploadCDN } from 'src/class/DocumentUploadCDN';
 import { TokenEncryptionService } from '../././../service/token-encryption.service';
+import { UserService } from 'src/service/user.service';
+import { VideoCallModalPage } from '../video-call-modal/video-call-modal.page';
+
 
 
 
@@ -350,60 +353,72 @@ export class DashboardPage implements OnInit, AfterViewInit {
     private activatedRoute: ActivatedRoute, private arbitrationservice: ArbitrationServiceService,
     private modalService: NgbModal, private router: Router, public alertservice: AlertService,
     public videostream: RtcstreamService, private datePipe: DatePipe,
-    private TokenEncryptionService: TokenEncryptionService,private loadingCtrl: LoadingController
+    private TokenEncryptionService: TokenEncryptionService, private loadingCtrl: LoadingController,
+
 
   ) {
-    this.initializeAudioTrack();
-    this.currentTimeforchecking = this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
-
-
-    if (this.activatedRoute.snapshot.paramMap.get('securecode')) {
-
-      this.SecreteCode = this.activatedRoute.snapshot.paramMap.get('securecode');
-      if (!!this.SecreteCode && this.SecreteCode.length > 0) {
-        if (localStorage.getItem("ADR_Dashboard_User")) {
-          // alert(JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).SecreteCode)
-          if (JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).SecreteCode == this.SecreteCode) {
-            this.IsUser = true;
-            this.User = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`);
-            if (!!this.User.AuthorisationUrl && this.User.AuthorisationUrl.length > 0) {
-              this.AuthURL = this.User.AuthorisationUrl;
-              this.checkauthurl();
-            }
-          }
-          else {
-            this.IsUser = false;
-            this.AuthURL = null;
-
-            localStorage.clear();
-          }
-        }
-        else {
-          this.IsUser = false;
-          this.AuthURL = null;
-
-          localStorage.clear();
-        }
-        const arbitrationDetailId = localStorage.getItem('ArbitrationDetailId');
-        if(arbitrationDetailId){
-                   this.GetAllArbitrationDetails();
-                   this.GetAllArbitrationParties(); 
-
-
-
-        }
-        else{
-          this.GetAllArbitrationDetailsId()
-
-
-
-        }
-
-      }
-    }
-
+    this.load()
 
   }
+
+
+
+  async load() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Loading...', // Message to display in the loader
+      spinner: 'crescent',  // Choose spinner style (default is 'dots')
+      duration: 0           // Keep it open until manually dismissed
+    });
+
+    // Show the loader
+    await loading.present();
+
+    try {
+      this.initializeAudioTrack();
+      this.currentTimeforchecking = this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss');
+
+      if (this.activatedRoute.snapshot.paramMap.get('securecode')) {
+        this.SecreteCode = this.activatedRoute.snapshot.paramMap.get('securecode');
+        if (!!this.SecreteCode && this.SecreteCode.length > 0) {
+          if (localStorage.getItem("ADR_Dashboard_User")) {
+            const storedUser = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`);
+            if (storedUser.SecreteCode === this.SecreteCode) {
+              this.IsUser = true;
+              this.User = storedUser;
+              if (!!this.User.AuthorisationUrl && this.User.AuthorisationUrl.length > 0) {
+                this.AuthURL = this.User.AuthorisationUrl;
+                await this.checkauthurl();
+              }
+            } else {
+              this.IsUser = false;
+              this.AuthURL = null;
+              localStorage.clear();
+            }
+          } else {
+            this.IsUser = false;
+            this.AuthURL = null;
+            localStorage.clear();
+          }
+
+          const arbitrationDetailId = localStorage.getItem('ArbitrationDetailId');
+          if (arbitrationDetailId) {
+            await Promise.all([
+              this.GetAllArbitrationDetails(),
+              this.GetAllArbitrationParties()
+            ]);
+          } else {
+            await this.GetAllArbitrationDetailsId();
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error in load:', error);
+    } finally {
+      // Dismiss the loader
+      await loading.dismiss();
+    }
+  }
+
   @HostListener('window:popstate', ['$event'])
   onPopState(event: Event) {
     // Get the secure code from local storage
@@ -423,7 +438,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
 
     // this.ReceiveSocket();
 
-    
+
     const userDataString = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`);
     if (userDataString) {
       const userData = userDataString;
@@ -478,25 +493,22 @@ export class DashboardPage implements OnInit, AfterViewInit {
   }
   GetMyData() {
     if (!!localStorage.getItem('ADR_Dashboard_User') && !!localStorage.getItem('ArbitrationDetails')) {
-
-
       const arbitrationDetails = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`)
       const adrDashboardUser = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`)
-
       if (arbitrationDetails && adrDashboardUser) {
         this.videocallUserservice.GetMyArbitrationPartyDetails(arbitrationDetails.Id, adrDashboardUser.Id).subscribe((data: any) => {
           // console.log(data, "myar oncefgfgh");
-          this.UserAddress = data[0].Address
-          this.UserName = data[0].Name
-          this.UserEmail = data[0].Email
-          this.UserDesignation = data[0].Designation
-          this.UserCity = data[0].City
-          this.UserState = data[0].State
-          this.UserCountry = data[0].Country
+          this.UserAddress = data[0].Address;
+          this.UserName = data[0].Name;
+          this.UserEmail = data[0].Email;
+          this.UserDesignation = data[0].Designation;
+          this.UserCity = data[0].City;
+          this.UserState = data[0].State;
+          this.UserCountry = data[0].Country;
           if (!!data && data.length > 0) {
             this.AuthURL = data[0].AuthorisationUrl;
 
-            this.LastLoginTime = data[0].LastLoginTime
+            this.LastLoginTime = data[0].LastLoginTime;
 
 
             const tokenTime = new Date(this.LastLoginTime);
@@ -613,10 +625,11 @@ export class DashboardPage implements OnInit, AfterViewInit {
       "Are you sure you want to resend?",
       3,
       () => {
+        // alert('ok')
         // If the user confirms, proceed with the resend logic
         this.startTimer();
         this.showResendLink = true;
-        this.arbitrationservice.SpLoginUser(this.ArbitrationDetails.Id, this.Email).subscribe(data => {
+        this.arbitrationservice.SpLoginUser(this.ArbitrationDetailId, this.Email).subscribe(data => {
           if (!!data) {
             if (data.Id > 0 && data.SecreteCode == this.SecreteCode) {
               this.Logindata = data;
@@ -627,6 +640,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
             }
           }
         });
+
       },
       () => {
         // If the user cancels, you can add code here to handle cancellation
@@ -636,16 +650,16 @@ export class DashboardPage implements OnInit, AfterViewInit {
     );
   }
 
-  GetAllArbitrationDetailsId(){
+  GetAllArbitrationDetailsId() {
 
     this.arbitrationservice.GetArbitrationIdWithSecreteCode(this.SecreteCode).subscribe(data => {
       if (data) {
 
 
-   this.ArbitrationDetailId=data[0].Id
+        this.ArbitrationDetailId = data[0].Id
         localStorage.setItem('ArbitrationDetailId', JSON.stringify(this.ArbitrationDetailId));
 
-        
+
         // Check conditions for Id and error
       }
 
@@ -658,16 +672,16 @@ export class DashboardPage implements OnInit, AfterViewInit {
     this.arbitrationservice.GetArbitrationDetailsWithSecreteCode(this.SecreteCode).subscribe(data => {
       if (!!data && data.length > 0) {
         this.ArbitrationDetails = data[0];
-        console.log("================atls",this.ArbitrationDetails)
+        // console.log("================atls",this.ArbitrationDetails)
         this.ReplyNoticeByRespondentUrl = data[0].ReplyNoticeByRespondentUrl;
 
 
         // alert(this.ReplyNoticeByRespondentUrl)
         if (this.ArbitrationDetails.Id > 0) {
           if (!!localStorage.getItem('ADR_Dashboard_User') && JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id > 0) {
-            
+
             this.alertservice.Alert(this.ArbitrationDetails.ProcessStatus, 1, () => { }, () => { },);
-            
+
           }
           if (this.ArbitrationDetails.ArbitrationStage < 8) { this.Tab = 2; }
           else if ((this.ArbitrationDetails.ArbitrationStage > 7 && this.ArbitrationDetails.ArbitrationStage < 14) || this.ArbitrationDetails.ArbitrationStage > 16) { this.Tab = 3; }
@@ -733,13 +747,13 @@ export class DashboardPage implements OnInit, AfterViewInit {
       message: 'Please wait...'
     });
     await loading.present();
-  
+
     // Fetch arbitration parties
     const arbitrationPartiesFetched = await this.GetAllArbitrationParties();
-  
+
     if (arbitrationPartiesFetched) {
-      console.log("this.ArbitrationParties", this.ArbitrationParties);
-  
+      //  console.log("this.ArbitrationParties", this.ArbitrationParties);
+
       // Create and present the modal
       const modal = await this.modalController.create({
         component: ArbitratorModalPage,
@@ -749,14 +763,16 @@ export class DashboardPage implements OnInit, AfterViewInit {
           ArbitrationParties: this.ArbitrationParties,
         },
       });
-  
+
       modal.onDidDismiss().then((modelData: any) => {
         // Handle data returned from the modal
+
+        this.loadPageFunctions()
       });
-  
+
       // Dismiss the loader before presenting the modal
       loading.dismiss();
-  
+
       await modal.present();
     } else {
       // If fetching arbitration parties fails, dismiss the loader
@@ -765,7 +781,16 @@ export class DashboardPage implements OnInit, AfterViewInit {
       this.alertservice.Alert("Failed to load arbitration parties. Please try again.", 3, () => { }, () => { });
     }
   }
-  
+
+
+  loadPageFunctions() {
+    this.GetAllArbitrationDetails();
+    this.GetAllArbitrationParties();
+    this.GetAllScrutinyComments();
+    this.GetAllAbitrationNotes();
+    this.GetAllArbitrationPartiesonly();
+  }
+
   async openscrunityModal() {
     const modal = await this.modalController.create({
       component: ScrunityModalPage,
@@ -820,7 +845,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
       if (!!data && data.length > 0) {
 
         this.CaseManagementProcedure = <Array<any>>data;
-        console.log(this.CaseManagementProcedure,"==========case===")
+        //  console.log(this.CaseManagementProcedure,"==========case===")
       }
     });
   }
@@ -857,15 +882,15 @@ export class DashboardPage implements OnInit, AfterViewInit {
         this.arbitrationservice.spGetAllarbitrationParties(JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).Id).subscribe(data => {
           if (!!data && data.length > 0) {
             this.ArbitrationParties = <Array<any>>data;
-            console.log(this.ArbitrationParties,"====ArbitrationParties=====")
+            console.log(this.ArbitrationParties, "====ArbitrationParties=====")
             this.Claimants = this.ArbitrationParties.filter(x => (x.Type === 0 || x.Type === 2) && x.Side === 0);
             this.Respondants = this.ArbitrationParties.filter(x => (x.Type === 0 || x.Type === 2) && x.Side === 1);
             this.Arbitrators = this.ArbitrationParties.filter(x => x.Type === 3 && x.Side === 0);
             this.Admin = this.ArbitrationParties.filter(x => x.Type == 4 || x.Type == 5);
-  
+
             let uid = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id;
             const party = this.ArbitrationParties.find(p => p.Id == uid);
-  
+
             if (party) {
               if ((party.Type === 0 && party.Side === 1) || (party.Type === 2 && party.Side === 1)) {
                 this.usertype = 'respondent';
@@ -876,7 +901,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
               } else if ((party.Type === 4 || party.Type === 5) && party.Side === 0) {
                 this.usertype = 'admin';
               }
-  
+
               this.videocallUserservice.GetMyArbitrationPartyDetails(JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).Id, JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id).subscribe((data: any) => {
                 if (data.length > 0) {
                   if (data[0].IsPrivateCall == 10) {
@@ -928,10 +953,10 @@ export class DashboardPage implements OnInit, AfterViewInit {
                       () => {
                         this.router.navigate(['/waiting-room']);
                       },
-                      () => {}
+                      () => { }
                     );
                   } else if (data[0].IsVideoStart == 5) {
-                    this.alertservice.Alert("Host ended entire meeting !", 3, () => {}, () => {},);
+                    this.alertservice.Alert("Host ended entire meeting !", 3, () => { }, () => { },);
                     this.IsVideo = false;
                     this.exitcall();
                   } else if (data[0].IsVideoStart == 0 || data[0].IsVideoStart == 4) {
@@ -954,7 +979,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
       }
     });
   }
-  
+
 
   GetAllArbitrationPartiesonly() {
     this.arbitrationservice.spGetAllarbitrationParties(JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).Id).subscribe((data: any) => {
@@ -1030,12 +1055,12 @@ export class DashboardPage implements OnInit, AfterViewInit {
   }
 
   async ViewAward() {
-    let doc='';
-    if(!!this.DraftAwards && this.DraftAwards.length>0){
-doc=this.DraftAwards[0].DocumentName;
+    let doc = '';
+    if (!!this.DraftAwards && this.DraftAwards.length > 0) {
+      doc = this.DraftAwards[0].DocumentName;
     }
-    else{
-      doc=this.ArbitrationDocs.filter(x=>x.Segment==6)[0].DocumentName;
+    else {
+      doc = this.ArbitrationDocs.filter(x => x.Segment == 6)[0].DocumentName;
     }
     const modal = await this.modalController.create({
       component: ProceduralOrderPage, cssClass: 'my-modal',
@@ -1043,12 +1068,13 @@ doc=this.DraftAwards[0].DocumentName;
       componentProps: {
         ArbitrationDetails: this.ArbitrationDetails,
         ArbitrationParties: this.ArbitrationParties,
-        ArbitrationDocs:this.ArbitrationDocs,
+        ArbitrationDocs: this.ArbitrationDocs,
         CaseManagementProcedure: this.CaseManagementProcedure,
         Type: 6,
         IsConnectwithParty: false,
         DocType: doc,
-        ApplicationType: ''
+        ApplicationType: '',
+        EditAward: 1
       },
 
     });
@@ -1091,7 +1117,7 @@ doc=this.DraftAwards[0].DocumentName;
 
   }
   GetAllScrutinyComments() {
-    
+
     if (!!localStorage.getItem('ArbitrationDetails') && !!localStorage.getItem('ADR_Dashboard_User')) {
       this.VideoCallId = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).Id;
       this.LoginUserId = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id;
@@ -1104,9 +1130,11 @@ doc=this.DraftAwards[0].DocumentName;
     }
   }
   checkauthurl() {
+    // alert('jjijiijij')
     let userDataString = localStorage.getItem('ADR_Dashboard_User');
     if (userDataString) {
-      
+
+
       let userData = JSON.parse(userDataString);
       this.Type = userData?.Type;
       this.Side = userData?.Side;
@@ -1132,7 +1160,7 @@ doc=this.DraftAwards[0].DocumentName;
         if (this.Type === 2) {
           this.openUploadModal(4);
         } else if (this.Type === 3) {
-          this.openUploadModal(3);
+          // this.openUploadModal(3);
         }
         else if (this.Type === 0 && this.Side == 1) {
           // this.openUploadModal(1)
@@ -1148,14 +1176,29 @@ doc=this.DraftAwards[0].DocumentName;
   FilterArbitrationParties(side: any, partytype: any) {
     // console.log(this.imInPvtCall)
     if (this.imInPvtCall) {
+      // console.log("else 2")
       return this.ArbitrationPartiesonly.filter(x => x.Type == partytype).filter(x => x.Side == side && (x.IsPrivateCall == 2 || x.IsPrivateCall == 10));
 
     } else {
       // console.log("else 1")
-      // console.log(this.ArbitrationPartiesonly,'    console.log(this.ArbitrationPartiesonly)')
+      // console.log(this.ArbitrationPartiesonly, '    console.log(this.ArbitrationPartiesonly)')
+      // console.log(this.ArbitrationParties.filter(x => x.Type == partytype).filter(x => x.Side == side), '-----------------WHAT--------------------');
+
       return this.ArbitrationParties.filter(x => x.Type == partytype).filter(x => x.Side == side);
 
     }
+  }
+
+  FilterArbitrationPartiesForAppearingFor(partytype: any) {
+    // console.log(this.imInPvtCall)
+
+    // console.log("else 1")
+    // console.log(this.ArbitrationPartiesonly,'    console.log(this.ArbitrationPartiesonly)')
+    // console.log(this.ArbitrationParties.filter(x => x.Type == partytype).filter(x => x.Side == side), '-----------------WHAT--------------------');
+
+    return this.ArbitrationParties.filter(x => x.Type == partytype);
+
+
   }
   FilterArbitrationPartiesWithIsConteoller(side: any, partytype: any, controller: any) {
     if (side) {
@@ -1419,22 +1462,24 @@ doc=this.DraftAwards[0].DocumentName;
   Send() {
 
     this.showResendLink = true;
-    this.arbitrationservice.SpLoginUser(this.ArbitrationDetailId, this.Email).subscribe(data => {
-      this.startTimer();
-      if (!!data) {
-
-        if (data.Id > 0 ) {
-
-          this.Logindata = data;
-          this.LoginStep = 2;
-
+    this.arbitrationservice.SpLoginUser(this.ArbitrationDetailId, this.Email).subscribe(
+      data => {
+        this.startTimer();
+        if (data) {
+          if (data.Id > 0) {
+            this.Logindata = data;
+            this.LoginStep = 2;
+          } else {
+            this.alertservice.Alert("Sorry, you are not an authorized user!", 3, () => { }, () => { });
+          }
         }
-        else {
-          this.alertservice.Alert("Sorry, You are not an authorised User  !", 3, () => { }, () => { },);
-
-        }
+      },
+      error => {
+        // Handle the error by showing an unauthorized message
+        this.alertservice.Alert("Unauthorized user!", 3, () => { }, () => { });
       }
-    })
+    );
+
 
   }
   VerifyOTP() {
@@ -1442,12 +1487,12 @@ doc=this.DraftAwards[0].DocumentName;
     // Format the current time to a string in a desired format
     const currentTime = new Date();
     const formattedTime = currentTime.toISOString();
-    console.log(formattedTime);
-    this.arbitrationservice.VerifyLogin(this.Email,this.Password).subscribe((data: any) => {
+    // console.log(formattedTime);
+    this.arbitrationservice.VerifyLogin(this.Email, this.Password).subscribe((data: any) => {
       // console.log(data,'document');
 
       if (data) {
-        if (data.Status==200) {
+        if (data.Status == 200) {
 
           this.TokenEncryptionService.EncryptToken(data.Token);
 
@@ -1462,50 +1507,61 @@ doc=this.DraftAwards[0].DocumentName;
 
           this.IsUser = true;
           this.LoginStep = 1;
-          let users=[]
-  
+          let users = []
+
           this.SaveLogin.LoginTime = formattedTime;
           this.SaveLogin.Email = this.Email
-          users= JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`)
+          users = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`)
           this.SaveLogin.UserId = users.Id; // Access the Id property
 
 
           this.loginservice.SaveLogins(this.SaveLogin).subscribe(data => {
             if (data) {
-  
-  
+
+
               localStorage.setItem("SCode", data.SecretCode);
-              const user =JSON.parse(localStorage.getItem('ADR_Dashboard_User') || '[]')
+              const user = JSON.parse(localStorage.getItem('ADR_Dashboard_User') || '[]')
 
               this.videocallUserservice.UpdateArbitrationPartyLastLoginTime(user.Id, this.currentTimeforchecking).subscribe(data => {
                 if (data) {
-                                  window.location.reload();
+                  // window.location.reload();
+                  // alert(this.Logindata)
+                  // console.log('====================================', user, '==================================');
+
+
+
+                  if (user.Type == 6 || user.Type == 3) {
+                    window.location.reload()
+                  } else {
+                    this.loadPageFunctions()
+                    this.load()
+                  }
                 }
               });
-  
+
               // alert('completed')
-  
+
             }
           });
-  
+
         }
         else {
           // alert("Invalid OTP !");
           this.alertservice.Alert("Invalid OTP !", 3, () => { }, () => { },);
-  
+
         }
       }
       else {
         this.alertservice.Alert("Error while Sign In. Please try again !", 3, () => { }, () => { },);
-  
-  
+
+
         this.LoginStep = 1;
       }
 
-      
+
     })
 
-   
+
   }
   getObjectURL(file: File): string {
     return URL.createObjectURL(file);
@@ -1521,9 +1577,6 @@ doc=this.DraftAwards[0].DocumentName;
         roleType: role
       };
       this.videostream.GetAgoraToken(param).subscribe((res: any) => {
-
-
-
         if (res) {
           this.generatedtoken = res.key;
 
@@ -1672,6 +1725,7 @@ doc=this.DraftAwards[0].DocumentName;
     await modal.present();
   }
   async openUploadModal(Type: any) {
+    // debugger
     const modal = await this.modalController.create({
       component: UploadModalPage,
       cssClass: 'my-modal',
@@ -1686,6 +1740,7 @@ doc=this.DraftAwards[0].DocumentName;
 
     });
     modal.onDidDismiss().then((modelData: any) => {
+      this.loadPageFunctions()
       if (!!modelData && !!modelData.data && modelData.data.FormType == 0) {
         this.GetAllArbitrationDetails();
 
@@ -1700,30 +1755,53 @@ doc=this.DraftAwards[0].DocumentName;
     await modal.present();
   }
   async openProfileModal(party: any) {
+    // code edited by jizel 
+    // console.log(this.ArbitrationPartiesonly, 'ppppppppp', party.Type);
 
     let arbdoc: any = '';
-    if (party.Type == 3) {
-      if ((!!this.filterarbitrationDocumentwithUserId(3, 3, party.Id) && this.filterarbitrationDocumentwithUserId(3, 3, party.Id).length > 0)) {
-        arbdoc = this.filterarbitrationDocumentwithUserId(3, 3, party.Id)[0].Description;
-      }
-    }
-    const modal = await this.modalController.create({
-      component: ProfileDetailsPage,
-      cssClass: 'my-modal',
-      // You can pass data to the modal using the componentProps option if needed
-      componentProps: {
-        ArbitrationParty: party,
-        ArbitrationParties: this.FilterArbitrationPartiesWithIsConteoller(0, 3, 1),
-        ArbDoc: arbdoc
-      },
+    if (party.Type == 2) {
+      const modal = await this.modalController.create({
+        component: ProfileDetailsPage,
+        cssClass: 'my-modal',
 
-    });
-    modal.onDidDismiss().then((modelData) => {
-      if (modelData !== null) {
-        this.GetAllArbitrationDetails();
+        componentProps: {
+          ArbitrationParty: party,
+          ArbitrationParties: this.FilterArbitrationPartiesForAppearingFor(0),
+          ArbDoc: arbdoc
+        },
+
+      });
+      modal.onDidDismiss().then((modelData) => {
+        if (modelData !== null) {
+          this.GetAllArbitrationDetails();
+        }
+      });
+      await modal.present();
+    } else {
+      if (party.Type == 3) {
+        if ((!!this.filterarbitrationDocumentwithUserId(3, 3, party.Id) && this.filterarbitrationDocumentwithUserId(3, 3, party.Id).length > 0)) {
+          arbdoc = this.filterarbitrationDocumentwithUserId(3, 3, party.Id)[0].Description;
+        }
       }
-    });
-    await modal.present();
+      const modal = await this.modalController.create({
+        component: ProfileDetailsPage,
+        // You can pass data to the modal using the componentProps option if needed
+        componentProps: {
+          ArbitrationParty: party,
+          ArbitrationParties: this.FilterArbitrationPartiesWithIsConteoller(0, 3, 1),
+          ArbDoc: arbdoc
+        },
+
+      });
+      modal.onDidDismiss().then((modelData) => {
+        if (modelData !== null) {
+          this.GetAllArbitrationDetails();
+        }
+      });
+      await modal.present();
+    }
+
+
   }
 
   async OpenProceduralOrderModalForApplication(type: any, val: any, doc: any, applicationtype: any, cm: any) {
@@ -1794,7 +1872,7 @@ doc=this.DraftAwards[0].DocumentName;
         await modal.present();
       }
     }
-   
+
     else {
       const modal = await this.modalController.create({
         component: ProceduralOrderPage, cssClass: 'my-modal',
@@ -1816,13 +1894,13 @@ doc=this.DraftAwards[0].DocumentName;
       await modal.present();
     }
   }
-  simple(){
+  simple() {
     alert("clicked")
   }
 
 
   async OpenCreatedDoc(type: any, doc: any) {
-    console.log("!@#$%^^^^^^^^^^^^")
+    //console.log("!@#$%^^^^^^^^^^^^")
     const modal = await this.modalController.create({
       component: DocViewerPage, cssClass: 'my-modal',
       // You can pass data to the modal using the componentProps option if needed
@@ -1874,11 +1952,12 @@ doc=this.DraftAwards[0].DocumentName;
   }
   async startCalls() {
 
+
     await this.videostream.createRTCClient(this.HostId);
 
 
     const uid = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id;
-
+    console.log(this.videocalltoken, this.videocallchannel, uid, this.videoState, this.audioState, this.usertype, 'ppoopopopop');
     this.videostream.agoraServerEvents(this.videostream.rtc, this.ArbitrationParties, this.imInPvtCall);
     await this.videostream.localUser(this.videocalltoken, this.videocallchannel, uid, this.videoState, this.audioState, this.usertype);
 
@@ -1894,6 +1973,7 @@ doc=this.DraftAwards[0].DocumentName;
 
   }
   async onvideostartGeneratetoken() {
+    // alert('poda')
     this.isMenuVisible = false;
 
     // Assuming 'ADR_Dashboard_User' contains JSON stringified data
@@ -2165,6 +2245,7 @@ doc=this.DraftAwards[0].DocumentName;
   }
 
   toggleCollapse10() {
+    // alert('poda')
     if (this.collapsed10 == 'collapse') {
       this.collapsed10 = ''
     } else {
@@ -2172,7 +2253,7 @@ doc=this.DraftAwards[0].DocumentName;
     }
   }
   toggleCollapse11() {
-    
+
 
     if (this.collapsed11 == 'collapse') {
       this.collapsed11 = ''
@@ -2305,6 +2386,8 @@ doc=this.DraftAwards[0].DocumentName;
 
   }
   async muteVideo(Type: any, Side: any, Id: any) {
+    // console.log(Type, Side, Id, 'lo');
+
     // alert("mute")
     this.ismuteVideo = false;
     // if(this.HostId != this.user){
@@ -2374,6 +2457,8 @@ doc=this.DraftAwards[0].DocumentName;
   }
 
   CheckDocTypeandOpen(filename: any, path: any, segment: any, partytype: any) {
+    console.log(filename, 'dis.ID?');
+
     let ext = '.' + filename.toString().split('.').pop();
     if (ext.startsWith(".jpg") || ext.startsWith(".JPG")
       || ext.startsWith(".JPEG") || ext.startsWith(".jpeg")
@@ -2388,7 +2473,7 @@ doc=this.DraftAwards[0].DocumentName;
     }
   }
   OpenDocument(filename: any, path: any) {
-    console.log(filename,path,"file name=================")
+    // console.log(filename,path,"file name=================")
 
     this.isMenuVisible = false;
     this.document_class = 'document-wrapper visible-document';
@@ -2403,7 +2488,7 @@ doc=this.DraftAwards[0].DocumentName;
 
     this.isMenuVisible = false;
     this.document_class = 'document-wrapper visible-document';
-    this.selecteddocument = this.appconfig.AdminAssets + "/assets/images/" + path + '/' + filename;
+    this.selecteddocument = this.appconfig.AssetUrl + "/assets/images/" + path + '/' + filename;
     //if (this.IsVideo) {
     this.isPeacegatePaddingLeft = true;
     //}
@@ -2415,7 +2500,7 @@ doc=this.DraftAwards[0].DocumentName;
     this.arbitrationservice.spGetAllArbitrationDocuments(this.ArbitrationDetails.Id).subscribe(data => {
       if (!!data && data.length > 0) {
         this.ArbitrationDocs = <Array<any>>data;
-        console.log(this.ArbitrationDocs,"================docs============")
+        console.log(this.ArbitrationDocs, "================docs============")
         this.filteredDates = this.FilterDashboardDatesWithSegments(1);
 
         // Check if the array has more than one element and trim it to only the first one
@@ -2425,17 +2510,18 @@ doc=this.DraftAwards[0].DocumentName;
         if (this.filteredDates.length === 2) {
           this.filteredDates.shift(); // Remove the first element
         }
-        
-        
-        
+
+
+
         this.DraftAwards = this.ArbitrationDocs.filter(x => x.Status == 2);
-      //  this.ArbitrationDocs = this.ArbitrationDocs.filter(x => x.Status == 0);
+        //  this.ArbitrationDocs = this.ArbitrationDocs.filter(x => x.Status == 0);
         this.dashboarddate = [...new Map(this.ArbitrationDocs.map(item => [item['Date'], item])).values()];
         this.GetAllArbitrationCaseManagement();
         this.GetAllArbitrationDocumentDetails();
       }
     });
   }
+
   FilterDashboardDatesWithSegments(type: any) {
     if (type == 1) {
       //  let arb = this.ArbitrationDocs.filter(x => (x.Segment == 1 || x.Segment == 11 || x.Segment == 12 || x.Segment == 3 || x.Segment == 8 || x.Segment == 9) && x.IsMailer == 0);
@@ -2460,8 +2546,8 @@ doc=this.DraftAwards[0].DocumentName;
       }
       dashboarddate = [...new Map(dashboarddate.map(item => [item['Date'], item])).values()];
       dashboarddate = dashboarddate.sort((a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime());
-      
-      
+
+
       return dashboarddate;
     }
     else if (type == 2) {
@@ -2502,6 +2588,7 @@ doc=this.DraftAwards[0].DocumentName;
       return false;
     }
   }
+
   GetAllArbitrationDocumentDetails() {
     this.arbitrationservice.spGetAllArbitrationDocumentDetails(this.ArbitrationDetails.Id).subscribe(data => {
       if (!!data && data.length > 0) {
@@ -2509,6 +2596,7 @@ doc=this.DraftAwards[0].DocumentName;
       }
     });
   }
+
   filterarbitrationDocumentwithPartytype(partytype: any) {
     if (partytype == 4 || partytype == 5) {
       return this.ArbitrationDocs.filter(x => x.CreatorType == 4 || x.CreatorType == 5);
@@ -2518,16 +2606,21 @@ doc=this.DraftAwards[0].DocumentName;
 
     }
   }
+
   filterarbitrationDocumentMailers(date: any) {
     return this.ArbitrationDocs.filter(x => x.IsMailer == 1 && x.Date == date);
   }
+
   filterarbitrationDocument(segment: any, partytype: any) {
-    
+    // console.log(this.ArbitrationDocs.filter(x => x.Segment == segment && x.CreatorType == partytype && x. IsMailer == 0), '---------===========---------', this.ArbitrationDetails.ArbitrationStage);
+
     return this.ArbitrationDocs.filter(x => x.Segment == segment && x.CreatorType == partytype && x.IsMailer == 0);
   }
+
   filterarbitrationDocumentWithSegment(segment: any) {
     return this.ArbitrationDocs.filter(x => x.Segment == segment && x.IsMailer == 0);
   }
+
   filterarbitrationDocumentWithDate(segment: any, partytype: any, date: any) {
     return this.ArbitrationDocs.filter(x => x.Segment == segment && x.CreatorType == partytype && x.Date == date && x.IsMailer == 0);
   }
@@ -2554,6 +2647,8 @@ doc=this.DraftAwards[0].DocumentName;
     return this.ArbitrationDocs.filter(x => x.Side == side && x.Date == date && x.DocumentName == docname && x.IsMailer == 0);
   }
   filterarbitrationDocumentWithDateandDocNameWithUserId(segment: any, partytype: any, date: any, docname: any, userId: any) {
+    // console.log(userId, 'cm?', this.ArbitrationDocs.filter(x => x.Segment == segment && x.CreatorType == partytype && x.Date == date && x.DocumentName == docname && x.IsMailer == 0 && x.CreatorId == userId));
+
     return this.ArbitrationDocs.filter(x => x.Segment == segment && x.CreatorType == partytype && x.Date == date && x.DocumentName == docname && x.IsMailer == 0 && x.CreatorId == userId);
   }
   filterarbitrationDocumentWithDocName(segment: any, docname: any) {
@@ -2577,6 +2672,10 @@ doc=this.DraftAwards[0].DocumentName;
   }
   filterarbitrationDocumentWithUniqueApplication(segment: any) {
     let arr = this.ArbitrationDocs.filter(x => x.Segment == segment && x.DocType == 3 && x.ReferenceDocumentId == 0 && x.IsMailer == 0);
+    console.log(arr, 'this arr =================================');
+
+    console.log([...new Map(arr.map(item => [item['Id'], item])).values()], 'popopopod', arr);
+
     return [...new Map(arr.map(item => [item['Id'], item])).values()];
   }
   filterarbitrationDocumentWithDateForApplicationCounter(segment: any, date: any) {
@@ -3364,6 +3463,10 @@ doc=this.DraftAwards[0].DocumentName;
 
 
   }
+
+  addDigitalSign() {
+    this.router.navigate(['add-digital-sign']);
+  }
   getAllPrivateCalls() {
     this.privateCalls = [];
     this.videochatservice.GetAllPrivateVideoCallWithArbitrationId(this.VideoCallId).subscribe(
@@ -4044,8 +4147,10 @@ doc=this.DraftAwards[0].DocumentName;
       buttons.unshift({
         text: 'End Entire Meeting',
         handler: async () => {
+
           // Use custom alert service for confirmation
           this.alertservice.Alert("Are you sure you want to stop the meeting for everyone?", 4, async () => {
+            await this.videostream.leaveCall();
             // If the user confirms, proceed with ending the entire meeting for all
             const MeetingStoppedBy = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id;
 
@@ -4056,9 +4161,12 @@ doc=this.DraftAwards[0].DocumentName;
 
             // Set MeetingStoppedBy in localStorage
             localStorage.setItem('MeetingStoppedBy', MeetingStoppedBy);
+            // this.turnvideoOff()
 
             // Call the method to get arbitration party details
             this.GetMyArbitrationPartyDetails();
+
+
           }, () => {
             // Handle the case when the user cancels the operation (optional)
             console.log("User canceled the operation");
@@ -4412,14 +4520,14 @@ doc=this.DraftAwards[0].DocumentName;
       case 7:
         return 'Parties';
       case 8:
-        return 'My Notes';
+        return 'References';
       default:
         return '';
     }
   }
   GetApplicationColor(application: any) {
 
-    console.log(application,"==============cm================")
+    console.log(application, "==============cm================")
     if (this.ArbitrationDocs.filter(x => x.Segment == 2 && x.ReferenceDocumentId == application.Id && x.IsMailer == 0 && x.DocType == 6).length > 0) {
       return 'green';
     }
@@ -4439,17 +4547,17 @@ doc=this.DraftAwards[0].DocumentName;
     if (!this.CaseManagementProcedure || this.CaseManagementProcedure.length === 0) {
       return false;
     }
-  
+
     const procedure = this.CaseManagementProcedure[0];
     const currentDate = new Date();
-  
+
     // Utility function to check if a date string is valid and in the past
     const isValidPastDate = (dateString: string | null): boolean => {
       if (!dateString) return false;
       const dateObj = new Date(dateString);
       return !isNaN(dateObj.getTime()) && dateObj < currentDate;
     };
-  
+
     // Check if all required dates are present and valid
     if (
       procedure.ClaimStatementFiledOn?.length > 0 &&
@@ -4459,7 +4567,7 @@ doc=this.DraftAwards[0].DocumentName;
     ) {
       return true;
     }
-  
+
     // Check individual date validity
     if (
       isValidPastDate(procedure.RejoinderFilingDate) ||
@@ -4468,10 +4576,51 @@ doc=this.DraftAwards[0].DocumentName;
     ) {
       return true;
     }
-  
+
     // Ensure that a value is always returned
     return false;
   }
-  
-  
+
+  ViewRules(id: any) {
+    window.open('https://peacegate.in/forms-list/' + id.toString(), '_blank');
+  }
+
+
+  // Video call modal 
+
+  async openVideoCallModal() {
+
+    const modal = await this.modalController.create({
+      component: VideoCallModalPage,
+      cssClass: 'custom-modal-height',
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result.data) {
+        if (result.data.action === 'videoCall') {
+          this.startVideoCall();
+        } else if (result.data.action === 'externalLink') {
+          this.openExternalLink(result.data.link);
+        }
+      }
+    });
+
+    return await modal.present();
+  }
+
+  getModalHeightClass() {
+    // You can add logic to decide the height dynamically
+    return 'custom-modal-height'; // Return the class based on conditions
+  }
+
+  startVideoCall() {
+    // Your function to handle the app's integrated video call
+    // console.log('Starting the video call...');
+    this.onvideostartGeneratetoken()
+  }
+
+  openExternalLink(link: string) {
+    // Your function to open the external link
+    console.log('Opening external link:', link);
+  }
 }

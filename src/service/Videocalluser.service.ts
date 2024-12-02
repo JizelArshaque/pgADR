@@ -89,21 +89,24 @@ MuteAudioorVideoOfRemoteUser(VideoCallId:any,UserId:any,IsMute:any,IsAudioOrVide
 
   UpdateAllUsersStatus(VideoCallId:any,Status:any)
   {
-   
-    let headers = new HttpHeaders();
-    headers.append("Accept", 'application/json');
-    headers.append('Content-Type', 'application/json');
-    headers.append('Authorization', 'Bearer ' + this.decryptiondata);
+   this.GetDecryptedData();
+    let headers = new HttpHeaders()
+    .set("Accept", 'application/json')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + this.decryptiondata);
 
     let options = { headers: headers };
     return this.http.get(this.appConfig.url + '/VideoCallUser?VideoCallId='+VideoCallId+'&Status='+Status, options).pipe<any>(map(res => res));
   }
   UpdateVideocallOnJoinByHost(Id:any,Status:any,Remarks:any,Token:any,Channel:any){
 
-    let headers = new HttpHeaders();
-    headers.append("Accept", 'application/json');
-    headers.append('Content-Type', 'application/json');
-    let options = { headers: headers };
+    this.GetDecryptedData();
+  
+    let headers = new HttpHeaders()
+      .set("Accept", 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + this.decryptiondata);
+      let options = { headers: headers };
     return this.http.get(this.appConfig.url + '/VideoCall?Id='+Id+'&Status='+Status+'&Remarks='+Remarks+'&Token='+encodeURIComponent(Token)+'&Channel='+Channel, options).pipe<any>(map(res => res));
  
   }
@@ -118,9 +121,12 @@ UpdateVideoCallUserStatusWithId(Id:any,Status:any)
 {
   // console.log(Id,Status,"ll");
  
-  let headers = new HttpHeaders();
-  headers.append("Accept", 'application/json');
-  headers.append('Content-Type', 'application/json');
+  this.GetDecryptedData();
+  
+    let headers = new HttpHeaders()
+      .set("Accept", 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + this.decryptiondata);
   let options = { headers: headers };
   return this.http.get(this.appConfig.url + '/VideoCallUser?Id='+Id+'&Status='+Status, options).pipe<any>(map(res => res));
 }
@@ -143,21 +149,21 @@ GetMyArbitrationPartyDetails(ArbId:any,UserId:any)
   // return this.http.get(this.appConfig.url+'/VideoCall?MainCallId=',VideoCallId).pipe<any>(map(res => res));
 }
 UpdateTokenandChannel(Id:any,VideoCallChannel:any,VideoCallToken:any,MyArbId:any){
-
-  let headers = new HttpHeaders();
-  headers.append("Accept", 'application/json');
-  headers.append('Content-Type', 'application/json');
+  this.GetDecryptedData();
+  let headers = new HttpHeaders()
+      .set("Accept", 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + this.decryptiondata);
   let options = { headers: headers };
-  return this.http.get(this.appConfig.url + '/ArbitrationParty?Id='+Id+'&VideoCallToken='+encodeURIComponent(VideoCallToken)+'&VideoCallChannel='+VideoCallChannel+'&MyArbId='+MyArbId, options).pipe<any>(map(res => res));
-
+  return this.http.get(this.appConfig.url + '/ArbitrationParty/SpUpdateArbitrationPartiesWithVideoCallIdAndToken_Result?Id='+Id+'&VideoCallToken='+encodeURIComponent(VideoCallToken)+'&VideoCallChannel='+encodeURIComponent(VideoCallChannel)+'&MyArbId='+MyArbId, options).pipe<any>(map(res => res));
 }
 UpdateArbitrationPartyLastTokenGeneratedTime(ArbitrationId:any,TokenGeneratedTime:any){
   // alert('hfgdfghiiiii')
-
-  let headers = new HttpHeaders();
-  headers.append("Accept", 'application/json');
-  headers.append('Content-Type', 'application/json');
-  headers.append('Authorization', 'Bearer ' + this.decryptiondata);
+  this.GetDecryptedData();
+  let headers = new HttpHeaders()
+  .set("Accept", 'application/json')
+  .set('Content-Type', 'application/json')
+  .set('Authorization', 'Bearer ' + this.decryptiondata);
 
   let options = { headers: headers };
   return this.http.get(this.appConfig.url + '/ArbitrationParty/spUpdateArbitrationPartyLastTokenGeneratedTime?ArbitrationId='+ArbitrationId+'&TokenGeneratedTime='+TokenGeneratedTime, options).pipe<any>(map(res => res));
@@ -166,7 +172,7 @@ UpdateArbitrationPartyLastTokenGeneratedTime(ArbitrationId:any,TokenGeneratedTim
 
 UpdateArbitrationPartyLastLoginTime(ArbitrationId:any,LastLoginTime:any){
 
-  console.log(ArbitrationId,LastLoginTime,'ArbitrationId,LastLoginTime');
+ 
   
   this.GetDecryptedData();
   
@@ -263,16 +269,16 @@ UpdateTokenandChannelformeonly(Id:any,VideoCallChannel:any,VideoCallToken:any){
   return this.http.get(this.appConfig.url + '/Video/RestartMeeting?Id='+Id+'&VideoCallToken='+encodeURIComponent(VideoCallToken)+'&VideoCallChannel='+VideoCallChannel, options).pipe<any>(map(res => res));
 
 }
-
+   
 
 UpdateVideocallForAcceptedUsersOnly(LoginUserId:number,VideoCallId:number,AcceptedId:any)
   {
-    let headers = new HttpHeaders();
-    headers.append("Accept", 'application/json');
-    headers.append('Content-Type', 'application/json');
+    this.GetDecryptedData();
+    let headers = new HttpHeaders()
+      .set("Accept", 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + this.decryptiondata);   
     let options = { headers: headers };
-    return this.http.get(this.appConfig.url + '/VideoCall?LoginUserId='+LoginUserId+'&VideoCallId='+VideoCallId+'&AcceptedId='+AcceptedId, options).pipe<any>(map(res => res));
+    return this.http.get(this.appConfig.url + '/Video/UpdateVideocallForAcceptedUsersOnly?LoginUserId='+LoginUserId+'&VideoCallId='+VideoCallId+'&AcceptedId='+AcceptedId, options).pipe<any>(map(res => res));
   }
-
-
 }

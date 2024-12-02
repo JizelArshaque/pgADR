@@ -8,7 +8,8 @@
     <div class="stepper-wrapper">
       <div class="stepper-item" [ngClass]="{ 'completed': Tab > 0}">
       </div>
-      <div class="stepper-item" [ngClass]="{'': Tab == 0, 'completed': Tab > 0}" (click)="changeTab(0)">
+      <div class="stepper-item" [ngClass]="{'': Tab == 0, 'completed': Tab > 0}">
+        <!-- (click)="changeTab(0)" -->
         <div class="step-counter" [ngClass]="{'step-active': Tab==0}">1</div>
         <div class="step-name">Create</div>
       </div>
@@ -17,18 +18,20 @@
         <div class="step-counter" [ngClass]="{'step-active': Tab==1}">2</div>
         <div class="step-name">Schedule</div>
       </div>
-      <div class="stepper-item" *ngIf="!!Type && (Type>7 || ( Type==2 && DocumentType!=6))" [ngClass]="{'': Tab == 2, 'completed': Tab > 1}"
-        (click)="changeTab(2)">
+      <div class="stepper-item" *ngIf="!!Type && (Type>7 || ( Type==2 && DocumentType!=6))"
+        [ngClass]="{'': Tab == 2, 'completed': Tab > 1}" (click)="changeTab(2)">
         <div class="step-counter" [ngClass]="{'step-active': Tab==2}">{{!!Type && Type< 10?'2':'3'}}</div>
             <div class="step-name">Posting Schedule</div>
         </div>
         <div class="stepper-item" [ngClass]="{'': Tab == 3, 'completed': Tab > 2}" (click)="changeTab(3)">
-          <div class="step-counter" [ngClass]="{'step-active': Tab==3}">{{!!Type && Type== 10? '4': (Type==3 || Type==6)? '2':'3'}}
+          <div class="step-counter" [ngClass]="{'step-active': Tab==3}">{{!!Type && Type== 10? '4': (Type==3 ||
+            Type==6)? '2':'3'}}
           </div>
           <div class="step-name">Finalize</div>
         </div>
         <div class="stepper-item" [ngClass]="{'': Tab == 4, 'completed': Tab > 3}" (click)="changeTab(4)">
-          <div class="step-counter" [ngClass]="{'step-active': Tab==4}">{{!!Type && Type== 10? '5': (Type==3 || Type==6)? '3':'4'}}
+          <div class="step-counter" [ngClass]="{'step-active': Tab==4}">{{!!Type && Type== 10? '5': (Type==3 ||
+            Type==6)? '3':'4'}}
           </div>
           <div class="step-name">Submit</div>
         </div>
@@ -42,7 +45,7 @@
 
 <ion-content [fullscreen]="true">
 
-  <body style="overflow: auto;"> 
+  <body style="overflow: auto;">
     <app-alert-info></app-alert-info>
     <div class="row justify-content-center" *ngIf="Tab==0 || Tab==3">
       <div class="container" id="auto_doc">
@@ -57,7 +60,8 @@
           <p style="text-align: center;" *ngIf="!!FilterArbitrationParties(1,0)">
             {{FilterArbitrationParties(1,0)[0].Name}} (Respondent)</p>
           <h5 style="text-align: center;font-weight: 600;">{{ArbitrationDetails.FileNumber}}</h5>
-          <h4 style="text-align: center;font-weight: 600;" *ngIf="!!Type && (Type==10 || Type==6 ||(Type==8 && ApplicationType=='Issues'))">BEFORE THE ARBITRAL
+          <h4 style="text-align: center;font-weight: 600;"
+            *ngIf="!!Type && (Type==10 || Type==6 ||(Type==8 && ApplicationType=='Issues'))">BEFORE THE ARBITRAL
             TRIBUNAL</h4>
           <p style="text-align: center;text-transform: uppercase;"
             *ngIf="!!FilterArbitrationPartiesWithType(3) && FilterArbitrationPartiesWithType(3).length>1 && (!!Type && (Type==10 || Type==6 ||(Type==8 && ApplicationType=='Issues')))">
@@ -133,10 +137,10 @@
             <p><b>{{FilterArbitrationPartiesWithUserId()[0].Name}}</b> <br>Arbitrator </p>
             <li>* This declaration does not require signature, as it is digitally issued by the Arbitrator.</li>
           </ul>
-          <ul *ngIf="!!Type && Type==10">
+          <ul *ngIf="!!Type && Type==10" style="list-style: none;">
             <li>1. The Arbitral Tribunal in the above matter to adjudicate the differences and disputes that have arisen
               between the parties was constituted on {{ArbitrationDetails.TribunalAppointedOn|date:'dd-MMM-yyyy'}}.
-              The Disclosure statement by the Arbitrator was given on <span 
+              The Disclosure statement by the Arbitrator was given on <span
                 *ngIf="!!this.ArbitrationDetails.FirstNoticeOn || (!!this.ArbitrationDetails.DisclosureSubmittedOn  && this.ArbitrationDetails.DisclosureSubmittedOn.length>0)">{{this.ArbitrationDetails.DisclosureSubmittedOn
                 |date:'dd-MMM-yyyy'}} </span> and the same was received by the parties.
               The arbitration is to be conducted as under the {{ArbitrationDetails.ArbitrationAgreementType==3 ?' IIAM
@@ -167,7 +171,9 @@
               arbitration shall be conducted in accordance with the
               {{ArbitrationDetails.ArbitrationAgreementType==3 ?' IIAM Expedited Arbitration Rules':' IIAM Arbitration
               Rules'}}.
-              It is agreed and decided that the venue of arbitration shall be {{ArbitrationDetails.ArbitrationAgreementType==3 ? ArbitrationDetails.Seat:ArbitrationDetails.CenterName +', '+ArbitrationDetails.CenterAddress}} and the proceedings can be
+              It is agreed and decided that the venue of arbitration shall be
+              {{ArbitrationDetails.ArbitrationAgreementType==3 ? ArbitrationDetails.Seat:ArbitrationDetails.CenterName
+              +', '+ArbitrationDetails.CenterAddress}} and the proceedings can be
               {{ArbitrationDetails.ArbitrationAgreementType==3 ? ' conducted online':' at [venue to be filld by
               arbitrator ] or online if needed
               '}}. The
@@ -187,12 +193,12 @@
             </p>
 
             <p *ngIf="!!FilterArbitrationParties(0,0) && FilterArbitrationParties(0,0).length>0 ">
-              <b>Claimant</b>: {{FilterArbitrationParties(0,0)[0].Name}}<br>Email: 
+              <b>Claimant</b>: {{FilterArbitrationParties(0,0)[0].Name}}<br>Email:
               {{FilterArbitrationParties(0,0)[0].Email}}<br>
               Mobile No.: {{FilterArbitrationParties(0,0)[0].Mobile}}
             </p>
             <p *ngIf="!!FilterArbitrationParties(1,0) && FilterArbitrationParties(1,0).length>0 ">
-              <b>Respondent</b>: {{FilterArbitrationParties(1,0)[0].Name}}<br> Email: 
+              <b>Respondent</b>: {{FilterArbitrationParties(1,0)[0].Name}}<br> Email:
               {{FilterArbitrationParties(1,0)[0].Email}}<br>
               Mobile No.: {{FilterArbitrationParties(1,0)[0].Mobile}}
             </p>
@@ -201,7 +207,7 @@
               {{FilterArbitrationParties(0,2)[0].Email}}<br>
               Mobile No.: {{FilterArbitrationParties(0,2)[0].Mobile}}</p>
             <p *ngIf="!!FilterArbitrationParties(1,2) && FilterArbitrationParties(1,2).length>0"><b>Lawyer for
-                Respondent</b>: {{FilterArbitrationParties(1,2)[0].Name}}<br> Email: 
+                Respondent</b>: {{FilterArbitrationParties(1,2)[0].Name}}<br> Email:
               {{FilterArbitrationParties(1,2)[0].Email}}<br>
               Mobile No.: {{FilterArbitrationParties(1,2)[0].Mobile}}</p>
             <li>5. <span *ngIf="ArbitrationDetails.ArbitrationAgreementType==1">
@@ -225,7 +231,8 @@
               <b><a>{{ArbitrationDetails.ArbitrationAgreementType==3?'https://peacegate.in/forms-list/14':'https://peacegate.in/forms-list/16'}}.</a></b>
             </li>
             <br>
-            <li>7. With the confirmation of both sides, the following filing schedule is fixed:
+            <li style="list-style: none;">7. With the confirmation of both sides, the following filing schedule is
+              fixed:
               <span style="color: #e20f0f;"
                 *ngIf="!Filling_Schedule || (!!Filling_Schedule && Filling_Schedule.length==0)">(This will be filled
                 after proceeding to the next page)</span>
@@ -238,8 +245,11 @@
             <li>8.<span>The counsel for the claimant submits that
                 the tentative claim amount will be <b>{{ArbitrationDetails.DisputeValue| number:'1.2-2'}}</b>. Based on
                 this figure, the tentative Arbitration expenses is
-                fixed at <span *ngIf="!!CaseManagementDetails && !! CaseManagementDetails.ArbitratorFee"> INR {{CaseManagementDetails.ArbitratorFee | number:'1.2-2'}} </span>as Arbitral Tribunal Fee and <span *ngIf="!!CaseManagementDetails && !! CaseManagementDetails.AdministrativeFee">INR
-                {{CaseManagementDetails.AdministrativeFee| number:'1.2-2'}}</span> as Administrative Fee (Incl. GST), as per the IIAM
+                fixed at <span *ngIf="!!CaseManagementDetails && !! CaseManagementDetails.ArbitratorFee"> INR
+                  {{CaseManagementDetails.ArbitratorFee | number:'1.2-2'}} </span>as Arbitral Tribunal Fee and <span
+                  *ngIf="!!CaseManagementDetails && !! CaseManagementDetails.AdministrativeFee">INR
+                  {{CaseManagementDetails.AdministrativeFee| number:'1.2-2'}}</span> as Administrative Fee (Incl. GST),
+                as per the IIAM
                 {{ArbitrationDetails.ArbitrationType}} Fee Schedule. The final arbitration expenses will be fixed
                 based on the final claim / counter claim amount. </span>
               <span *ngIf="ArbitrationDetails.ArbitrationAgreementType==3">The {{CaseManagementDetails.FeePaidBy == 2? '
@@ -257,7 +267,9 @@
               <ul [innerHtml]="Fee_Schedule"></ul>
             </li>
             <br>
-            <p *ngIf="ArbitrationDetails.ArbitrationAgreementType==3 && !!CaseManagementDetails && !!CaseManagementDetails.FeePaidBy">The arbitration fee and expenses shall be
+            <p
+              *ngIf="ArbitrationDetails.ArbitrationAgreementType==3 && !!CaseManagementDetails && !!CaseManagementDetails.FeePaidBy">
+              The arbitration fee and expenses shall be
               deposited {{CaseManagementDetails.FeePaidBy == 2? ' by the claimant ' :' equally shared by claimant and
               respondent[s] '}} as and when Invoice is raised for the said purpose by IIAM.</p>
             <br>
@@ -283,7 +295,7 @@
               IFSC: {{CenterBankDetails[0].IFSCCode}}<br>
               PAN No.: {{CenterBankDetails[0].PANNo}}</p>
 
-           
+
             <li>10. The next sitting of the Arbitral Tribunal is scheduled on
               <b
                 *ngIf="!!this.CaseManagementDetails.NextPostingDateAndTime || (!!this.CaseManagementDetails.NextPostingDateAndTime && this.CaseManagementDetails.NextPostingDateAndTime.length>0)">{{this.CaseManagementDetails.NextPostingDateAndTime|date:'dd-MMM-yyyy'}}
@@ -324,7 +336,8 @@
             <span *ngIf="DocName=='First Sitting Notice'">
               <br>
               <li>Please take notice that I have received communication from the Indian Institute of Arbitration &
-                Mediation (IIAM) on {{ArbitrationDetails.TribunalAppointedOn|date:'dd-MMM-yyyy'}}, appointing me as the Arbitrator
+                Mediation (IIAM) on {{ArbitrationDetails.TribunalAppointedOn | date:'dd-MMM-yyyy'}}, appointing me as
+                the Arbitrator
                 under agreement dated {{ArbitrationDetails.DateOfAgreement | date:'dd-MMM-yyyy'}}, executed between you
                 to resolve the disputes,
                 as per the IIAM {{ArbitrationDetails.ArbitrationAgreementType==3?'Expedited Arbitration':'Arbitration'}}
@@ -360,7 +373,7 @@
                 Alternatively if you wish to be represented through duly authorised counsel or
                 representative, who can act on your behalf, please inform the arbitrator at <b
                   *ngIf="!!FilterArbitrationPartiesWithIsConteoller(0,3,1) && FilterArbitrationPartiesWithIsConteoller(0,3,1).length>0 ">{{FilterArbitrationPartiesWithIsConteoller(0,3,1)[0].Email}}</b>,
-                the name and email of the said representative, so that the appropriate online link can be send to the
+                the name and email of the said representative, so that the appropriate online link can be sent to the
                 authorised representative/counsel.
               </li>
             </span>
@@ -394,12 +407,14 @@
                   date:'dd-MMM-yyyy'}}</span>
                 <span
                   *ngif="!!CaseManagementProcedure[0].ReplyStatementFiledOn && CaseManagementProcedure[0].ReplyStatementFiledOn.length>0">the
-                  ,reply statement was filed on {{CaseManagementProcedure[0].ReplyStatementFiledOn |date: 'dd-MMM-yyyy'}}
+                  ,reply statement was filed on {{CaseManagementProcedure[0].ReplyStatementFiledOn |date:
+                  'dd-MMM-yyyy'}}
                 </span>
                 <span
                   *ngif="!!CaseManagementProcedure[0].RejoinderFiledOn && CaseManagementProcedure[0].RejoinderFiledOn.length>0">
                   and the rejoinder was filed on {{CaseManagementProcedure[0].RejoinderFiledOn |date: 'dd-MMM-yyyy'}}.
-                </span></li><br>
+                </span>
+              </li><br>
               <li>You may file acceptance and denials of documents filed by the other side along with the pleadings on
                 or before <span
                   *ngIf="!!this.CaseManagementDetails.ClaimStatementFilingDate || (!!this.CaseManagementDetails.ClaimStatementFilingDate && this.CaseManagementDetails.ClaimStatementFilingDate.length>0)">{{this.CaseManagementDetails.ClaimStatementFilingDate|date:'dd-MMM-yyyy'}}</span><span
@@ -429,7 +444,7 @@
               <li *ngIf="ArbitrationDetails.ArbitrationAgreementType==3"> for finalization of issues and
                 scheduling the date of hearing. The Sitting will be conducted through the Peacegate online platform on
                 the following link:
-                <b>{{appconfig.AdrDashboard}}{{ArbitrationDetails.SecureCode}}</b>. 
+                <b>{{appconfig.AdrDashboard}}{{ArbitrationDetails.SecureCode}}</b>.
               </li>
             </span>
             <br>
@@ -450,34 +465,43 @@
             <h3 style="text-align: center;">PROCEDURAL ORDER No. {{PoNumber}} DATED {{today|date:'dd-MMM-yyyy'}}</h3>
             <p style="text-align: center;">(With the minutes of sitting held [online / at (Venue)] on [date] at [time])
             </p>
-<span *ngIf="DocName!='Settlement and Termination'">
-            <p>1. The above arbitration matter was posted today for (………….) [enter the details for which the matter is
-              posted on this day]</p>
-            <p *ngIf="DocName!='Closing of Final Hearing'">2. [……………….] (Mention the other discussion made on the day)</p>
-            <p *ngIf="DocName==='Closing of Final Hearing'">2. Heard the parties. The matter is reserved for award.
-              The parties may file argument notes and cost memo, if any on or before <span
-              *ngIf="!!this.CaseManagementDetails.ClaimStatementFilingDate && this.CaseManagementDetails.ClaimStatementFilingDate.length>0">{{this.CaseManagementDetails.ClaimStatementFilingDate|date:'dd-MMM-yyyy'}}
-              </span><span
-              style="color: #e20f0f;"
-              *ngIf="!this.CaseManagementDetails.ClaimStatementFilingDate || (!!this.CaseManagementDetails.ClaimStatementFilingDate && this.CaseManagementDetails.ClaimStatementFilingDate.length==0)">
-              [Date] (This will be filled after proceeding to the next page)</span>.</p>
-            <p *ngIf="DocName!='Closing of Final Hearing'">3. The next sitting of the Arbitral Tribunal is scheduled on [date] at [time]. The sitting will be
-              conducted <span *ngIf="ArbitrationDetails.ArbitrationAgreementType==3"> online through the Peacegate
-                online platform through the following link:
-                <b>{{appconfig.AdrDashboard}}{{ArbitrationDetails.SecureCode}}</b></span><span
-                *ngIf="ArbitrationDetails.ArbitrationAgreementType!=3"> online /
-                {{ArbitrationDetails.CenterName}},{{ArbitrationDetails.CenterAddress}}.</span></p>
-              </span>
-              <span *ngIf="DocName=='Settlement and Termination'">
-                <p>1.	In this arbitration initiated by [claimant], the claimant/parties has/have withdrawn the claim / abandoned the proceedings / reported that the matter is settled. </p>
-                <p>2.	In this arbitration initiated by [claimant], even though notice was issued, there is no response from the claimant/parties, and the arbitrator finds that the continuation of the proceedings has become unnecessary and impossible.</p>
-                <p>3.	In the above circumstances, the arbitration is terminated as per Rule 14 of the IIAM Expedited Arbitration Rules.</p>
-                <p>4.	As per Rule 14, the claimant/parties are liable to pay 25%/50%/75% of the total fee. The tentative amount in dispute was [amount] and the total fee as per the fee schedule is [amount]. As such the fee payable is [amount]. </p>
-                <p>5.	The above said amount shall be paid on or before [date] (or)
-                  The claimant/parties have already made a deposit of [amount] and the balance amount of [amount] shall be paid on or before [date] (or)
-                  The claimant/parties have already made a deposit of [amount]. Since this more than the fee payable, the balance amount of [amount] shall be refunded by IIAM on or before [date].  
-                  </p>
-              </span>
+            <span *ngIf="DocName!='Settlement and Termination'">
+              <p>1. The above arbitration matter was posted today for (………….) [enter the details for which the matter is
+                posted on this day]</p>
+              <p *ngIf="DocName!='Closing of Final Hearing'">2. [……………….] (Mention the other discussion made on the day)
+              </p>
+              <p *ngIf="DocName==='Closing of Final Hearing'">2. Heard the parties. The matter is reserved for award.
+                The parties may file argument notes and cost memo, if any on or before <span
+                  *ngIf="!!this.CaseManagementDetails.ClaimStatementFilingDate && this.CaseManagementDetails.ClaimStatementFilingDate.length>0">{{this.CaseManagementDetails.ClaimStatementFilingDate|date:'dd-MMM-yyyy'}}
+                </span><span style="color: #e20f0f;"
+                  *ngIf="!this.CaseManagementDetails.ClaimStatementFilingDate || (!!this.CaseManagementDetails.ClaimStatementFilingDate && this.CaseManagementDetails.ClaimStatementFilingDate.length==0)">
+                  [Date] (This will be filled after proceeding to the next page)</span>.</p>
+              <p *ngIf="DocName!='Closing of Final Hearing'">3. The next sitting of the Arbitral Tribunal is scheduled
+                on [date] at [time]. The sitting will be
+                conducted <span *ngIf="ArbitrationDetails.ArbitrationAgreementType==3"> online through the Peacegate
+                  online platform through the following link:
+                  <b>{{appconfig.AdrDashboard}}{{ArbitrationDetails.SecureCode}}</b></span><span
+                  *ngIf="ArbitrationDetails.ArbitrationAgreementType!=3"> online /
+                  {{ArbitrationDetails.CenterName}},{{ArbitrationDetails.CenterAddress}}.</span></p>
+            </span>
+            <span *ngIf="DocName=='Settlement and Termination'">
+              <p>1. In this arbitration initiated by [claimant], the claimant/parties has/have withdrawn the claim /
+                abandoned the proceedings / reported that the matter is settled. </p>
+              <p>2. In this arbitration initiated by [claimant], even though notice was issued, there is no response
+                from the claimant/parties, and the arbitrator finds that the continuation of the proceedings has become
+                unnecessary and impossible.</p>
+              <p>3. In the above circumstances, the arbitration is terminated as per Rule 14 of the IIAM Expedited
+                Arbitration Rules.</p>
+              <p>4. As per Rule 14, the claimant/parties are liable to pay 25%/50%/75% of the total fee. The tentative
+                amount in dispute was [amount] and the total fee as per the fee schedule is [amount]. As such the fee
+                payable is [amount]. </p>
+              <p>5. The above said amount shall be paid on or before [date] (or)
+                The claimant/parties have already made a deposit of [amount] and the balance amount of [amount] shall be
+                paid on or before [date] (or)
+                The claimant/parties have already made a deposit of [amount]. Since this more than the fee payable, the
+                balance amount of [amount] shall be refunded by IIAM on or before [date].
+              </p>
+            </span>
             <br>
             <p>Dated this the {{today|date:'dd'}} of {{today|date:'MMMM, yyyy'}}</p>
 
@@ -490,16 +514,24 @@
 
             <i>* This order does not require signature, as it is digitally issued by the Arbitrator.</i>
           </ul>
-          <ul style="list-style: none;"  *ngIf="!!Type && Type==9">
+          <ul style="list-style: none;" *ngIf="!!Type && Type==9">
             <span *ngIf="ApplicationType=='Settlement and Termination'">
-              <p>1.	In this arbitration initiated by [claimant], the claimant/parties has/have withdrawn the claim / abandoned the proceedings / reported that the matter is settled. </p>
-              <p>2.	In this arbitration initiated by [claimant], even though notice was issued, there is no response from the claimant/parties, and the arbitrator finds that the continuation of the proceedings has become unnecessary and impossible.</p>
-              <p>3.	In the above circumstances, the arbitration is terminated as per Rule 14 of the IIAM Expedited Arbitration Rules.</p>
-              <p>4.	As per Rule 14, the claimant/parties are liable to pay 25%/50%/75% of the total fee. The tentative amount in dispute was [amount] and the total fee as per the fee schedule is [amount]. As such the fee payable is [amount]. </p>
-              <p>5.	The above said amount shall be paid on or before [date] (or)
-                The claimant/parties have already made a deposit of [amount] and the balance amount of [amount] shall be paid on or before [date] (or)
-                The claimant/parties have already made a deposit of [amount]. Since this more than the fee payable, the balance amount of [amount] shall be refunded by IIAM on or before [date].  
-                </p>
+              <p>1. In this arbitration initiated by [claimant], the claimant/parties has/have withdrawn the claim /
+                abandoned the proceedings / reported that the matter is settled. </p>
+              <p>2. In this arbitration initiated by [claimant], even though notice was issued, there is no response
+                from the claimant/parties, and the arbitrator finds that the continuation of the proceedings has become
+                unnecessary and impossible.</p>
+              <p>3. In the above circumstances, the arbitration is terminated as per Rule 14 of the IIAM Expedited
+                Arbitration Rules.</p>
+              <p>4. As per Rule 14, the claimant/parties are liable to pay 25%/50%/75% of the total fee. The tentative
+                amount in dispute was [amount] and the total fee as per the fee schedule is [amount]. As such the fee
+                payable is [amount]. </p>
+              <p>5. The above said amount shall be paid on or before [date] (or)
+                The claimant/parties have already made a deposit of [amount] and the balance amount of [amount] shall be
+                paid on or before [date] (or)
+                The claimant/parties have already made a deposit of [amount]. Since this more than the fee payable, the
+                balance amount of [amount] shall be refunded by IIAM on or before [date].
+              </p>
             </span>
             <br>
             <p>Dated this the {{today|date:'dd'}} of {{today|date:'MMMM, yyyy'}}</p>
@@ -516,19 +548,23 @@
             <p>Based on the pleadings of the parties, the following Issues are framed:</p>
             <li>1. Whether the disputes referred to arbitration by the Claimant are arbitrable?</li>
             <br>
-            <li>2. Whether the disputes raised by the respondent in the counter-claim are arbitrable? [If there is counter-claim]</li>
+            <li>2. Whether the disputes raised by the respondent in the counter-claim are arbitrable? [If there is
+              counter-claim]</li>
             <br>
-            <li>3. Whether the claimant is entitled to the claims raised under various heads in this arbitration proceedings?</li>
+            <li>3. Whether the claimant is entitled to the claims raised under various heads in this arbitration
+              proceedings?</li>
             <br>
-            <li>4. Whether the respondent is entitled to the counter claims raised under this arbitration proceedings? [If there is counter-claim]</li>
+            <li>4. Whether the respondent is entitled to the counter claims raised under this arbitration proceedings?
+              [If there is counter-claim]</li>
             <br>
-            <li>5. [Narrate other Issues, if there are any specific contentions raised in the claim statement and objected in the defence statement]</li>
+            <li>5. [Narrate other Issues, if there are any specific contentions raised in the claim statement and
+              objected in the defence statement]</li>
             <br>
             <li>6. Reliefs and Costs?</li>
             <br>
             <br>
             <p>Dated this {{today|date:'dd'}} {{today|date:'MMMM, yyyy'}}</p>
-  
+
             <p
               *ngIf="!!FilterArbitrationPartiesWithIsConteoller(0,3,1) && FilterArbitrationPartiesWithIsConteoller(0,3,1).length>0 ">
               {{FilterArbitrationPartiesWithIsConteoller(0,3,1)[0].Name}}<br>
@@ -655,14 +691,15 @@
             </li><br>
             <li><b>6. Time schedule of arbitration1:
               </b></li><br>
-            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before [date] as per 
-              {{ ArbitrationDetails.ArbitrationAgreementType == 3 ? 
-                  'Rule 10(a) of the IIAM Expedited Arbitration Rules' : 
-                  ArbitrationDetails.ArbitrationAgreementType == 2 ? 
-                  'Rule 11(d)(iv) of the IIAM Arbitration Rules, since the parties had opted for Fast-track procedure' : 
-                  'Rule 14 of the IIAM Arbitration Rules' 
+            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before
+              [date] as per
+              {{ ArbitrationDetails.ArbitrationAgreementType == 3 ?
+              'Rule 10(a) of the IIAM Expedited Arbitration Rules' :
+              ArbitrationDetails.ArbitrationAgreementType == 2 ?
+              'Rule 11(d)(iv) of the IIAM Arbitration Rules, since the parties had opted for Fast-track procedure' :
+              'Rule 14 of the IIAM Arbitration Rules'
               }}.
-                    </li><br>
+            </li><br>
             <li>6.2 [In case IIAM or the parties have extended the time schedule]
               IIAM/Parties had agreed to extend the time schedule of arbitration vide Procedural Order No. [ ] dated [ ]
               and it was decided to complete the proceedings on or before [date].
@@ -903,14 +940,15 @@
             </li><br>
             <li><b>
               </b></li><br>
-            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before [date] as per 
-              {{ ArbitrationDetails.ArbitrationAgreementType == 3 ? 
-                  'Rule 10(a) of the IIAM Expedited Arbitration Rules' : 
-                  ArbitrationDetails.ArbitrationAgreementType == 2 ? 
-                  'Rule 11(d)(iv) of the IIAM Arbitration Rules, since the parties had opted for Fast-track procedure' : 
-                  'Rule 14 of the IIAM Arbitration Rules' 
+            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before
+              [date] as per
+              {{ ArbitrationDetails.ArbitrationAgreementType == 3 ?
+              'Rule 10(a) of the IIAM Expedited Arbitration Rules' :
+              ArbitrationDetails.ArbitrationAgreementType == 2 ?
+              'Rule 11(d)(iv) of the IIAM Arbitration Rules, since the parties had opted for Fast-track procedure' :
+              'Rule 14 of the IIAM Arbitration Rules'
               }}.
-              </li><br>
+            </li><br>
             <li>6.2 [In case IIAM or the parties have extended the time schedule]
               IIAM/Parties had agreed to extend the time schedule of arbitration vide Procedural Order No. [ ] dated [ ]
               and it was decided to complete the proceedings on or before [date].
@@ -1397,15 +1435,16 @@
             </li><br>
             <li><b>6. Time schedule of arbitration4:
               </b></li><br>
-            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before [date] as per 
-              {{ 
-                ArbitrationDetails.ArbitrationAgreementType == 3 ? 
-                  'Rule 10(a) of the IIAM Expedited Arbitration Rules' : 
-                  ArbitrationDetails.ArbitrationAgreementType == 2 ? 
-                  'Rule 11(d)(iv) of the IIAM Arbitration Rules, since the parties had opted for Fast-track procedure' : 
-                  'Rule 14 of the IIAM Arbitration Rules' 
+            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before
+              [date] as per
+              {{
+              ArbitrationDetails.ArbitrationAgreementType == 3 ?
+              'Rule 10(a) of the IIAM Expedited Arbitration Rules' :
+              ArbitrationDetails.ArbitrationAgreementType == 2 ?
+              'Rule 11(d)(iv) of the IIAM Arbitration Rules, since the parties had opted for Fast-track procedure' :
+              'Rule 14 of the IIAM Arbitration Rules'
               }}.
-              
+
             </li><br>
             <li>6.2 [In case IIAM or the parties have extended the time schedule]
               IIAM/Parties had agreed to extend the time schedule of arbitration vide Procedural Order No. [ ] dated [ ]
@@ -1647,15 +1686,16 @@
             </li><br>
             <li><b>6. Time schedule of arbitration3:
               </b></li><br>
-            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before [date] as per 
-              {{ 
-                ArbitrationDetails.ArbitrationAgreementType == 3 ? 
-                  'Rule 10(a) of the IIAM Expedited Arbitration Rules' : 
-                  ArbitrationDetails.ArbitrationAgreementType == 2 ? 
-                  'Rule 11(d)(iv) of the IIAM Arbitration Rules, since the parties had opted for Fast-track procedure' : 
-                  'Rule 14 of the IIAM Arbitration Rules' 
+            <li>6.1 Since the date of reference is [date], the arbitration proceedings had to be completed on or before
+              [date] as per
+              {{
+              ArbitrationDetails.ArbitrationAgreementType == 3 ?
+              'Rule 10(a) of the IIAM Expedited Arbitration Rules' :
+              ArbitrationDetails.ArbitrationAgreementType == 2 ?
+              'Rule 11(d)(iv) of the IIAM Arbitration Rules, since the parties had opted for Fast-track procedure' :
+              'Rule 14 of the IIAM Arbitration Rules'
               }}.
-              
+
             </li><br>
             <li>6.2 [In case IIAM or the parties have extended the time schedule]
               IIAM/Parties had agreed to extend the time schedule of arbitration vide Procedural Order No. [ ] dated [ ]
@@ -1783,7 +1823,7 @@
           <br>
           The {{ReferenceDocument.Side==FilterArbitrationParties(0,0)[0].Side? 'Claimant' : 'Respondent'}} has filed
           {{ReferenceDocument.DocumentNumber}} with respect to {{ReferenceDocument.DocumentName}}. <br><br>
-    
+
           {{ReferenceDocument.Side==FilterArbitrationParties(0,0)[0].Side? 'Respondent' : 'Claimant'}} shall file
           objection on or before <span style="color: #e20f0f;"
             *ngIf="!this.CaseManagementDetails.ClaimStatementFilingDate || (!!this.CaseManagementDetails.ClaimStatementFilingDate && this.CaseManagementDetails.ClaimStatementFilingDate.length==0)">
@@ -1852,154 +1892,280 @@
           <br>
           <ul *ngIf="DocName==='Challenge of Arbitrator'">
             <li>
-              1. This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under Rule 5 of the IIAM Expedited Arbitration Rules, r/w. Section 13 of the Arbitration & Conciliation Act, 1996, challenging the arbitrator, on the ground of justifiable doubts as to the independence and impartiality of the arbitrator.</li>
-              <br>
-              <li>2.	The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}. As per Procedural order dated <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>, the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>. <span *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter was filed by the respondent on {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the respondent.</span> </li>
-              <br>
+              1. This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under
+              Rule 5 of the IIAM Expedited Arbitration Rules, r/w. Section 13 of the Arbitration & Conciliation Act,
+              1996, challenging the arbitrator, on the ground of justifiable doubts as to the independence and
+              impartiality of the arbitrator.</li>
+            <br>
+            <li>2. The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}. As per Procedural
+              order dated <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>,
+              the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>.
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter
+                was filed by the respondent on
+                {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span
+                *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the
+                respondent.</span> </li>
+            <br>
             <li>3. According to the applicant, [narrate the facts and grounds challenging the arbitrator].</li>
             <br>
             <li>4. According to the respondent, [narrate the objection according to the respondent].</li>
             <br>
-            <li>5.	The matter was heard on [date]. After hearing the parties on both sides and after going through the records, it is decided as follows:</li>
-              <br>
-            <li>6.	[Give the reasoned decision in the challenge application based on the pleadings and records].</li>
-              <br>
-            <li>7.	The petition is allowed/dismissed/disposed-of as above.</li>
+            <li>5. The matter was heard on [date]. After hearing the parties on both sides and after going through the
+              records, it is decided as follows:</li>
+            <br>
+            <li>6. [Give the reasoned decision in the challenge application based on the pleadings and records].</li>
+            <br>
+            <li>7. The petition is allowed/dismissed/disposed-of as above.</li>
           </ul>
-          <ul *ngIf="DocName==='Jurisdiction of Tribunal'">  
+          <ul *ngIf="DocName==='Jurisdiction of Tribunal'">
             <li>
-               1.	This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under Rule 6 of the IIAM Expedited Arbitration Rules, r/w. Section 16 of the Arbitration & Conciliation Act, 1996, challenging the jurisdiction of the arbitral tribunal.</li> 
-              <br>
-            <li>2.	The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}. As per Procedural order dated <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>, the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>. <span *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter was filed by the respondent on {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the respondent.</span> </li>
-              <br>
-            <li>3.	According to the applicant, [narrate the facts and grounds challenging the jurisdiction of the arbitral tribunal].</li>
+              1. This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under
+              Rule 6 of the IIAM Expedited Arbitration Rules, r/w. Section 16 of the Arbitration & Conciliation Act,
+              1996, challenging the jurisdiction of the arbitral tribunal.</li>
             <br>
-            <li>4.	According to the respondent, [narrate the objection according to the respondent].</li>
+            <li>2. The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}. As per Procedural
+              order dated <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>,
+              the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>.
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter
+                was filed by the respondent on
+                {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span
+                *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the
+                respondent.</span> </li>
             <br>
-            <li>5.	The matter was heard on [date]. After hearing the parties on both sides and after going through the records, it is decided as follows:</li>
-              <br>
-            <li>6.	[Give the reasoned decision in the challenge application based on the pleadings and records].</li>
-              <br>
-            <li>7.	The petition is allowed/dismissed/disposed-of as above.</li>
+            <li>3. According to the applicant, [narrate the facts and grounds challenging the jurisdiction of the
+              arbitral tribunal].</li>
+            <br>
+            <li>4. According to the respondent, [narrate the objection according to the respondent].</li>
+            <br>
+            <li>5. The matter was heard on [date]. After hearing the parties on both sides and after going through the
+              records, it is decided as follows:</li>
+            <br>
+            <li>6. [Give the reasoned decision in the challenge application based on the pleadings and records].</li>
+            <br>
+            <li>7. The petition is allowed/dismissed/disposed-of as above.</li>
           </ul>
           <ul *ngIf="DocName==='Interim Measure'">
             <li>
-              1.	This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under Rule 8 of the IIAM Expedited Arbitration Rules, r/w. Section 17 of the Arbitration & Conciliation Act, 1996, seeking interim measures of protection.</li>
-              <br>
-              <li>2.	The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}. As per Procedural order dated <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>, the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>. <span *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter was filed by the respondent on {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the respondent.</span> </li>
-              <br>
-            <li>3.	According to the applicant, [narrate the facts and grounds seeking interim measures of protection].</li>
+              1. This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under
+              Rule 8 of the IIAM Expedited Arbitration Rules, r/w. Section 17 of the Arbitration & Conciliation Act,
+              1996, seeking interim measures of protection.</li>
             <br>
-            <li>4.	According to the respondent, [narrate the objection according to the respondent].</li>
+            <li>2. The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}. As per Procedural
+              order dated <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>,
+              the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>.
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter
+                was filed by the respondent on
+                {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span
+                *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the
+                respondent.</span> </li>
             <br>
-            <li>5.	The matter was heard on [date]. After hearing the parties on both sides and after going through the records, it is decided as follows:</li>
-              <br>
-            <li>6.	[Give the reasoned decision granting or refusing interim measures of protection, based on the pleadings and records].</li>
-              <br>
-            <li>7.	The petition is allowed/dismissed/disposed-of as above.</li>
+            <li>3. According to the applicant, [narrate the facts and grounds seeking interim measures of protection].
+            </li>
+            <br>
+            <li>4. According to the respondent, [narrate the objection according to the respondent].</li>
+            <br>
+            <li>5. The matter was heard on [date]. After hearing the parties on both sides and after going through the
+              records, it is decided as follows:</li>
+            <br>
+            <li>6. [Give the reasoned decision granting or refusing interim measures of protection, based on the
+              pleadings and records].</li>
+            <br>
+            <li>7. The petition is allowed/dismissed/disposed-of as above.</li>
           </ul>
           <ul *ngIf="DocName==='Interpretation of Award'">
             <li>
-              1. This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under Rule 13 of the IIAM Expedited Arbitration Rules, r/w. Section 33 of the Arbitration & Conciliation Act, 1996, seeking interpretation of the arbitral award passed by the Arbitral Tribunal on [date].</li>
-              <br>
-              <li>2.	The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}, which is within 15 days from the date of receipt of the copy of the award by the applicant. As per Procedural order dated <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>, the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>. <span *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter was filed by the respondent on {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the respondent.</span> </li>
+              1. This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under
+              Rule 13 of the IIAM Expedited Arbitration Rules, r/w. Section 33 of the Arbitration & Conciliation Act,
+              1996, seeking interpretation of the arbitral award passed by the Arbitral Tribunal on [date].</li>
+            <br>
+            <li>2. The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}, which is within 15
+              days from the date of receipt of the copy of the award by the applicant. As per Procedural order dated
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>,
+              the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>.
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter
+                was filed by the respondent on
+                {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span
+                *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the
+                respondent.</span> </li>
 
-              <br>
+            <br>
             <li>3. According to the applicant, [narrate the facts and grounds seeking interpretation of the award].</li>
             <br>
             <li>4. According to the respondent, [narrate the objection according to the respondent].</li>
             <br>
-            <li>5.	The matter was heard on [date]. After hearing the parties on both sides and after going through the records, it is decided as follows:</li>
-              <br>
-            <li>6.	[Give the reasoned decision interpreting the award or stating that no interpretation is required, based on the pleadings].</li>
-              <br>
-            <li>7.	The petition is allowed/dismissed/disposed-of as above.</li>
+            <li>5. The matter was heard on [date]. After hearing the parties on both sides and after going through the
+              records, it is decided as follows:</li>
+            <br>
+            <li>6. [Give the reasoned decision interpreting the award or stating that no interpretation is required,
+              based on the pleadings].</li>
+            <br>
+            <li>7. The petition is allowed/dismissed/disposed-of as above.</li>
           </ul>
           <ul *ngIf="DocName==='Correction of Award'">
             <li>
-              1. This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under Rule 13 of the IIAM Expedited Arbitration Rules, r/w. Section 33 of the Arbitration & Conciliation Act, 1996, seeking some clerical correction in the arbitral award passed by the Arbitral Tribunal on [date].</li>
-              <br>
-              <li>2.	The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}, which is within 15 days from the date of receipt of the copy of the award by the applicant. As per Procedural order dated <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>, the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>. <span *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter was filed by the respondent on {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the respondent.</span> </li>
-              <br>
+              1. This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under
+              Rule 13 of the IIAM Expedited Arbitration Rules, r/w. Section 33 of the Arbitration & Conciliation Act,
+              1996, seeking some clerical correction in the arbitral award passed by the Arbitral Tribunal on [date].
+            </li>
+            <br>
+            <li>2. The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}, which is within 15
+              days from the date of receipt of the copy of the award by the applicant. As per Procedural order dated
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>,
+              the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>.
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter
+                was filed by the respondent on
+                {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span
+                *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the
+                respondent.</span> </li>
+            <br>
             <li>3. According to the applicant, [narrate the facts and grounds seeking correction of the award].</li>
             <br>
             <li>4. According to the respondent, [narrate the objection according to the respondent].</li>
             <br>
-            <li>5. The matter was heard on [date]. After hearing the parties on both sides and after going through the records, it is decided as follows:</li>
-              <br>
-            <li>6. [Give the reasoned decision allowing or refusing the correction as sought for, based on the pleadings].</li>
-              <br>
+            <li>5. The matter was heard on [date]. After hearing the parties on both sides and after going through the
+              records, it is decided as follows:</li>
+            <br>
+            <li>6. [Give the reasoned decision allowing or refusing the correction as sought for, based on the
+              pleadings].</li>
+            <br>
             <li>7. The petition is allowed/dismissed/disposed-of as above.</li>
           </ul>
           <ul *ngIf="DocName==='Additional Award'">
             <li>
-              1.	This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under Rule 13 of the IIAM Expedited Arbitration Rules, r/w. Section 33 of the Arbitration & Conciliation Act, 1996, seeking an additional award in the above matter, since certain issues raised in the matter were not considered in the arbitral award passed by the Arbitral Tribunal on [date].</li>
-              <br>
-              <li>2.	The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}, which is within 15 days from the date of receipt of the copy of the award by the applicant. As per Procedural order dated <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>, the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>. <span *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter was filed by the respondent on {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the respondent.</span> </li>
-              <br>
-            <li>3.	According to the applicant, [narrate the facts and grounds seeking additional award].</li>
+              1. This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under
+              Rule 13 of the IIAM Expedited Arbitration Rules, r/w. Section 33 of the Arbitration & Conciliation Act,
+              1996, seeking an additional award in the above matter, since certain issues raised in the matter were not
+              considered in the arbitral award passed by the Arbitral Tribunal on [date].</li>
             <br>
-            <li>4.	According to the respondent, [narrate the objection according to the respondent].</li>
+            <li>2. The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}, which is within 15
+              days from the date of receipt of the copy of the award by the applicant. As per Procedural order dated
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>,
+              the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>.
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter
+                was filed by the respondent on
+                {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span
+                *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the
+                respondent.</span> </li>
             <br>
-            <li>5.	The matter was heard on [date]. After hearing the parties on both sides and after going through the records, it is decided as follows:</li>
-              <br>
-            <li>6.	[Give the reasoned decision allowing or refusing to give additional award as sought for, based on the pleadings].</li>
-              <br>
-            <li>7.	The petition is allowed/dismissed/disposed-of as above.</li>
+            <li>3. According to the applicant, [narrate the facts and grounds seeking additional award].</li>
+            <br>
+            <li>4. According to the respondent, [narrate the objection according to the respondent].</li>
+            <br>
+            <li>5. The matter was heard on [date]. After hearing the parties on both sides and after going through the
+              records, it is decided as follows:</li>
+            <br>
+            <li>6. [Give the reasoned decision allowing or refusing to give additional award as sought for, based on the
+              pleadings].</li>
+            <br>
+            <li>7. The petition is allowed/dismissed/disposed-of as above.</li>
           </ul>
           <ul *ngIf="DocName==='Settlement and Termination'">
             <li>
-              1.	This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under Rule 13 of the IIAM Expedited Arbitration Rules.</li>
-              <br>
-              <li>2.	The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}. </li>
-              <br>
-            <li>3.	According to the applicant, [narrate the facts and grounds seeking termination].</li>
+              1. This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under
+              Rule 13 of the IIAM Expedited Arbitration Rules.</li>
             <br>
-            <li>4.	Since no objection is raised by the respondent in the application, the termination is allowed. </li>
+            <li>2. The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}. </li>
             <br>
-            <li>5.  As per Rule 14, the claimant/parties are liable to pay 25%/50%/75% of the total fee. The tentative amount in dispute was [amount] and the total fee as per the fee schedule is [amount]. As such the fee payable is [amount]. </li>
-              <br>
-            <li>6.	The above said amount shall be paid on or before [date] (or)
-              The claimant/parties have already made a deposit of [amount] and the balance amount of [amount] shall be paid on or before [date] (or)
-              The claimant/parties have already made a deposit of [amount]. Since this more than the fee payable, the balance amount of [amount] shall be refunded by IIAM on or before [date].  
-              </li>
-              <br>
-           
+            <li>3. According to the applicant, [narrate the facts and grounds seeking termination].</li>
+            <br>
+            <li>4. Since no objection is raised by the respondent in the application, the termination is allowed. </li>
+            <br>
+            <li>5. As per Rule 14, the claimant/parties are liable to pay 25%/50%/75% of the total fee. The tentative
+              amount in dispute was [amount] and the total fee as per the fee schedule is [amount]. As such the fee
+              payable is [amount]. </li>
+            <br>
+            <li>6. The above said amount shall be paid on or before [date] (or)
+              The claimant/parties have already made a deposit of [amount] and the balance amount of [amount] shall be
+              paid on or before [date] (or)
+              The claimant/parties have already made a deposit of [amount]. Since this more than the fee payable, the
+              balance amount of [amount] shall be refunded by IIAM on or before [date].
+            </li>
+            <br>
+
           </ul>
           <ul *ngIf="DocName==='Post Award Negotiation'">
             <li>
-              1.	This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under Rule 13 of the IIAM Expedited Arbitration Rules, r/w. Section 33 of the Arbitration & Conciliation Act, 1996, requesting the arbitral tribunal to act as an amiable compositeur to facilitate an amicable settlement between the parties through negotiation. </li>
-              <br>
-              <li>2.	The award was published on [date] and the applicant has filed this application within 15 days from the date of receipt of the copy of award. </li>
-              <br>
-            <li>3.	As per Procedural order dated [date], the parties were given notice to appear on [date].</li>
+              1. This is an application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under
+              Rule 13 of the IIAM Expedited Arbitration Rules, r/w. Section 33 of the Arbitration & Conciliation Act,
+              1996, requesting the arbitral tribunal to act as an amiable compositeur to facilitate an amicable
+              settlement between the parties through negotiation. </li>
             <br>
-            <li>4.	[If settlement is made] After detailed discussions, the parties came up with a settlement and jointly filed the terms of settlement and requested the arbitral tribunal to pass an award on agreed terms, amending the award dated [date]. Based on the same a separate award is passed incorporating the terms of settlement.</li>
+            <li>2. The award was published on [date] and the applicant has filed this application within 15 days from
+              the date of receipt of the copy of award. </li>
             <br>
-            <li>5.	[If no settlement made] After detailed discussions, the parties could not arrive at a settlement and therefore this application is closed.</li>
-              <br>
-            <li>6.	The petition is disposed-of as above. The date of closure of this application will be deemed to be the date when the arbitral award is received by the parties for all legal purposes.
-              </li>
-              <br>
-           
+            <li>3. As per Procedural order dated [date], the parties were given notice to appear on [date].</li>
+            <br>
+            <li>4. [If settlement is made] After detailed discussions, the parties came up with a settlement and jointly
+              filed the terms of settlement and requested the arbitral tribunal to pass an award on agreed terms,
+              amending the award dated [date]. Based on the same a separate award is passed incorporating the terms of
+              settlement.</li>
+            <br>
+            <li>5. [If no settlement made] After detailed discussions, the parties could not arrive at a settlement and
+              therefore this application is closed.</li>
+            <br>
+            <li>6. The petition is disposed-of as above. The date of closure of this application will be deemed to be
+              the date when the arbitral award is received by the parties for all legal purposes.
+            </li>
+            <br>
+
           </ul>
-          <ul *ngIf="DocName!='Settlement and Termination' && DocName!='Challenge of Arbitrator' && DocName!='Jurisdiction of Tribunal' && DocName!='Interim Measure' && DocName!='Interpretation of Award' && DocName!='Correction of Award' && DocName!='Additional Award'">
+          <ul
+            *ngIf="DocName!='Settlement and Termination' && DocName!='Challenge of Arbitrator' && DocName!='Jurisdiction of Tribunal' && DocName!='Interim Measure' && DocName!='Interpretation of Award' && DocName!='Correction of Award' && DocName!='Additional Award'">
             <li>
-              1.	This is a miscellaneous application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent '}} under Rule __ of the IIAM Expedited Arbitration Rules, r/w. Section __ of the Arbitration & Conciliation Act, 1996, seeking [narrate the prayer of the application].</li>
-              <br>
-              <li>2.	The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}. As per Procedural order dated <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>, the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before <span *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>. <span *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter was filed by the respondent on {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the respondent.</span> </li>
-              <br>
-            <li>3.	According to the applicant, [narrate the facts and grounds in the application].</li>
+              1. This is a miscellaneous application filed by the {{ReferenceDocument.Side==0?' claimant ': ' respondent
+              '}} under Rule __ of the IIAM Expedited Arbitration Rules, r/w. Section __ of the Arbitration &
+              Conciliation Act, 1996, seeking [narrate the prayer of the application].</li>
             <br>
-            <li>4.	According to the respondent, [narrate the objection according to the respondent].</li>
+            <li>2. The application was filed on {{ReferenceDocument.SysTime|date:'dd-MMM-yyyy'}}. As per Procedural
+              order dated <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].SysTime|date:'dd-MMM-yyyy'}}</span>,
+              the {{ReferenceDocument.Side==1?' claimant ': ' respondent '}} was directed to file counter on or before
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationOrder(2,5) && filterarbitrationDocumentWithApplicationOrder(2,5).length>0">{{filterarbitrationDocumentWithApplicationOrder(2,5)[0].Remarks|date:'dd-MMM-yyyy'}}</span>.
+              <span
+                *ngIf="!!filterarbitrationDocumentWithApplicationCounter(2) && filterarbitrationDocumentWithApplicationCounter(2).length>0">Counter
+                was filed by the respondent on
+                {{filterarbitrationDocumentWithApplicationCounter(2)[0].SysTime|date:'dd-MMM-yyyy'}}.</span> <span
+                *ngIf="!filterarbitrationDocumentWithApplicationCounter(2)"> No counter was filed by the
+                respondent.</span> </li>
             <br>
-            <li>5.	The matter was heard on [date]. After hearing the parties on both sides and after going through the records, it is decided as follows:</li>
-              <br>
-            <li>6.	[Give the reasoned decision either allowing or refusing the prayer made in the application based on the pleadings and records].</li>
-              <br>
-            <li>7.	The petition is allowed/dismissed/disposed-of as above.  </li>
+            <li>3. According to the applicant, [narrate the facts and grounds in the application].</li>
+            <br>
+            <li>4. According to the respondent, [narrate the objection according to the respondent].</li>
+            <br>
+            <li>5. The matter was heard on [date]. After hearing the parties on both sides and after going through the
+              records, it is decided as follows:</li>
+            <br>
+            <li>6. [Give the reasoned decision either allowing or refusing the prayer made in the application based on
+              the pleadings and records].</li>
+            <br>
+            <li>7. The petition is allowed/dismissed/disposed-of as above. </li>
           </ul>
-          
+
           <br>
           <p>Dated this {{today|date:'dd'}} {{today|date:'MMMM, yyyy'}}</p>
 
@@ -2015,9 +2181,9 @@
       <br>
       <div class="col-lg-6" style="text-align: center;padding-bottom: 100px;">
         <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;"
-          (click)="Save()">{{Tab==0?'Edit':'Proceed'}}123</button>
+          (click)="Save()">{{Tab==0?'Edit':'Proceed'}}</button>
       </div>
-     
+
     </div>
 
     <div class="container  form-wrapper" style="margin-top: 50px;" *ngIf="Tab==1 && (!!Type && Type==10)">
@@ -2119,7 +2285,7 @@
         <div class="form-group col-6">
           <button class="btn btn-sm purple-btn" (click)="Save()">Save</button>
           <br>
-          <br> 
+          <br>
           <br>
           <br>
           <br>
@@ -2207,10 +2373,11 @@
       <!-- <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
       <ngx-editor [editor]="editor" [ngModel]="HtmlData" [disabled]="false" [placeholder]="'Type here...'"></ngx-editor> -->
       <!-- <editor [inline]="true"  plugins='[tinymcespellchecker]'  [apiKey]="appconfig.tinymce_key" [(ngModel)]="HtmlData"></editor> -->
-      <br><br>  <br><br>
+      <br><br> <br><br>
       <div class="row justify-content-center" style="margin-bottom: 100px;">
         <div class="col-lg-12" style="text-align: center;" *ngIf="Type!=6">
-          <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;" (click)="Save()"  [disabled]="isButtonDisabled">Submit</button>
+          <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;" (click)="Save()"
+            [disabled]="isButtonDisabled">Submit</button>
           <br>
           <br>
           <br>
@@ -2219,16 +2386,19 @@
           <br>
         </div>
         <div class="col-lg-6" style="text-align: center;" *ngIf="Type==6 && (!!doc && doc.AwardStatus==0)">
-          <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;" (click)="SaveAward(0)">Submit to Scrutiny</button>
+          <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;" (click)="SaveAward(0)">Submit to
+            Scrutiny</button>
 
+        </div>
+        <div class="col-lg-6" style="text-align: center;" *ngIf="Type==6 && (!!doc && doc.AwardStatus==0)">
+          <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;" (click)="SaveAward(2)">Save
+            Award</button>
+        </div>
+        <div class="col-lg-12" style="text-align: center;" *ngIf="Type==6 && (!!doc && doc.AwardStatus==1)">
+          <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;" (click)="SaveAward(1)">Publish
+            Award</button>
+        </div>
       </div>
-      <div class="col-lg-6" style="text-align: center;" *ngIf="Type==6 && (!!doc && doc.AwardStatus==0)">
-        <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;" (click)="SaveAward(2)">Save Award</button>
-    </div>
-    <div class="col-lg-12" style="text-align: center;" *ngIf="Type==6 && (!!doc && doc.AwardStatus==1)">
-      <button class="btn  purple-btn" style="color: #fff;margin-left: 10px;" (click)="SaveAward(1)">Publish Award</button>
-  </div>
-    </div>
     </div>
   </body>
 </ion-content>

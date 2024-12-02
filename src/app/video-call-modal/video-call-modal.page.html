@@ -1,0 +1,35 @@
+<!-- video-call-modal.component.html -->
+<div class="custom-header">
+  <div class="toolbar">
+    <div class="title">Choose Video Call Option</div>
+    <div class="close-button">
+      <button (click)="dismiss()">Close</button>
+    </div>
+  </div>
+</div>
+
+
+<ion-content>
+  <div class="icon-container">
+    <!-- Left icon: App Integrated Video Call -->
+    <ion-button fill="clear" (click)="selectVideoCall()">
+      <ion-icon name="videocam" slot="start"></ion-icon>
+      <ion-label>App Integrated Video Call</ion-label>
+    </ion-button>
+
+    <!-- Right icon: External Sources -->
+    <ion-button fill="clear" (click)="selectExternalLink()">
+      <ion-icon name="link" slot="end"></ion-icon>
+      <ion-label>External Sources</ion-label>
+    </ion-button>
+  </div>
+
+  <!-- Conditional form for external link input -->
+  <div *ngIf="isExternalSelected">
+    <ion-item>
+      <ion-label position="floating">Paste Link Here</ion-label>
+      <ion-input [(ngModel)]="externalLink" type="url" placeholder="Paste external link"></ion-input>
+    </ion-item>
+    <ion-button expand="full" (click)="submitExternalLink()">Submit</ion-button>
+  </div>
+</ion-content>

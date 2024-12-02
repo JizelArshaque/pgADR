@@ -38,7 +38,7 @@ export class TokenEncryptionService {
       Name: this.encryptedData,
     };
     localStorage.setItem('type', JSON.stringify(type));
-    console.log("=============",type)
+   // console.log("=============",type)
     
     // alert("encryption")
   }
@@ -46,7 +46,7 @@ export class TokenEncryptionService {
   DecryptToken() {
     if (localStorage.getItem('type')) {
       this.encrypted = JSON.parse(`${localStorage.getItem('type')}`).Name;
-      console.log(this.encrypted,"encryptedindwecrytoy");
+     // console.log(this.encrypted,"encryptedindwecrytoy");
       // alert("decryprionsavelogin")
 
       try {

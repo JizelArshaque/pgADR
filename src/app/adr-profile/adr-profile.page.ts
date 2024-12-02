@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import {  NavController, ModalController } from '@ionic/angular';
+import { NavController, ModalController } from '@ionic/angular';
 
 import { AdrProfessionalService } from 'src/service/adr-professional.service';
 import { UserDetails } from '../../class/UserDetails';
@@ -18,19 +18,19 @@ import { AlertService } from 'src/shared/alert-info/alert.service';
   styleUrls: ['./adr-profile.page.scss'],
 })
 export class AdrProfilePage implements OnInit {
-  userDetails=new UserDetails();
-  ImageData:string='';
-  userData:any []=[];
+  userDetails = new UserDetails();
+  ImageData: string = '';
+  userData: any[] = [];
   Country: any;
-  Type:number=0;
-  Id:number=0;
-  SecretCode:any
+  Type: number = 0;
+  Id: number = 0;
+  SecretCode: any
   Address: any;
   ArbitratorType: any;
   ArbitratorSide: any;
-  flag:number=0;
-  Name:any
-  appconfig=new AppConfig();
+  flag: number = 0;
+  Name: any
+  appconfig = new AppConfig();
   TId: any
   mediation = new Mediation();
   Side: any;
@@ -39,56 +39,56 @@ export class AdrProfilePage implements OnInit {
   Mobile: any;
   State: any;
   City: any;
-  constructor(public alertservice: AlertService,private arbitrationservice: ArbitrationServiceService, private location: Location,private adrprovider: AdrProfessionalService,public navCtrl: NavController,public modalCtrl:ModalController, public activatedrouter: ActivatedRoute, public router: Router) { 
+  constructor(public alertservice: AlertService, private arbitrationservice: ArbitrationServiceService, private location: Location, private adrprovider: AdrProfessionalService, public navCtrl: NavController, public modalCtrl: ModalController, public activatedrouter: ActivatedRoute, public router: Router) {
     this.activatedrouter.queryParams.subscribe(params => {
       const navigationExtras = this.router.getCurrentNavigation()?.extras;
-    
+
       if (navigationExtras && navigationExtras.state) {
         this.userDetails = navigationExtras.state['UserDetails'] ?? new UserDetails();
         this.Type = navigationExtras.state['Type'] ?? 0;
-    
+
         if (this.userDetails) {
-          this.ImageData = this.appconfig.AssetUrl + "/assets/images/User/" + this.userDetails.Id.toString() + ".jpg?timeStamp=" + Date.now().toString();
+          this.ImageData = this.appconfig.AssetUrlAdmin + "/assets/images/User/" + this.userDetails.Id.toString() + ".jpg?timeStamp=" + Date.now().toString();
         }
-    
+
         this.flag = 0;
       } else {
         this.SecretCode = this.activatedrouter.snapshot.paramMap.get('SecretCode') ?? '';
         this.Name = this.activatedrouter.snapshot.paramMap.get('Name') ?? '';
-    
+
         this.flag = 1;
         this.GetAllADRProfessional(this.SecretCode);
       }
     });
-    
-  }
-  GetAllADRProfessional(secret:any) {
-    
-    this.adrprovider.GetAllADRProfessionals(secret).subscribe((data:any)=>{
-     
 
-     
+  }
+  GetAllADRProfessional(secret: any) {
+
+    this.adrprovider.GetAllADRProfessionals(secret).subscribe((data: any) => {
+
+
+
       this.userData = <Array<any>>data;
-    
+
       this.userDetails = this.userData[0]
-      this.ImageData=this.appconfig.AssetUrl+"/assets/images/User/"+this.userDetails.Id.toString()+".jpg?timeStamp="+Date.now().toString()
-     })
+      this.ImageData = this.appconfig.AssetUrlAdmin + "/assets/images/User/" + this.userDetails.Id.toString() + ".jpg?timeStamp=" + Date.now().toString()
+    })
   }
 
   ngOnInit() {
   }
 
-  goHome(){
+  goHome() {
     this.router.navigate(['home'])
   }
 
   ionViewDidLoad() {
   }
-  back(){
- 
-      this.router.navigate(['arbitrator-modal'])
-    }
-   
+  back() {
+
+    this.router.navigate(['arbitrator-modal'])
+  }
+
   //  this.viewCtrl.dismiss();  }
 
   confirmApproveforExpedited(Id: any) {
@@ -119,7 +119,7 @@ export class AdrProfilePage implements OnInit {
       .subscribe((data: any) => {
         if (!!data && data.length > 0) {
           if (data[0].Id > 1 && data[0].Error === 0) {
-                      this.alertservice.Alert("Arbitrator Appointed!",3,()=>{},()=>{},);
+            this.alertservice.Alert("Arbitrator Appointed!", 3, () => { }, () => { },);
             this.location.back();
           }
         } else {
@@ -127,8 +127,8 @@ export class AdrProfilePage implements OnInit {
       });
   }
   AppointArbitratorforExpedited(Arbitrator: any) {
-    console.log(Arbitrator);
-    
+    // console.log(Arbitrator);
+
     this.TId = Arbitrator.Id;
     this.Name = Arbitrator.Name;
     this.Mobile = Arbitrator.Mobile;
@@ -145,24 +145,24 @@ export class AdrProfilePage implements OnInit {
 
       if (!!data) {
         if (data[0].Id > 1 && data[0].Error === 0) {
-          
-                    this.alertservice.Alert("Arbitrator Appointed!",3,()=>{},()=>{},);
-              const secureCode = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).SecureCode
-              console.log(secureCode);
-              
-              this.router.navigate(['/dashboard'+'/'+secureCode]);
+
+          this.alertservice.Alert("Arbitrator Appointed!", 3, () => { }, () => { },);
+          const secureCode = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).SecureCode
+          // console.log(secureCode);
+
+          this.router.navigate(['/dashboard' + '/' + secureCode]);
         }
       } else {
         alert("Error while Appoint Arbitrator");
       }
     });
   }
-  OpenCertificate(type:any){
+  OpenCertificate(type: any) {
     let navigationextra: NavigationExtras = {
       state: {
-        UserDetails:this.userDetails,Type:type,Page:'adr-profile'
+        UserDetails: this.userDetails, Type: type, Page: 'adr-profile'
       }
     }
-      this.router.navigate(['/neutral-certificate'],navigationextra);
+    this.router.navigate(['/neutral-certificate'], navigationextra);
   }
 }

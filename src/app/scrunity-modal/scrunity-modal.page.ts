@@ -184,7 +184,7 @@ export class ScrunityModalPage implements OnInit {
   async SubmitDispute() {
     if (this.selectedArbitrator) {
       const ScrunityId = this.selectedArbitrator.Id;
-      console.log(ScrunityId);
+     
   
       this.ArbId = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).Id;
   
@@ -314,7 +314,7 @@ export class ScrunityModalPage implements OnInit {
       if (data) {
         if (!!data && data.length > 0) {
           this.Arbitrators = data;
-          console.log(this.Arbitrators);
+        //  console.log(this.Arbitrators);
           
         } else {
           this.Arbitrators = [];

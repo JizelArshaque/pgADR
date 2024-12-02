@@ -86,23 +86,43 @@ export class ArbitrationPartyAddPage implements OnInit {
   constructor(public alertservice: AlertService, private router: Router, private route: ActivatedRoute, private modalCtrl: ModalController, private loadingCtrl: LoadingController, public navCtrl: NavController, public navParams: NavParams,
     private validservice: ValidationService, private countryservice: CountryServiceService, private ArbitrationService: ArbitrationServiceService) {
 
+    // console.log(this.navParams, 'nav');
+
+    if (this.navParams.get("ArbitrationParties")) {
 
 
+
+      this.ArbitrationParties = this.navParams.get("ArbitrationParties");
+
+      // debugger
+    }
     if (this.navParams.get("ArbitrationEdit")) {
+      this.GetAllCountry()
+
+
+
+
       this.additionalpartyedit = this.navParams.get("ArbitrationEdit");
-      console.log(this.additionalpartyedit,"============edit============")
+      console.log(this.additionalpartyedit, "============edit============")
       this.Name = this.additionalpartyedit.Name
       this.Email = this.additionalpartyedit.Email
       this.Mobile = this.additionalpartyedit.Mobile
       this.Side = this.additionalpartyedit.Side
       this.PartyType = this.additionalpartyedit.Type
-      this.cntry=  this.additionalpartyedit.Country
-      this.stat =this.additionalpartyedit.State
-      this.city=this.additionalpartyedit.City
+      this.cntry = this.additionalpartyedit.Country
+      this.stat = this.additionalpartyedit.State
+      this.selectedState = this.State.find(x => x.state === this.additionalpartyedit.State);
+      this.city = this.additionalpartyedit.City
 
       this.Address = this.additionalpartyedit.Address
       this.Designation = this.additionalpartyedit.Designation
       this.AppearFor = this.additionalpartyedit.AppearFor
+      // this.Side = this.additionalparty.Side
+
+      this.prty = this.ArbitrationParties.find(x => x.Name === this.AppearFor);
+
+
+
       this.AuthorisationUrl = this.additionalpartyedit.AuthorisationUrl
       this.additionalparty.Id = this.additionalpartyedit.Id;
       this.additionalparty.SecureCode = this.additionalpartyedit.SecureCode;
@@ -112,13 +132,10 @@ export class ArbitrationPartyAddPage implements OnInit {
     }
     if (this.navParams.get("Side")) {
       this.Side = this.navParams.get("Side");
-      debugger
+      // debugger
 
     }
-    if (this.navParams.get("ArbitrationParties")) {
-      this.ArbitrationParties = this.navParams.get("ArbitrationParties");
-      debugger
-    }
+
 
 
     if (this.PartyType == 0) { this.title = "Add Co-Mediator"; this.Type = this.PartyType; } else if (this.PartyType == 1) { this.title = "Manage Addl.Party/Lawyer"; this.Type = this.PartyType; }
@@ -144,8 +161,8 @@ export class ArbitrationPartyAddPage implements OnInit {
 
   ionViewWillEnter() {
     this.GetAllCountry();
-   
-  
+
+
 
   }
 
@@ -179,7 +196,7 @@ export class ArbitrationPartyAddPage implements OnInit {
           that.Name = data[0].Name;
           that.Mobile = data[0].Mobile;
           that.UserId = data[0].Id;
-         
+
         }
       }
       else {
@@ -191,90 +208,90 @@ export class ArbitrationPartyAddPage implements OnInit {
 
 
   async AdditionalPartyAdd() {
-   
+
     this.additionalparty.Side = this.Side;
 
     // Validation checks
-console.log(this.cntry,"contry");
+    //console.log(this.cntry,"contry");
 
-    debugger
+    // debugger
     if ((this.PartyType === 0 && this.Side === 0) || (this.PartyType === 0 && this.Side === 1)) {
-        if (!this.Email) {
-            alert("Please enter Email");
-           
-            return;
-        }
-        if (!this.Name) {
-            alert("Please enter Name");
-          
-            return;
-        }
-        if (!this.Address) {
-            alert("Please enter Address");
-            
-            return;
-        }
-        if (!this.selectedCountry) {
-            alert("Please enter Country");
-           
-            return;
-        }
-        if (!this.selectedState) {
-            alert("Please enter State");
-           
-            return;
-        }
-        if (!this.selectedCity) {
-            alert("Please enter city");
-            
-            return;
-        }
+      if (!this.Email) {
+        alert("Please enter Email");
+
+        return;
+      }
+      if (!this.Name) {
+        alert("Please enter Name");
+
+        return;
+      }
+      if (!this.Address) {
+        alert("Please enter Address");
+
+        return;
+      }
+      if (!this.selectedCountry) {
+        alert("Please enter Country");
+
+        return;
+      }
+      if (!this.selectedState) {
+        alert("Please enter State");
+
+        return;
+      }
+      if (!this.selectedCity) {
+        alert("Please enter city");
+
+        return;
+      }
     } else if (this.PartyType === 5) {
-        if (!this.Email) {
-            alert("Please enter Email");
-           
-            return;
-        }
-        if (!this.Name) {
-            alert("Please enter Name");
-          
-            return;
-        }
-        if (!this.Designation) {
-            alert("Please enter Designation");
-            
-            return;
-        }
-        if (!this.Address) {
-            alert("Please enter Address");
-          
-            return;
-        }
-        if (!this.selectedCountry) {
-            alert("Please enter Country");
-            
-            return;
-        }
-        if (!this.selectedState) {
-            alert("Please enter State");
-           
-            return;
-        }
-        if (!this.selectedCity) {
-            alert("Please enter city");
-           
-            return;
-        }
-        if (!this.PartyType) {
-            alert("Please enter Type");
-           
-            return;
-        }
+      if (!this.Email) {
+        alert("Please enter Email");
+
+        return;
+      }
+      if (!this.Name) {
+        alert("Please enter Name");
+
+        return;
+      }
+      if (!this.Designation) {
+        alert("Please enter Designation");
+
+        return;
+      }
+      if (!this.Address) {
+        alert("Please enter Address");
+
+        return;
+      }
+      if (!this.selectedCountry) {
+        alert("Please enter Country");
+
+        return;
+      }
+      if (!this.selectedState) {
+        alert("Please enter State");
+
+        return;
+      }
+      if (!this.selectedCity) {
+        alert("Please enter city");
+
+        return;
+      }
+      if (!this.PartyType) {
+        alert("Please enter Type");
+
+        return;
+      }
     }
     let loading = await this.loadingCtrl.create({
       message: 'Please wait...'
-  });
-  await loading.present();
+    });
+    await loading.present();
 
 
     // Assign values to additionalparty object
@@ -291,39 +308,39 @@ console.log(this.cntry,"contry");
 
     // API call to insert the party
     this.ArbitrationService.InsertArbitrationParty(this.additionalparty).subscribe(
-        (data: any) => {
-            loading.dismiss(); // Dismiss the loader after the API response
+      (data: any) => {
+        loading.dismiss(); // Dismiss the loader after the API response
 
-            if (!!data && data.length > 0) {
-                if (data[0].Error == 0) {
-                    alert("Inserted Successfully");
-                    this.back();
-                } else if (data[0].Error == 111) {
-                    alert("Error: Party with email already registered!!");
-                } else {
-                    alert("Error while saving!! " + data[0].Error.toString());
-                }
-            } else {
-                alert("Error while saving!!");
-            }
-        },
-        (error) => {
-            loading.dismiss(); // Dismiss the loader even if there's an error
-            alert("An error occurred while saving the data!");
+        if (!!data && data.length > 0) {
+          if (data[0].Error == 0) {
+            alert("Inserted Successfully");
+            this.back();
+          } else if (data[0].Error == 111) {
+            alert("Error: Party with email already registered!!");
+          } else {
+            alert("Error while saving!! " + data[0].Error.toString());
+          }
+        } else {
+          alert("Error while saving!!");
         }
+      },
+      (error) => {
+        loading.dismiss(); // Dismiss the loader even if there's an error
+        alert("An error occurred while saving the data!");
+      }
     );
-}
+  }
 
 
 
 
- async AdditionalLawyerAdd() {
+  async AdditionalLawyerAdd() {
 
-   
-    debugger
 
-    if ( this.PartyType === 2 && this.Side === 1) {
-      debugger
+    // debugger
+
+    if (this.PartyType === 2 && this.Side === 1) {
+      // debugger
       if (!this.Email) {
         alert("Please enter Email");
         return;
@@ -354,7 +371,7 @@ console.log(this.cntry,"contry");
       //   return;
       // }
     } else if (this.PartyType === 2 && this.Side === 0) {
-      debugger
+      // debugger
       if (!this.Email) {
         alert("Please enter Email");
         return;
@@ -364,7 +381,7 @@ console.log(this.cntry,"contry");
         return;
       }
       if (!this.Address) {
-        debugger
+        // debugger
         alert("Please enter Address");
         return;
       }
@@ -384,7 +401,7 @@ console.log(this.cntry,"contry");
       //   alert("Please enter Side");
       //   return;
       // }
-      debugger
+      // debugger
       if (!this.additionalparty.AppearFor) {
         alert("Please enter Appearing");
         return;
@@ -428,12 +445,12 @@ console.log(this.cntry,"contry");
       }
     }
 
-    debugger
+    // debugger
 
     let loading = await this.loadingCtrl.create({
       message: 'Please wait...'
-  });
-  await loading.present();
+    });
+    await loading.present();
 
     // If all mandatory fields are entered, proceed with the insertion
     this.additionalparty.Name = this.Name;
@@ -470,7 +487,7 @@ console.log(this.cntry,"contry");
         alert("No data received.");
         window.location.reload();
       }
-      
+
     });
 
   }
@@ -493,6 +510,8 @@ console.log(this.cntry,"contry");
   }
 
   FilterParties() {
+    // console.log('pols?', this.ArbitrationParties.filter(x => x.Type == 0));
+
     return this.ArbitrationParties.filter(x => x.Type == 0);
   }
   //added by nazrin 3/5/23
@@ -500,47 +519,60 @@ console.log(this.cntry,"contry");
     this.countryservice.GetAllCountryFromJSON().subscribe((data: any) => {
       this.Country = <Array<any>>data;
       this.selectedCountry = this.Country?.find(country => country.name === this.cntry);
-      debugger
-  this.GetAllStates(this.selectedCountry);
-      debugger
+      // debugger
+      this.GetAllStates(this.selectedCountry);
+      // debugger
+
+      if (this.stat) {
+        console.log(this.cntry, this.stat);
+
+      }
     });
   }
   //added by nazrin 3/5/23
   GetAllStates(selectedCountry: any) {
-    debugger
+    // debugger
+
     if (selectedCountry) {
+
       // Assign selected country name to additionalparty.Country
-      this.additionalparty.Country = selectedCountry.name; 
-  
+      this.additionalparty.Country = selectedCountry.name;
+
       // Fetch states based on the selected country
       this.countryservice.GetAllStatesFromJSON().subscribe((data: any) => {
         // Filter states by the selected country ID
         this.State = data?.filter((x: any) => x.country_id == selectedCountry.id);
-        this.selectedState = this.State?.find(state => state.name === this.stat);
+
 
         this.GetAllCities(this.selectedState);
-        debugger
+
+        // debugger
       });
     }
   }
-  
+
   //added by nazrin 3/5/23
   GetAllCities(selectedState: any) {
+
     if (selectedState) {
       // Assign selected state name to additionalparty.State
       this.additionalparty.State = selectedState.name;
-  
+
       // Fetch cities based on the selected state
       this.countryservice.GetAllCitiesFromJSON().subscribe((data: any) => {
         // Filter cities by the selected state ID
         this.District = data.filter((x: any) => x.state_id == selectedState.id);
         this.selectedCity = this.District?.find(citys => citys.name === this.city);
-        debugger
+        // debugger
       });
     }
+    console.log(this.selectedState, '============================');
+
   }
-  
+
   AppearForChange(event: { component: IonicSelectableComponent, value: any }) {
+    // console.log(this.prty);
+
     this.additionalparty.AppearFor = event.value.Name;
     this.additionalparty.Side = this.ArbitrationParties.find(x => x.Id == event.value.Id).Side;
     // alert(this.additionalparty.Side);

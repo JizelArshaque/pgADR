@@ -1,0 +1,49 @@
+<ion-header>
+  <div style="background-color: #04356d; display: flex; align-items: center; justify-content: center;"
+    class="text-center">
+    <!-- <ion-buttons slot="start">
+      <ion-button>
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
+
+    <!-- Title -->
+    <ion-title>Signature</ion-title>
+
+    <!-- Right Icons -->
+    <ion-buttons slot="start">
+      <ion-button (click)="back()">
+        <ion-icon name="close"></ion-icon>
+
+      </ion-button>
+
+      <!-- <ion-button>
+        <ion-icon name="settings"></ion-icon>
+      </ion-button> -->
+    </ion-buttons>
+  </div>
+</ion-header>
+
+<ion-content>
+  <!-- <div > -->
+  <ion-row>
+    <ion-col class="signature-pad-border">
+      <signature-pad [options]="signaturePadOptions" (onBeginEvent)="drawStart()"
+        (onEndEvent)="drawComplete()"></signature-pad>
+    </ion-col>
+  </ion-row>
+
+  <!-- </div> -->
+  <ion-row>
+    <ion-col>
+      <button class="btn btn-outline-success active full-width" (click)="saveSignature()">
+        submit
+      </button>
+    </ion-col>
+    <ion-col>
+      <button class="btn btn-outline-light active full-width" (click)="clearSignature()">
+        Clear
+      </button>
+    </ion-col>
+  </ion-row>
+</ion-content>

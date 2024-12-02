@@ -1,0 +1,75 @@
+/* video-call-modal.component.scss */
+.icon-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+ion-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+ion-label {
+    margin-top: 5px;
+}
+
+ion-icon {
+    font-size: 40px;
+    /* Adjust the icon size */
+}
+
+.custom-modal-height .modal-wrapper {
+    height: 500px;
+    /* Fixed height for testing */
+    max-height: 500px;
+}
+
+.custom-modal-height .modal-content {
+    height: 100%;
+    /* Ensure content fills the modal wrapper */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* Adjust as needed */
+    padding: 0;
+    /* Optional: remove padding if you don't need it */
+}
+
+
+.custom-header {
+    background-color: #04356d;
+    /* Set your desired background color */
+    color: white;
+    /* Text color for contrast */
+    padding: 16px 0;
+    /* Add padding similar to ion-header */
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    /* Padding inside the toolbar */
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.close-button button {
+    background-color: transparent;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.close-button button:hover {
+    opacity: 0.8;
+}

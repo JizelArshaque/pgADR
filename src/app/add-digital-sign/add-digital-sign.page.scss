@@ -1,0 +1,145 @@
+ion-header {
+    background-color: #04356d !important;
+    /* Set header background color */
+}
+
+ion-title {
+    color: white !important;
+    /* Set title text color to white */
+}
+
+ion-toolbar {
+    --background: #04356d;
+    /* Set toolbar background color */
+}
+
+ion-button {
+    color: white;
+    /* Set icon and text color to white */
+}
+
+/* Add custom class for the Add Digital Sign button */
+.digital-sign-btn {
+    background-color: #04356d !important;
+    /* Ensure the button color is #04356d */
+    color: white !important;
+    /* Ensure button text is white */
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    border-radius: 8px;
+    margin-top: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+/* Ensure the button stays the desired color even on hover */
+.digital-sign-btn:hover {
+    background-color: #032a53 !important;
+    /* Darker shade of #04356d */
+}
+
+/* Remove default button styling */
+ion-button.digital-sign-btn {
+    --background: #04356d !important;
+    --color: white !important;
+}
+
+
+/* Center the title */
+.center-title {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+    text-align: center;
+}
+
+/* Styling for the informational text */
+.info-text {
+    font-size: 1rem;
+    color: #333;
+    padding: 1rem;
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* Ensure responsive layout for the camera container */
+.camera {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+/* Style the video element */
+video {
+    max-width: 100%;
+    /* Ensure video does not overflow container */
+    height: auto;
+    /* Maintain aspect ratio */
+    margin: 0.5rem auto;
+    border: 2px solid #04356d;
+    border-radius: 8px;
+}
+
+/* Style for captured photo preview */
+img {
+    max-width: 100%;
+    /* Ensure image fits within the container */
+    height: auto;
+    /* Maintain aspect ratio */
+    margin: 1rem auto;
+    display: block;
+    /* Center the image */
+    border: 2px solid #04356d;
+    border-radius: 8px;
+}
+
+.loc {
+    max-width: 100%;
+    /* Ensure image fits within the container */
+    height: auto;
+    /* Maintain aspect ratio */
+    margin: 1rem auto;
+    display: block;
+    /* Center the image */
+    // border: 2px solid #04356d;
+    border-radius: 8px;
+}
+
+/* Add responsiveness with media queries */
+@media (max-width: 768px) {
+    .camera {
+        padding: 0.5rem;
+    }
+
+    ion-button {
+        font-size: 0.9rem;
+        /* Adjust button font size for smaller screens */
+        padding: 0.5rem 1rem;
+    }
+
+    video {
+        max-width: 90%;
+        /* Adjust video width for smaller screens */
+    }
+
+    img {
+        max-width: 90%;
+        /* Adjust image preview for smaller screens */
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .camera {
+        padding: 1rem 2rem;
+    }
+
+    video,
+    img {
+        max-width: 80%;
+        /* Adjust size for tablets */
+    }
+}

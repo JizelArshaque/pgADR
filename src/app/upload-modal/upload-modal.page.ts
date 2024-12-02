@@ -24,11 +24,11 @@ export class UploadModalPage implements OnInit {
 
   documentName: string = '';
   selectedProcedure: any
-  message: any
+  message: string = ''
   datepipe = new DatePipe('en-IND');
   selectedFile: File | null = null;
   showAdditionalUploadOptions: boolean = false;
-  uploadbutton:boolean=false;
+  uploadbutton: boolean = false;
   doccdn = new DocumentUploadCDN();
   User: any;
   VideoCallId: any;
@@ -63,11 +63,13 @@ export class UploadModalPage implements OnInit {
   ArbitrationDocuments: any[] = [];
   DocType: any;
   ReferenceDocument: any;
-  CaseManagementProcedure: any[]=[];
+  CaseManagementProcedure: any[] = [];
   isButtonDisabled = false;
 
 
-  constructor(public alertservice: AlertService, public videocallUserservice: Videocalluser, private modalController: ModalController, private arbitrationservice: ArbitrationServiceService, public navParams: NavParams,private loadingCtrl: LoadingController) {
+  constructor(public alertservice: AlertService, public videocallUserservice: Videocalluser, private modalController: ModalController, private arbitrationservice: ArbitrationServiceService, public navParams: NavParams, private loadingCtrl: LoadingController) {
+    console.log(this.navParams, "=========NAV=========");
+
     if (this.navParams.get("Arbitration")) {
       this.ArbitrationDetails = this.navParams.get("Arbitration");
       this.ArbitrationParties = this.navParams.get("ArbitrationParties");
@@ -88,21 +90,21 @@ export class UploadModalPage implements OnInit {
     }
     if (this.navParams.get("DaftIssues")) {
       if (localStorage.getItem("ADR_Dashboard_User")) {
-      if(JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Type==3){
-        this.applicationtype='Issues';
+        if (JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Type == 3) {
+          this.applicationtype = 'Issues';
+        }
+        else {
+          this.applicationtype = 'Memo';
+          this.doctype = 'Draft Issues';
+        }
       }
-      else{
-        this.applicationtype='Memo';
-        this.doctype='Draft Issues'; 
-      }
-    }
     }
     if (this.navParams.get("Applicationtype")) {
-this.applicationtype=this.navParams.get("Applicationtype");
+      this.applicationtype = this.navParams.get("Applicationtype");
     }
 
     if (this.navParams.get("DocFileName")) {
-      this.doctype=this.navParams.get("DocFileName");
+      this.doctype = this.navParams.get("DocFileName");
     }
     if (this.navParams.get("ReferenceDocument")) {
       this.ReferenceDocument = this.navParams.get("ReferenceDocument");
@@ -257,7 +259,7 @@ this.applicationtype=this.navParams.get("Applicationtype");
     if (confirm("Are you sure to delete this file ?")) {
       const index = this.exhibits.indexOf(exhibit);
       if (index !== -1) {
-       
+
         this.exhibits.splice(index, 1); // Remove the exhibit from the array
         // Perform any additional deletion actions or update logic here as needed
       }
@@ -272,14 +274,14 @@ this.applicationtype=this.navParams.get("Applicationtype");
         this.arbitrationservice.DeleteDocumentCDN(ex.Id).subscribe((data: any) => {
           if (!!data) {
             this.exhibits = this.exhibits.filter(x => x.Id == ex.Id);
-            
-      const index = this.exhibits.indexOf(ex);
-      if (index !== -1) {
-        this.uploadbutton=false
-        this.exhibits.splice(index, 1); // Remove the exhibit from the array
-        // Perform any additional deletion actions or update logic here as needed
-      }
-  
+
+            const index = this.exhibits.indexOf(ex);
+            if (index !== -1) {
+              this.uploadbutton = false
+              this.exhibits.splice(index, 1); // Remove the exhibit from the array
+              // Perform any additional deletion actions or update logic here as needed
+            }
+
           }
           else {
             alert("Error while delete file");
@@ -397,7 +399,7 @@ this.applicationtype=this.navParams.get("Applicationtype");
               this.doccdn.Description = (this.doctype == 'Other' || this.doctype == 'Miscellaneous') ? this.doctypeother : this.doctype;
               this.doccdn.DocName = (this.doctype == 'Other' || this.doctype == 'Miscellaneous') ? this.doctypeother : this.doctype;
               this.doccdn.UserId = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id;
-              this.uploadbutton=true
+              this.uploadbutton = true
 
 
               this.UploadDocumentCDN(this.doccdn);
@@ -429,7 +431,7 @@ this.applicationtype=this.navParams.get("Applicationtype");
               this.doccdn.Type = this.usertype == 0 ? 1 : this.usertype;
               this.doccdn.ScheduleDate = "01-Jan-1901";
               this.doccdn.Segment = this.FormType;
-              this.doccdn.DocType = this.applicationtype=='Memo' ? 4:this.DocType;
+              this.doccdn.DocType = this.applicationtype == 'Memo' ? 4 : this.DocType;
               this.doccdn.Side = this.userside;
               this.doccdn.ReferenceDocumentId = this.ReferenceDocument.Id;
               this.doccdn.ArbitrationId = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).Id;
@@ -447,13 +449,13 @@ this.applicationtype=this.navParams.get("Applicationtype");
   }
   GetDocTypeForDocumentFiling() {
     if (this.FormType == 2) {
-      if(this.applicationtype==='Memo'){
+      if (this.applicationtype === 'Memo') {
         return 4;
       }
-      else{
+      else {
         return 3;
       }
-      
+
     }
     else if (this.FormType == 5) {
       return 1;
@@ -513,6 +515,7 @@ this.applicationtype=this.navParams.get("Applicationtype");
               this.doccdn.Type = this.usertype;
               this.doccdn.Description = description;
               this.doccdn.DocName = description;
+              this.doccdn.Type = type
               this.UploadDocumentCDNforReplyNotice(this.doccdn);
             }
           );
@@ -541,17 +544,20 @@ this.applicationtype=this.navParams.get("Applicationtype");
 
   }
   async GenerateFIleNumber(type: any) {
+    if (type == 1) {
+      this.message = 'undefined'
+    }
     this.isButtonDisabled = true;
     const loading = await this.loadingCtrl.create({
       message: 'Please wait...'
     });
     await loading.present();
-  
+
     this.arbitrationservice.GenerateArbitrationFileNumber(this.ArbitrationDetails.Id, type, this.message).subscribe({
       next: (data: any) => {
         loading.dismiss();
         this.isButtonDisabled = false;
-  
+
         if (!!data && data.Id > 0) {
           switch (type) {
             case 1:
@@ -577,30 +583,33 @@ this.applicationtype=this.navParams.get("Applicationtype");
       }
     });
   }
-  
- async CommenttoClaimant() {  
 
-  this.isButtonDisabled = true;
+  async CommenttoClaimant() {
+
+    this.isButtonDisabled = true;
     const loading = await this.loadingCtrl.create({
       message: 'Please wait...'
     });
     await loading.present();
-    this.arbitrationservice.CommentClaimant(this.message, this.ArbitrationParties.filter(x => x.Type == 0 && x.Side == 0)[0].Email,this.ArbitrationParties.filter(x => x.Type == 0 && x.Side == 0)[0].Mobile, this.ArbitrationParties.filter(x => x.Type == 0 && x.Side == 0)[0].Name, this.ArbitrationDetails.Id).subscribe((data: any) => {
+    this.arbitrationservice.CommentClaimant(this.message, this.ArbitrationParties.filter(x => x.Type == 0 && x.Side == 0)[0].Email, this.ArbitrationParties.filter(x => x.Type == 0 && x.Side == 0)[0].Mobile, this.ArbitrationParties.filter(x => x.Type == 0 && x.Side == 0)[0].Name, this.ArbitrationDetails.Id).subscribe((data: any) => {
       loading.dismiss();
       this.isButtonDisabled = false;
 
       if (!!data && data[0].Id > 0) {
-       
+
         alert("Comment Sent! ");
         this.back(null);
       }
     });
   }
   UploadDocumentCDNforReplyNotice(doc: any) {
+    // console.log(doc);
+
     this.arbitrationservice.UploadDocumentCDN(doc).subscribe((data: any) => {
       if (data) {
         if (data.Id > 0 && data.Error == 0) {
-          this.alertservice.Alert("Document Uploaded", 3, () => { }, () => { },);
+          alert('Document Uploaded!')
+          // this.alertservice.Alert("Document Uploaded", 3, () => { }, () => { },);
           this.authURLScode = data.SecreteCode;
           doc.SecreteCode = data.SecreteCode;
           if (doc.Type == 1) {
@@ -614,11 +623,13 @@ this.applicationtype=this.navParams.get("Applicationtype");
           }
 
         } else {
-          this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
+          // this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
+          alert('Error While Upload !')
         }
       }
       else {
-        this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
+        alert('Error While Upload !')
+        // this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
       }
     });
   }
@@ -658,7 +669,7 @@ this.applicationtype=this.navParams.get("Applicationtype");
   async UploadArbitrationDocument() {
     if (!!this.exhibits && this.exhibits.length > 0) {
       const noExhibits = this.exhibits.filter(x => x.Type == 0).length == 0;
-  
+
       if (noExhibits) {
         const confirmed = confirm(`Are you sure you want to upload ${this.doctype} without exhibits?`);
         if (!confirmed) return;
@@ -669,12 +680,12 @@ this.applicationtype=this.navParams.get("Applicationtype");
         message: 'Please wait...'
       });
       await loading.present();
-  
+
       this.arbitrationservice.UploadArbitrationDocument(doc).subscribe({
         next: (data: any) => {
           loading.dismiss();
           this.isButtonDisabled = false;
-  
+
           if (data && data.Id > 0 && data.Error == 0) {
             if (!noExhibits) {
               this.exhibits.find(x => x.Type != 0).Id = data.Id;
@@ -700,7 +711,7 @@ this.applicationtype=this.navParams.get("Applicationtype");
   async UploadArbitrationDocumentForMemo() {
     if (!!this.exhibits && this.exhibits.length > 0) {
       const noExhibits = this.exhibits.filter(x => x.Type == 0).length == 0;
-  
+
       // if (noExhibits) {
       //   const confirmed = confirm(`Are you sure you want to upload ${this.doctype} without exhibits?`);
       //   if (!confirmed) return;
@@ -711,12 +722,12 @@ this.applicationtype=this.navParams.get("Applicationtype");
         message: 'Please wait...'
       });
       await loading.present();
-  
+
       this.arbitrationservice.UploadArbitrationDocument(doc).subscribe({
         next: (data: any) => {
           loading.dismiss();
           this.isButtonDisabled = false;
-  
+
           if (data && data.Id > 0 && data.Error == 0) {
             if (!noExhibits) {
               this.exhibits.find(x => x.Type != 0).Id = data.Id;
@@ -738,7 +749,7 @@ this.applicationtype=this.navParams.get("Applicationtype");
       });
     }
   }
-  
+
   UploadDocumentCDN(doc: any) {
     this.arbitrationservice.UploadDocumentCDN(doc).subscribe((data: any) => {
       if (data) {
@@ -852,7 +863,7 @@ this.applicationtype=this.navParams.get("Applicationtype");
   TypeChange(event: any) {
     this.doctype = '';
     this.doctypeother = '';
-   
+
   }
   SaveCaseManagementProcedure() {
 
@@ -889,14 +900,15 @@ this.applicationtype=this.navParams.get("Applicationtype");
     }
   }
   async CreatewithPG(val: any) {
+    // alert(this.doctype);
+    // alert(this.doctypeother);
     let doc = '';
     if (((this.applicationtype == 'Issues') || (this.applicationtype == 'Procedural Order(PO)'))) {
       doc = this.applicationtype;
-if(!!this.doctype && (this.doctype=='Closing of Final Hearing' || this.doctype=='Settlement and Termination') )
-  {
-    doc = this.doctype;
-  }
-     
+      if (!!this.doctype && (this.doctype == 'Closing of Final Hearing' || this.doctype == 'Settlement and Termination')) {
+        doc = this.doctype;
+      }
+
     }
     else {
       doc = this.doctype;
@@ -905,12 +917,15 @@ if(!!this.doctype && (this.doctype=='Closing of Final Hearing' || this.doctype==
     if (!!this.doctypeother && this.doctypeother.length > 1) {
       doc = this.doctypeother;
     }
+
+
     let dt = {
       FormType: this.FormType,
       IsConnectwithParty: val,
       DocType: doc,
       ApplicationType: this.applicationtype
     }
+    console.log(dt, 'plplplp')
     this.modalController.dismiss(dt);
   }
   async CreatewithPGapplication(val: any) {
@@ -918,15 +933,15 @@ if(!!this.doctype && (this.doctype=='Closing of Final Hearing' || this.doctype==
     if (!!this.doctypeother && this.doctypeother.length > 1) {
       doc = this.doctypeother;
     }
-    if(!!this.ReferenceDocument && this.ReferenceDocument.Id>0){
-      doc=this.ReferenceDocument.DocumentName
+    if (!!this.ReferenceDocument && this.ReferenceDocument.Id > 0) {
+      doc = this.ReferenceDocument.DocumentName
     }
-    let dt = {   
-      FormType: this.FormType,     
+    let dt = {
+      FormType: this.FormType,
       IsConnectwithParty: val,
       DocType: doc,
       ApplicationType: "Application",
-      ReferenceDocument:this.ReferenceDocument
+      ReferenceDocument: this.ReferenceDocument
     }
     this.modalController.dismiss(dt);
   }
@@ -937,9 +952,9 @@ if(!!this.doctype && (this.doctype=='Closing of Final Hearing' || this.doctype==
   filterarbitrationDocumentWithDocName(segment: any, docname: any) {
     return this.ArbitrationDocuments.filter(x => x.Segment == segment && x.DocumentName == docname && x.IsMailer == 0);
   }
-  ApplicationSelectChange(event:any){
-    this.ReferenceDocument=this.ArbitrationDocuments.find(x=>x.Id==event.target.value); 
-    this.DocType=5;
-    this.FormType=2;
+  ApplicationSelectChange(event: any) {
+    this.ReferenceDocument = this.ArbitrationDocuments.find(x => x.Id == event.target.value);
+    this.DocType = 5;
+    this.FormType = 2;
   }
 }

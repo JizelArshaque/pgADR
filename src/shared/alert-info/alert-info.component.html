@@ -28,7 +28,7 @@
   </div>
   <!-- ==============================2.Warning Alert================================= -->
 
-  
+
   <div [class]="WarningClass" *ngIf="message.type==2" id="exampleModal" [style]="StyleClass" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -145,19 +145,28 @@
             <p [innerHtml]="message.text"></p>
           </div>
           <div class="row justify-content-center">
-           
-<button class="alert-icon-btn" (click)="message.yesFn(0)"> <p>Not for me </p><i class="fas fa-thumbs-down"></i><p class="review-count">11</p></button>
-<button class="alert-icon-btn" (click)="message.yesFn(1)"><p>I like it </p><i class="fas fa-thumbs-up"></i><p class="review-count">1145</p></button>
-<button class="alert-icon-btn" (click)="message.yesFn(2)"><p>I love it </p><i class="fas fa-heart"></i><p class="review-count">1500</p></button>
+
+            <button class="alert-icon-btn" (click)="message.yesFn(0)">
+              <p>Not for me </p><i class="fas fa-thumbs-down"></i>
+              <p class="review-count">11</p>
+            </button>
+            <button class="alert-icon-btn" (click)="message.yesFn(1)">
+              <p>I like it </p><i class="fas fa-thumbs-up"></i>
+              <p class="review-count">1145</p>
+            </button>
+            <button class="alert-icon-btn" (click)="message.yesFn(2)">
+              <p>I love it </p><i class="fas fa-heart"></i>
+              <p class="review-count">1500</p>
+            </button>
 
 
-          </div> <br> 
+          </div> <br>
         </div>
- 
+
       </div>
     </div>
   </div>
 
- 
+
 </div>
 <!-- </body> -->

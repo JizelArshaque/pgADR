@@ -53,7 +53,7 @@ export class ArbitratorModalPage implements OnInit {
   City: any;
   usertype: any;
   userside: any;
-  adrpro: number=5;
+  adrpro: number = 5;
   AuthorisationUrl: any;
   doctype: string = '';
   docname: string = '';
@@ -81,16 +81,21 @@ export class ArbitratorModalPage implements OnInit {
   reason: string = '';
   IsMessage: number = 0;
   isButtonDisabled = false;
-  constructor( public alertservice: AlertService,private router: Router,private location: Location, private modalController: ModalController, private arbitrationservice: ArbitrationServiceService, public navParams: NavParams,private loadingCtrl: LoadingController) {
+
+  searchText: string = ''
+  filteredArbitrators: any[] = [];  // List of filtered arbitrators
+
+
+  constructor(public alertservice: AlertService, private router: Router, private location: Location, private modalController: ModalController, private arbitrationservice: ArbitrationServiceService, public navParams: NavParams, private loadingCtrl: LoadingController) {
     this.GetAllADRProfessional();
     this.GetAllConstitutionalTribunal();
     if (this.navParams.get("Arbitration")) {
       this.ArbitrationDetails = this.navParams.get("Arbitration");
       this.ArbitrationParties = this.navParams.get("ArbitrationParties");
-      console.log(this.ArbitrationParties,"================")
+      // console.log(this.ArbitrationParties,"================")
       if (this.ArbitrationParties.filter(x => x.Type == 3 && x.IsController == 1).length > 0) {
         this.AppointedArbitrator = this.ArbitrationParties.filter(x => x.Type == 3 && x.IsController == 1)[0];
-        console.log(this.AppointedArbitrator,"==####++++")
+        //  console.log(this.AppointedArbitrator,"==####++++")
         debugger
 
       }
@@ -157,21 +162,22 @@ export class ArbitratorModalPage implements OnInit {
       message: 'Please wait...'
     });
     await loading.present();
-  
+
     if (!!this.AppointedArbitrator) {
       this.arbitrationservice.GenerateArbitrationFileNumber(this.ArbitrationDetails.Id, this.IsMessage, this.reason).subscribe({
         next: (data) => {
+          loading.dismiss();
           if (!!data) {
             if (this.IsMessage == 4) {
               alert("Defects in Disclosure Notified.");
             } else if (this.IsMessage == 5) {
               alert("Arbitrator Removed.");
             }
-            this.selectedArbitrator = null; 
+            this.selectedArbitrator = null;
             this.AppointedArbitrator = null;
             this.back();
           }
-          loading.dismiss(); // Dismiss the loader after processing
+          // Dismiss the loader after processing
         },
         error: (err) => {
           loading.dismiss(); // Ensure loader is dismissed on error
@@ -186,7 +192,7 @@ export class ArbitratorModalPage implements OnInit {
       loading.dismiss(); // Dismiss the loader if no condition is met
     }
   }
-  
+
 
   viewProfile(selectedId: any) {
     const secureCode = selectedId;
@@ -239,12 +245,12 @@ export class ArbitratorModalPage implements OnInit {
 
       if (!!data) {
         if (data.Id > 1 && data.Error === 0) {
-                    this.alertservice.Alert("Arbitrator Appointed!",3,()=>{},()=>{},);
+          this.alertservice.Alert("Arbitrator Appointed!", 3, () => { }, () => { },);
           this.back();
         }
       } else {
-        this.alertservice.Alert("Error while Appoint Arbitrator!",3,()=>{},()=>{},);
- 
+        this.alertservice.Alert("Error while Appoint Arbitrator!", 3, () => { }, () => { },);
+
       }
     });
   }
@@ -259,7 +265,7 @@ export class ArbitratorModalPage implements OnInit {
       .subscribe((data: any) => {
         if (!!data && data.length > 0) {
           if (data[0].Id > 1 && data[0].Error === 0) {
-                      this.alertservice.Alert("Arbitrator Appointed!",3,()=>{},()=>{},);
+            this.alertservice.Alert("Arbitrator Appointed!", 3, () => { }, () => { },);
             this.location.back();
           }
         } else {
@@ -299,8 +305,8 @@ export class ArbitratorModalPage implements OnInit {
       if (data) {
         if (data.Id > 0 && data.Error === 0) {
           // Arbitrator Submitted successfully
-          this.alertservice.Alert("Arbitrator Inserted!",3,()=>{},()=>{},);
-       
+          this.alertservice.Alert("Arbitrator Inserted!", 3, () => { }, () => { },);
+
           window.location.reload()
 
           that.mediation.Id = data.Id;
@@ -342,7 +348,7 @@ export class ArbitratorModalPage implements OnInit {
       if (data) {
         if (data.Id > 0 && data.Error === 0) {
           // Arbitrator Submitted successfully
-          this.alertservice.Alert("Arbitrator Inserted!",3,()=>{},()=>{},);
+          this.alertservice.Alert("Arbitrator Inserted!", 3, () => { }, () => { },);
 
           window.location.reload()
 
@@ -388,7 +394,7 @@ export class ArbitratorModalPage implements OnInit {
       }
       else {
 
-        this.alertservice.Alert("Error while delete file",3,()=>{},()=>{},);
+        this.alertservice.Alert("Error while delete file", 3, () => { }, () => { },);
       }
     });
 
@@ -416,7 +422,7 @@ export class ArbitratorModalPage implements OnInit {
         // this.exhibits = this.exhibits.filter(x => x.Id == ex.Id);
       }
       else {
-        this.alertservice.Alert("Error while delete file",3,()=>{},()=>{},);
+        this.alertservice.Alert("Error while delete file", 3, () => { }, () => { },);
       }
     });
 
@@ -429,7 +435,7 @@ export class ArbitratorModalPage implements OnInit {
           this.exhibits = this.exhibits.filter(x => x.Id == ex.Id);
         }
         else {
-          this.alertservice.Alert("Error while delete file",3,()=>{},()=>{},);
+          this.alertservice.Alert("Error while delete file", 3, () => { }, () => { },);
         }
       });
     }
@@ -459,7 +465,7 @@ export class ArbitratorModalPage implements OnInit {
           );
         }
         else {
-          this.alertservice.Alert("Only jpg/jpeg/pdf/png files accepted!",3,()=>{},()=>{},);
+          this.alertservice.Alert("Only jpg/jpeg/pdf/png files accepted!", 3, () => { }, () => { },);
         }
       }
     }
@@ -467,29 +473,47 @@ export class ArbitratorModalPage implements OnInit {
   FilterExhibits(type: any) {
     return this.exhibits.filter(x => x.Type == type);
   }
-  GetAllADRProfessional() {
+  async GetAllADRProfessional() {
+
+    let loading = await this.loadingCtrl.create({
+      message: 'Please wait...'
+    });
+    await loading.present();
     this.arbitrationservice.GetAllADRProfessional().subscribe((data: any) => {
-    
-      
+
+      loading.dismiss()
       if (data.length > 0) {
-        this.MediationAdvocates = data.filter((x:any) => x.MediationAdvocateStatus == 1);
+        this.MediationAdvocates = data.filter((x: any) => x.MediationAdvocateStatus == 1);
         this.MediationAdvocatesFilter = this.MediationAdvocates;
-        this.Mediators = data.filter((x:any)  => x.MediatorStatus == 1);
+        this.Mediators = data.filter((x: any) => x.MediatorStatus == 1);
         this.MediatorsFilter = this.Mediators;
-        this.Arbitrators = data.filter((x:any)  => x.ArbitratorStatus == 1);
+        this.Arbitrators = data.filter((x: any) => x.ArbitratorStatus == 1);
         this.ArbitratorsFilter = this.Arbitrators;
-        this.adrpro=5;
+        this.filteredArbitrators = this.ArbitratorsFilter
+        this.adrpro = 5;
       } else {
         this.MediationAdvocates = [];
         this.Mediators = [];
         this.Arbitrators = [];
+        this.filteredArbitrators = [];
         this.ArbitratorsFilter = [];
         this.MediatorsFilter = [];
         this.MediationAdvocatesFilter = [];
       }
     });
   }
-  OpenADRProfile(item:any, type:any) {
+
+  filterArbitrators() {
+    if (this.searchText.trim()) {
+      this.filteredArbitrators = this.ArbitratorsFilter.filter(item =>
+        item.Name.toLowerCase().includes(this.searchText.toLowerCase())
+      );
+    } else {
+      this.filteredArbitrators = [...this.ArbitratorsFilter];  // Show all if search is empty
+    }
+  }
+
+  OpenADRProfile(item: any, type: any) {
     this.modalController.dismiss(0);
     let navigationextra: NavigationExtras = {
       state: {
@@ -506,21 +530,21 @@ export class ArbitratorModalPage implements OnInit {
         if (data.Id > 0 && data.Error == 0) {
 
 
-          this.alertservice.Alert("Document Uploaded",3,()=>{},()=>{},);
+          this.alertservice.Alert("Document Uploaded", 3, () => { }, () => { },);
 
-          
+
           this.authURLScode = data.SecreteCode;
           doc.SecreteCode = data.SecreteCode;
           this.exhibits.push(doc);
 
           this.InsertAuthorisationURL()
         } else {
-       
-          this.alertservice.Alert("Error While Upload ",3,()=>{},()=>{},);
+
+          this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
         }
       }
       else {
-        this.alertservice.Alert("Error While Upload ",3,()=>{},()=>{},);
+        this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
       }
     })
   }
@@ -539,7 +563,7 @@ export class ArbitratorModalPage implements OnInit {
 
       }
       else {
-        this.alertservice.Alert("Error While Upload ",3,()=>{},()=>{},);
+        this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
       }
     })
   }
@@ -552,9 +576,9 @@ export class ArbitratorModalPage implements OnInit {
     });
   }
   back() {
-    const secureCode = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).SecureCode;  
+    const secureCode = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).SecureCode;
     this.router.navigate(['/dashboard', secureCode]);
-    this.modalController.dismiss();     
+    this.modalController.dismiss();
   }
   async OpenDoc(ex: any) {
     const modal = await this.modalController.create({
@@ -607,25 +631,25 @@ export class ArbitratorModalPage implements OnInit {
         return '';
     }
   }
- // Appoint Arbitrator
+  // Appoint Arbitrator
   async ConstituteArbitrator() {
-    this.isButtonDisabled=true
+    this.isButtonDisabled = true
     let loading = await this.loadingCtrl.create({
       message: 'Please wait...'
     });
     await loading.present();
 
-    console.log( this.ArbitrationDetails.Id, 
-      JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id,"joi")
-    debugger;
-  
+    //console.log( this.ArbitrationDetails.Id, 
+    //  JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id,"joi")
+    //debugger;
+
     this.arbitrationservice.ConstituteTribunalExpedited(
-      this.ArbitrationDetails.Id, 
+      this.ArbitrationDetails.Id,
       JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id
     ).subscribe({
       next: (data) => {
         loading.dismiss(); // Dismiss the loader after the API response
-        this.isButtonDisabled=false
+        this.isButtonDisabled = false
         if (!!data && data.Id > 0) {
           alert("Arbitrator Appointed.");
           this.back();
@@ -633,13 +657,13 @@ export class ArbitratorModalPage implements OnInit {
       },
       error: (err) => {
         loading.dismiss(); // Dismiss the loader even if there's an error
-        this.isButtonDisabled=false
+        this.isButtonDisabled = false
         console.error('Error constituting arbitrator:', err);
         alert("There was an error appointing the arbitrator. Please try again.");
       }
     });
   }
-  
+
   ShowMessage(type: any) {
     this.IsMessage = type;
 

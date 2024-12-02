@@ -22,10 +22,12 @@ export class ProfileDetailsPage implements OnInit {
   constructor(private router: Router, public navParams: NavParams, private modalController: ModalController, private modalCtrl: ModalController) {
     if (this.navParams.get("ArbitrationParty")) {
       this.party = this.navParams.get("ArbitrationParty");
-      console.log(this.party,"party=======================")
+      console.log(this.navParams, '===============nav================');
+
+      console.log(this.party, "party=======================")
       this.ArbitrationDetailslocalStorage = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`);
-      this.ArbitrationStage= this.ArbitrationDetailslocalStorage.ArbitrationStage
-      console.log( this.ArbitrationStage,"stagee")
+      this.ArbitrationStage = this.ArbitrationDetailslocalStorage.ArbitrationStage
+      // console.log( this.ArbitrationStage,"stagee")
 
       if (localStorage.getItem("ADR_Dashboard_User")) {
         this.User = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`);
@@ -46,15 +48,16 @@ export class ProfileDetailsPage implements OnInit {
   }
   async ArbitrationPartyAdd(partytype: any) {
 
-    debugger
+    // debugger
 
+    console.log('pols', partytype);
 
     this.modalController.dismiss();
     const modal = await this.modalController.create({
       component: ArbitrationPartyAddPage, cssClass: 'my-modal',
       componentProps: {
         // ArbitrationDetails: this.ArbitrationDetails,
-        // ArbitrationParties: this.ArbitrationParties,
+        ArbitrationParties: this.ArbitrationParties,
         // Side:side,
         ArbitrationEdit: partytype
       },
@@ -140,10 +143,10 @@ export class ProfileDetailsPage implements OnInit {
         Docs: this.ArbDoc
       },
 
-    });this.closeModal();
+    }); this.closeModal();
     modal.onDidDismiss().then((modelData) => {
 
-    }); 
+    });
     await modal.present();
   }
   closeModal() {

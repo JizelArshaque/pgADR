@@ -26,6 +26,11 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 
+.custom-modal-height {
+	--height: 33vh;
+	/* Set the modal's height to 40% of the viewport height */
+}
+
 // for full screen modal
 .my-modal {
 	--width: 100%;
@@ -36,13 +41,15 @@
 	--margin: 0;
 	--top: 0;
 	--left: 0;
-  }
-  // for alert show in front of modal
-  ion-alert {
-	z-index: 100000 !important; /* Make sure this is higher than the modal's z-index */
-  }
-  
-  .my-modal {
+}
+
+// for alert show in front of modal
+ion-alert {
+	z-index: 100000 !important;
+	/* Make sure this is higher than the modal's z-index */
+}
+
+.my-modal {
 	--width: 100%;
 	--height: 100%;
 	--max-width: 100%;
@@ -51,72 +58,89 @@
 	--margin: 0;
 	--top: 0;
 	--left: 0;
-  }
-  
-.my-modal .modal-wrapper 
-{    
-	
-	  width: 100% !important;
-	  height: 100% !important;     
-	  --width: 100% !important;
-	  --height: 100% !important; 
-	} 
-	ion-backdrop{  
+}
+
+.my-modal .modal-wrapper {
+
+	width: 100% !important;
+	height: 100% !important;
+	--width: 100% !important;
+	--height: 100% !important;
+}
+
+ion-backdrop {
+	display: contents !important;
+}
+
+.ionic-selectable-cover {
+	top: 20px !important;
+}
+
+.ionic-selectable-value {
+	padding-top: 0px !important;
+}
+
+.ionic-selectable-icon {
+	margin-top: -10px !important
+}
+
+@media screen and (max-width: 480px) {
+	.my-modal .modal-wrapper {
+		position: absolute;
+		top: 0 !important;
+
+		display: block;
 		display: contents !important;
+		text-align: center;
+		justify-content: center;
+		width: 100% !important;
+		height: 100% !important;
+		--width: 100% !important;
+		--height: 100% !important;
 	}
+}
 
-	.ionic-selectable-cover{
-		top:20px !important;
+@media only screen and (min-width: 768px) and (min-height: 600px) {
+	.my-modal .modal-wrapper {
+		position: absolute;
+		top: 0 !important;
+
+		display: block;
+		display: contents !important;
+		text-align: center;
+		justify-content: center;
+		width: 100% !important;
+		height: 100% !important;
+		--width: 100% !important;
+		--height: 100% !important;
 	}
-	.ionic-selectable-value {padding-top: 0px !important;}
-	.ionic-selectable-icon{margin-top:-10px !important}
+}
 
-	@media screen and (max-width: 480px) { .my-modal .modal-wrapper      
-		{
-			position: absolute;
-			top: 0 !important;   
-			
-			display: block; 
-			display: contents !important;
-		  text-align: center;
-		  justify-content: center; 
-			  width: 100% !important;
-			  height: 100% !important; 
-			  --width:100% !important;
-			  --height:100% !important;
-			} }
+@media screen and (min-width: 1366px) {
+	.my-modal .modal-wrapper {
+		position: absolute;
+		/* Makes the modal wrapper positioned absolutely relative to its closest positioned ancestor */
+		top: 0 !important;
+		/* Ensures the modal starts from the top of the screen */
+		left: 0 !important;
+		/* Ensures the modal starts from the left of the screen */
+		display: block !important;
+		/* Ensures the modal wrapper maintains its block layout */
+		text-align: center;
+		/* Centers text within the modal wrapper */
+		justify-content: center;
+		/* Centers any flex content inside the modal */
+		width: 100% !important;
+		/* Sets the width to full screen */
+		height: 100% !important;
+		/* Sets the height to full screen */
+	}
+}
 
-			@media only screen and (min-width: 768px) and (min-height: 600px) { .my-modal .modal-wrapper      
-				{
-					position: absolute;
-					top: 0 !important;   
-					
-					display: block; 
-					display: contents !important;
-				  text-align: center;
-				  justify-content: center; 
-					  width: 100% !important;
-					  height: 100% !important; 
-					  --width:100% !important;
-					  --height:100% !important;
-					} }
-					@media screen and (min-width: 1366px) { 
-						.my-modal .modal-wrapper {
-						  position: absolute; /* Makes the modal wrapper positioned absolutely relative to its closest positioned ancestor */
-						  top: 0 !important;  /* Ensures the modal starts from the top of the screen */
-						  left: 0 !important; /* Ensures the modal starts from the left of the screen */
-						  display: block !important; /* Ensures the modal wrapper maintains its block layout */
-						  text-align: center; /* Centers text within the modal wrapper */
-						  justify-content: center; /* Centers any flex content inside the modal */
-						  width: 100% !important; /* Sets the width to full screen */
-						  height: 100% !important; /* Sets the height to full screen */
-						}
-					  }
-					  
 
-					ion-modal {    
-						// .modal-wrapper {
-						// 	height: 70%;
-						// 	width: 60%;   
-						// }
-					}
+ion-modal {
+	// .modal-wrapper {
+	// 	height: 70%;
+	// 	width: 60%;   
+	// }
+}

@@ -205,7 +205,7 @@ export class ArbitrationServiceService {
       .set('Authorization', 'Bearer ' + this.decryptiondata);
 
     let options = { headers: headers };
-    debugger
+    // debugger
     return this.http.get<any>(this.appConfig.url +'/Arbitration/spGetAllArbitrationDocuments?arbiddoc='+ArbId, options).pipe(map(res=>res));
   } 
 

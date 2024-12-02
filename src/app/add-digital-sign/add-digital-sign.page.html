@@ -1,0 +1,75 @@
+<app-alert-info></app-alert-info>
+
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="center-title">Add Digital Sign</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" *ngIf="!adding">
+
+  <!-- Collapsible sub-header for digital signing -->
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title class="center-title" size="large">Digital Signing</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="close()">
+          <ion-icon name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Reason for adding the digital sign -->
+  <div class="info-text" *ngIf="!isSignProcessStarted">
+    <p>
+      To complete this process, we require your digital signature. This will help us verify your identity and record
+      your consent. Please take a photo of your signature to confirm your action.
+    </p>
+  </div>
+
+  <!-- Add Digital Sign Button, only shown if process has not started -->
+  <ion-button expand="full" (click)="addDigitalSign()" *ngIf="!isSignProcessStarted" class="digital-sign-btn">
+    Add Digital Sign
+  </ion-button>
+
+  <!-- Video for live camera feed -->
+  <div class="camera" *ngIf="!photo">
+    <video #video autoplay *ngIf="isCameraActive"></video>
+    <ion-button expand="full" (click)="capturePhoto()" *ngIf="isCameraActive">Capture Photo</ion-button>
+    <ion-button expand="full" color="danger" (click)="stopCamera()" *ngIf="isCameraActive">Stop Camera</ion-button>
+  </div>
+
+  <!-- Captured photo preview -->
+  <img *ngIf="photo && !added" [src]="photo" alt="Captured photo" />
+  <p *ngIf="photo && !added" class="loc" style="    text-align: center;"><i class="fa-solid fa-location-dot"
+      style="color: #04356d;"></i> {{address}}</p>
+
+  <!-- Retake button -->
+  <ion-button expand="full" class="digital-sign-btn" *ngIf="photo && !added" (click)="retakePhoto()">Retake
+    Photo</ion-button>
+  <ion-button expand="full" class="digital-sign-btn" *ngIf="photo && !added" (click)="NavigateToSign()">Add Your Digital
+    Signature</ion-button>
+</ion-content>
+
+<ion-content *ngIf="added">
+  <div class="d-flex justify-content-center ">
+    <ion-card style="max-width: 48vh;
+      max-height: 50vh">
+      <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+      <ion-card-header>
+        <ion-card-title>Digital Signature </ion-card-title>
+        <!-- <ion-card-subtitle>Card Subtitle</ion-card-subtitle> -->
+      </ion-card-header>
+
+      <!-- <ion-card-content>
+        Here's a small text description for the card content. Nothing more, nothing less.
+      </ion-card-content> -->
+    </ion-card>
+  </div>
+</ion-content>

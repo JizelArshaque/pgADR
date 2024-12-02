@@ -8,7 +8,7 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ArbitrationCaseManagement, DocumentUploadCDN } from 'src/class/DocumentUploadCDN';
 import { Editor } from 'ngx-editor';
-import {EditorConfig, ST_BUTTONS} from 'ngx-simple-text-editor';
+import { EditorConfig, ST_BUTTONS } from 'ngx-simple-text-editor';
 import { AlertService } from 'src/shared/alert-info/alert.service';
 @Component({
   selector: 'app-procedural-order',
@@ -25,7 +25,7 @@ export class ProceduralOrderPage implements OnInit {
     buttons: ST_BUTTONS,
   };
   appconfig = new AppConfig();
-  editor= new Editor();
+  editor = new Editor();
   IsEdit: boolean = false;
   HtmlData: any;
   datepipe = new DatePipe('en-IND');
@@ -54,7 +54,12 @@ export class ProceduralOrderPage implements OnInit {
   CaseManagementProcedure: any[] = [];
   ArbitrationDocs: any[] = [];
   isButtonDisabled = false;
-  constructor(private loadingCtrl: LoadingController,private router: Router,private alertservice:AlertService, private modalController: ModalController, private arbitrationservice: ArbitrationServiceService, public navParams: NavParams) {
+  isEditAward: number = 0
+  constructor(private loadingCtrl: LoadingController, private router: Router, private alertservice: AlertService, private modalController: ModalController, private arbitrationservice: ArbitrationServiceService, public navParams: NavParams) {
+    console.log(this.navParams);
+    // debugger
+
+
     if (this.navParams.get("ArbitrationDetails")) {
       this.ArbitrationDetails = this.navParams.get("ArbitrationDetails");
       this.ArbitrationParties = this.navParams.get("ArbitrationParties");
@@ -68,6 +73,7 @@ export class ProceduralOrderPage implements OnInit {
         this.user = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`);
       }
       this.Type = this.navParams.get("Type");
+      // console.log(this.Tab, '-----------------this.Tab--------------');
       if (this.Type == 10) {
         this.GetBankDetails();
         this.GetFeeForDisputeRegister();
@@ -84,17 +90,22 @@ export class ProceduralOrderPage implements OnInit {
       if (this.Type == 2 || this.Type == 8 || this.Type == 9 || this.Type == 10) {
         this.GetNextPONumber();
       }
-      if(this.Type==6){
-        if(this.ArbitrationDetails.ArbitrationStage==26){
-          this.Tab=4;
-          this.HtmlData=this.ArbitrationDocs.filter(x=>x.Segment==6)[0].Description;
-          this.doc.AwardStatus=1;
-          this.doc.Id=this.ArbitrationDocs.filter(x=>x.Segment==6)[0].Id;
+      if (this.Type == 6) {
+        console.log(this.ArbitrationDetails.ArbitrationStage, '-----------------ArbitrationStage--------------');
+        console.log(this.ArbitrationDocs, '-------------------ArbitrationDocs---------------');
+
+        if (this.ArbitrationDetails.ArbitrationStage == 26) {
+          this.Tab = 4;
+          this.HtmlData = this.ArbitrationDocs.filter(x => x.Segment == 6)[0].Description;
+          this.doc.AwardStatus = 1;
+          this.doc.Id = this.ArbitrationDocs.filter(x => x.Segment == 6)[0].Id;
         }
-        else if(this.ArbitrationDocs.filter(x=>x.Segment==6 && x.Status==2).length>0){
-          this.Tab=4;
-          this.HtmlData=this.ArbitrationDocs.filter(x=>x.Segment==6)[0].Description;
-          this.doc.Id=this.ArbitrationDocs.filter(x=>x.Segment==6)[0].Id;
+        else if (this.ArbitrationDocs.filter(x => x.Segment == 6 && x.Status == 2).length > 0) {
+          this.Tab = 4;
+          this.HtmlData = this.ArbitrationDocs.filter(x => x.Segment == 6)[0].Description;
+          // console.log(this.HtmlData, '-------------------------------');
+
+          this.doc.Id = this.ArbitrationDocs.filter(x => x.Segment == 6)[0].Id;
         }
       }
       if (this.navParams.get("IsConnectwithParty")) {
@@ -103,9 +114,7 @@ export class ProceduralOrderPage implements OnInit {
       if (this.navParams.get("DocType")) {
         this.DocName = this.navParams.get("DocType");
       }
-      if (this.navParams.get("CaseManagementProcedure")) {
-        this.CaseManagementProcedure = this.navParams.get("CaseManagementProcedure");
-      }
+
       if (this.navParams.get("ApplicationType")) {
         this.ApplicationType = this.navParams.get("ApplicationType");
         if (this.ApplicationType == 'Notice' || this.ApplicationType == 'Issues') {
@@ -118,6 +127,7 @@ export class ProceduralOrderPage implements OnInit {
           this.DocumentType = 2;
         }
       }
+      console.log(this.ArbitrationDetails.Region, '-----------------this.ArbitrationDetails.Region------------');
 
       if (this.ArbitrationDetails.Region == 1) {
         this.GetAllCentresWithAdrType(2);
@@ -130,10 +140,67 @@ export class ProceduralOrderPage implements OnInit {
       }
     }
 
-   
+    if (this.navParams.get("EditAward")) {
+      this.isEditAward = 1
+    }
+
+    // let dt = document.getElementById('auto_doc')?.innerHTML;
+    // console.log(dt, 'pod');
+
+
+    if (this.navParams.get("DocType") && this.navParams.get("DocType") == "Final Award") {
+      // console.log('logger');
+      this.Tab = 3
+      // this.Save()
+    }
+
 
   }
-  
+
+
+  ngOnInit(): void {
+    // Set timeout to call Edit and change Tab after 20 seconds (20000 milliseconds)
+    // debugger
+    setTimeout(() => {
+
+
+      if (!!this.Type && this.Type == 6) {
+        // console.log('ppopopopopo', this.HtmlData, this.config);
+
+        this.IsEdit = !this.IsEdit;
+      }
+      else {
+        this.Edit();
+      }
+
+      if (!!this.Type && this.Type == 10) {
+        this.Tab = 1;
+      }   // Call the Edit method
+      else if (!!this.Type && (this.Type > 7 || this.Type == 2 || (this.Type == 8 && this.ApplicationType == 'Notice' && this.DocName == 'Notice for Draft Issues'))) {
+        this.Tab = 2;
+      }
+      else if (this.Type == 3) {
+        this.Tab = 4;
+      }
+      else {
+        // console.log('ppppopppppppppp');
+        if (this.isEditAward == 1) {
+          this.Tab = 4;
+        } else {
+          // console.log(FormType);
+
+          this.Tab = 3;
+        }
+        // before tab = 4
+
+      }
+      // Set Tab to 4
+    }, 2500);
+
+
+    // alert(this.Tab);
+  }
+
   @HostListener('window:popstate', ['$event'])
   onPopState(event: Event) {
     // Get the secure code from local storage
@@ -205,6 +272,8 @@ export class ProceduralOrderPage implements OnInit {
   }
   Edit() {
     let dt = document.getElementById('auto_doc')?.innerHTML;
+    // alert(dt);
+
     this.HtmlData = dt;
     this.IsEdit = !this.IsEdit;
   }
@@ -246,13 +315,7 @@ export class ProceduralOrderPage implements OnInit {
     result.setMonth(result.getMonth() + month);
     return result;
   }
-  ngOnInit(): void {
-    // Set timeout to call Edit and change Tab after 20 seconds (20000 milliseconds)
-    setTimeout(() => {
-      this.Edit();     // Call the Edit method
-      this.Tab = 4;    // Set Tab to 4
-    },2500);
-  }
+
   back() {
     this.modalController.dismiss(true);
   }
@@ -356,30 +419,34 @@ export class ProceduralOrderPage implements OnInit {
     }
   }
   Save() {
-    debugger
+    // console.log('logger');
+
+    // debugger
+    // alert(this.Tab)
+    // debugger
     if (this.Tab == 0) {
-      debugger
+      // debugger
       if (this.Type == 10) {
-        debugger
+        // debugger
         this.Tab = 1;
       }
       else if (this.Type == 8 || this.Type == 9 || (this.Type == 2 && this.DocumentType != 6)) {
-        debugger
+        // debugger
         this.Tab = 2;
       }
       else {
-        debugger
+        // debugger
         this.Edit();
         this.Tab = 4;
       }
     }
     else if (this.Tab == 1) {
-      debugger
+      // debugger
       this.Schedule();
       this.Tab = 2;
     }
     else if (this.Tab == 2) {
-      debugger
+      // debugger
       if (this.Type == 10) {
         if ((!!this.CaseManagementDetails.NextPostingDateAndTime && this.CaseManagementDetails.NextPostingDateAndTime.length > 0) &&
           (!!this.CaseManagementDetails.NameandAddressofVenue && this.CaseManagementDetails.NameandAddressofVenue.length > 0)) {
@@ -387,8 +454,8 @@ export class ProceduralOrderPage implements OnInit {
 
             this.Tab = 3;
             setTimeout(() => {
-              this.Edit();         
-              this.Tab = 4;   
+              this.Edit();
+              this.Tab = 4;
             }, 1000)
           };
         }
@@ -402,15 +469,15 @@ export class ProceduralOrderPage implements OnInit {
 
           this.Tab = 3;
           setTimeout(() => {
-            this.Edit();       
-            this.Tab = 4;   
+            this.Edit();
+            this.Tab = 4;
           }, 1000)
         };
       }
 
     }
     else if (this.Tab == 3) {
-      debugger
+      // debugger
       this.Edit();
       setTimeout(() => {
         this.Tab = 4;
@@ -418,14 +485,14 @@ export class ProceduralOrderPage implements OnInit {
 
     }
     else if (this.Tab == 4) {
-      debugger
+      // debugger
       this.CreateDocument();
     }
   }
   SaveSchedule(type: any) {
     if (type == 1) {
       if (this.CaseManagementDetails.SittingOption == 'Online') { this.CaseManagementDetails.NameandAddressofVenue = 'Online'; }
-      if (!!this.CaseManagementDetails.NextPostingDateAndTime || !!this.CaseManagementDetails.NameandAddressofVenue ) {
+      if (!!this.CaseManagementDetails.NextPostingDateAndTime || !!this.CaseManagementDetails.NameandAddressofVenue) {
         this.doc.ScheduleDate = this.datepipe.transform(this.CaseManagementDetails.NextPostingDateAndTime, 'dd-MMM-yyyy hh:mm a');
         this.doc.ScheduleVenue = this.CaseManagementDetails.NameandAddressofVenue;
         if (this.Type === 2) {
@@ -434,20 +501,20 @@ export class ProceduralOrderPage implements OnInit {
             this.doc.Remarks = this.datepipe.transform(claimDate, 'dd-MMM-yyyy') ?? '';
           }
         }
-        
+
         else if (this.Type == 8 && this.ApplicationType == 'Notice' && this.DocName == 'Notice for Draft Issues') {
           if (this.CaseManagementDetails?.ClaimStatementFilingDate?.length > 0) {
             this.doc.Remarks = this.datepipe.transform(this.CaseManagementDetails.ClaimStatementFilingDate, 'dd-MMM-yyyy') ?? '';
-            
+
             if (this.CaseManagementDetails?.DefenceStatementFilingDate?.length > 0) {
               this.doc.Remarks += ',' + (this.datepipe.transform(this.CaseManagementDetails.DefenceStatementFilingDate, 'dd-MMM-yyyy') ?? '');
             }
           }
-          
+
         }
         this.Save();
       }
-      else if(this.DocName=='Closing of Final Hearing'){
+      else if (this.DocName == 'Closing of Final Hearing') {
         this.Save();
       }
       else {
@@ -460,8 +527,8 @@ export class ProceduralOrderPage implements OnInit {
     }
   }
 
-  SaveAward(type:any){
-   
+  SaveAward(type: any) {
+
     this.doc.ArbitrationId = this.ArbitrationDetails.Id;
     this.doc.Side = this.user.Side;
     this.doc.UserId = this.user.Id;
@@ -473,61 +540,61 @@ export class ProceduralOrderPage implements OnInit {
     this.doc.Name = this.user.Name;
     this.doc.Email = this.user.Email;
     this.doc.Mobile = this.user.Mobile;
-    this.doc.Status=type;
-    if(type==1){
-      this.doc.AwardStatus =  1; 
-      this.doc.Status=0 
+    this.doc.Status = type;
+    if (type == 1) {
+      this.doc.AwardStatus = 1;
+      this.doc.Status = 0
     }
     if (!!this.ReferenceDocument) { this.doc.ReferenceDocumentId = this.ReferenceDocument.Id; } else { this.doc.ReferenceDocumentId = 0; }
     if (!this.doc.ScheduleDate || (!!this.doc.ScheduleDate && this.doc.ScheduleDate.length < 2)) {
       this.doc.ScheduleDate = '01-Jan-1901';
     }
-    if(type==2){
+    if (type == 2) {
       this.arbitrationservice.InsertArbitrationAward(this.doc).subscribe((data) => {
         if (!!data && data.Id > 0 && data.Error == 0) {
-          if(type==2){
+          if (type == 2) {
             alert("Arbitral Award Saved Successfully.");
           }
-          else  if(type==0){
+          else if (type == 0) {
             alert("Arbitral Award Submitted for Scrutiny.");
           }
-          else  if(type==1){
+          else if (type == 1) {
             alert("Arbitral Award Published Successfully.");
           }
           this.back();
         }
       });
     }
-    else{
-      let msg='';
-      if(type==0 && this.doc.AwardStatus==0){
-        msg=" Submit Award for Scrutiny. ";
+    else {
+      let msg = '';
+      if (type == 0 && this.doc.AwardStatus == 0) {
+        msg = " Submit Award for Scrutiny. ";
       }
-      else if(type==1){
-        msg=" Publish Award";
+      else if (type == 1) {
+        msg = " Publish Award";
       }
-     
-      let that=this;
-      if(confirm("Are you sure to "+msg+" ?")) {
 
-      this.arbitrationservice.InsertArbitrationAward(this.doc).subscribe((data) => {
-        if (!!data && data.Id > 0 && data.Error == 0) {  
-           if(type==0){
-            alert("Arbitral Award Submitted for Scrutiny.");
+      let that = this;
+      if (confirm("Are you sure to " + msg + " ?")) {
+
+        this.arbitrationservice.InsertArbitrationAward(this.doc).subscribe((data) => {
+          if (!!data && data.Id > 0 && data.Error == 0) {
+            if (type == 0) {
+              alert("Arbitral Award Submitted for Scrutiny.");
+            }
+            else if (type == 1) {
+              alert("Arbitral Award Published Successfully.");
+            }
+            that.back();
           }
-          else  if(type==1){
-            alert("Arbitral Award Published Successfully.");
-          }
-          that.back();
-        }
-      });
+        });
+      }
     }
-  }
   }
   async CreateDocument() {
     this.isButtonDisabled = true;
     let loading = await this.loadingCtrl.create({
-        message: 'Please wait...'
+      message: 'Please wait...'
     });
     await loading.present();
 
@@ -550,31 +617,31 @@ export class ProceduralOrderPage implements OnInit {
 
     // Handle ScheduleDate
     if (!this.doc.ScheduleDate || (this.doc.ScheduleDate.length < 2)) {
-        this.doc.ScheduleDate = '01-Jan-1901';
+      this.doc.ScheduleDate = '01-Jan-1901';
     }
-console.log(this.doc) ;debugger
+    //console.log(this.doc) ;debugger
 
 
     // API call to upload the document
     this.arbitrationservice.UploadArbitrationDocument(this.doc).subscribe(
-        (data) => {
-            loading.dismiss();
-            this.isButtonDisabled = false; // Dismiss the loader after the API response
+      (data) => {
+        loading.dismiss();
+        this.isButtonDisabled = false; // Dismiss the loader after the API response
 
-            if (!!data && data.Id > 0 && data.Error == 0) {
-                alert("Document Created Successfully");
-                this.back();
-            } else {
-                alert("Error creating document");
-            }
-        },
-        (error) => {
-          this.isButtonDisabled = false;
-            loading.dismiss(); // Dismiss the loader even if there's an error
-            alert("An error occurred while creating the document!");
+        if (!!data && data.Id > 0 && data.Error == 0) {
+          alert("Document Created Successfully");
+          this.back();
+        } else {
+          alert("Error creating document");
         }
+      },
+      (error) => {
+        this.isButtonDisabled = false;
+        loading.dismiss(); // Dismiss the loader even if there's an error
+        alert("An error occurred while creating the document!");
+      }
     );
-}
+  }
 
 
   CheckEditorDisable() {

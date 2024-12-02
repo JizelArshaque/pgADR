@@ -1,76 +1,84 @@
-<ion-header [translucent]="true" >
-  <ion-toolbar  
-  >
-  <app-alert-info></app-alert-info>
-    <div class="row justify-content-center" > 
-      <div class="col-lg-12" >
-                <h4 class="heading-con top-heading" style="width: 25rem; margin-left: 40%; margin-bottom: 17px;" >Select Arbitrators</h4> 
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <app-alert-info></app-alert-info>
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <h4 class="heading-con top-heading" style="width: 25rem; margin-left: 40%; margin-bottom: 17px;">Select
+          Arbitrators</h4>
         <button (click)="back()" style="margin-top: 0px;" class="close"><i class="fas fa-times"></i></button>
       </div>
-    </div>  
+    </div>
   </ion-toolbar>
 </ion-header>
 <ion-content *ngIf="region === 1 || region === 2">
-  <div class="container-fluid" >
+  <div class="container-fluid">
     <br>
-    
-        <div class="search-result">
-          <div class="row"  >
-    
-              <div class="col-lg-4 d-flex justify-content-center" *ngFor="let item of ArbitratorsFilter" (click)="OpenADRProfile(item,1)">
-                  <a >
-                      <div class="row justify-content-center" >
-                          <div class="col-lg-4 col-md-4 col-sm-4 col-4">
-                              <span>
-                                  <img src="{{appconfig.AssetUrl}}/assets/images/User/{{item.ImageUrl}}" onerror="this.src='assets/img/noimage.jpg'" loading="lazy" />
-                              </span>
-                          </div> 
-                          <div class="col-lg-8 col-md-8 col-sm-8 col-8">
-                          
-                              <h5 class="capitalize">{{item.Name}} </h5> 
-                              <p *ngIf="item.ApcamArbitratorCategory.length>0" >{{item.ApcamArbitratorCategory}}</p>
-                              <p *ngIf="item.ArbitratorCategory.length>0" >{{item.ArbitratorCategory}}</p> 
-    
-                          </div>
-                      </div>
-                  </a>
+
+    <div class="search-result">
+      <div class="row">
+
+        <div class="col-lg-4 d-flex justify-content-center" *ngFor="let item of ArbitratorsFilter"
+          (click)="OpenADRProfile(item,1)">
+          <a>
+            <div class="row justify-content-center">
+              <div class="col-lg-4 col-md-4 col-sm-4 col-4">
+                <span>
+                  <img src="{{appconfig.AssetUrlAdmin}}/assets/images/User/{{item.ImageUrl}}"
+                    onerror="this.src='assets/img/noimage.jpg'" loading="lazy" />
+                </span>
               </div>
-                
-          </div>
+              <div class="col-lg-8 col-md-8 col-sm-8 col-8">
+
+                <h5 class="capitalize">{{item.Name}} </h5>
+                <p *ngIf="item.ApcamArbitratorCategory.length>0">{{item.ApcamArbitratorCategory}}</p>
+                <p *ngIf="item.ArbitratorCategory.length>0">{{item.ArbitratorCategory}}</p>
+
+              </div>
+            </div>
+          </a>
+        </div>
+
       </div>
-      </div>
+    </div>
+  </div>
   <!-- Other content -->
 </ion-content>
 <ion-content *ngIf="region === 3">
   <div class="container-fluid" *ngIf="!AppointedArbitrator && !selectedArbitrator">
-<br>
+    <br>
+    <div>
+      <ion-searchbar *ngIf="ArbitratorsFilter" [(ngModel)]="searchText" (ionInput)="filterArbitrators()" animated="true"
+        placeholder="Search Arbitrator" class="smooth-searchbar"></ion-searchbar>
 
+    </div>
     <div class="search-result">
-      <div class="row"  >
+      <div class="row">
 
-          <div class="col-lg-4 d-flex justify-content-center" *ngFor="let item of ArbitratorsFilter" (click)="OpenADRProfile(item,1)">
-              <a >
-                  <div class="row justify-content-center" >
-                      <div class="col-lg-4 col-md-4 col-sm-4 col-4">
-                          <span>
-                              <img src="{{appconfig.AssetUrl}}/assets/images/User/{{item.ImageUrl}}" onerror="this.src='assets/img/noimage.jpg'" loading="lazy" />
-                          </span>
-                      </div> 
-                      <div class="col-lg-8 col-md-8 col-sm-8 col-8">
-                        <!-- <h4>
+        <div class="col-lg-4 d-flex justify-content-center" *ngFor="let item of filteredArbitrators"
+          (click)="OpenADRProfile(item,1)">
+          <a>
+            <div class="row justify-content-center">
+              <div class="col-lg-4 col-md-4 col-sm-4 col-4">
+                <span>
+                  <img src="{{appconfig.AssetUrlAdmin}}/assets/images/User/{{item.ImageUrl}}"
+                    onerror="this.src='assets/img/noimage.jpg'" loading="lazy" />
+                </span>
+              </div>
+              <div class="col-lg-8 col-md-8 col-sm-8 col-8">
+                <!-- <h4>
                           <font><i class="fas fa-star"></i></font> 0 Feedbacks
                         </h4> -->
-                          <h5 class="capitalize">{{item.Name}} </h5> 
-                          <p *ngIf="item.ApcamArbitratorCategory.length>0" >{{item.ApcamArbitratorCategory}}</p>
-                              <p *ngIf="item.ArbitratorCategory.length>0" >{{item.ArbitratorCategory}}</p> 
+                <h5 class="capitalize">{{item.Name}} </h5>
+                <p *ngIf="item.ApcamArbitratorCategory.length>0">{{item.ApcamArbitratorCategory}}</p>
+                <p *ngIf="item.ArbitratorCategory.length>0">{{item.ArbitratorCategory}}</p>
 
-                      </div>
-                  </div>
-              </a>
-          </div>
-            
+              </div>
+            </div>
+          </a>
+        </div>
+
       </div>
-  </div>
+    </div>
   </div>
   <ion-list>
     <ng-container *ngIf=" selectedArbitrator">
@@ -79,9 +87,9 @@
         <ion-button (click)="viewProfile(selectedArbitrator.Id)" size="small">View Profile</ion-button>
         <ion-button (click)="removeSelected()" color="danger" size="small">Remove</ion-button>
       </ion-item>
-      <ion-item >
-        <ion-label>Message </ion-label> 
-       <ion-input [(ngModel)]="reason" class="form-control"></ion-input>
+      <ion-item>
+        <ion-label>Message </ion-label>
+        <ion-input [(ngModel)]="reason" class="form-control"></ion-input>
       </ion-item>
     </ng-container>
 
@@ -89,19 +97,24 @@
       <ion-item>
         <ion-label>{{ AppointedArbitrator.Name }}</ion-label>
         <ion-button (click)="viewProfile(AppointedArbitrator.UserId)" size="small">View Profile</ion-button>
-        <ion-button *ngIf="!! AppointedArbitrator && !!AppointedArbitrator.AuthorisationUrl && !ArbitrationDetails.TribunalAppointedOn" (click)="ConstituteArbitrator()" color="success" size="small">Appoint</ion-button>
-        <ion-button *ngIf="!! AppointedArbitrator && !!AppointedArbitrator.AuthorisationUrl && !ArbitrationDetails.TribunalAppointedOn" (click)="ShowMessage(4)" color="success" size="small">Defective Filing</ion-button>
+        <ion-button
+          *ngIf="!! AppointedArbitrator && !!AppointedArbitrator.AuthorisationUrl && !ArbitrationDetails.TribunalAppointedOn"
+          (click)="ConstituteArbitrator()" color="success" size="small">Appoint</ion-button>
+        <ion-button
+          *ngIf="!! AppointedArbitrator && !!AppointedArbitrator.AuthorisationUrl && !ArbitrationDetails.TribunalAppointedOn"
+          (click)="ShowMessage(4)" color="success" size="small">Defective Filing</ion-button>
         <ion-button (click)="ShowMessage(5)" color="danger" size="small">Remove</ion-button>
       </ion-item>
     </ng-container>
 
     <div class="col-12" *ngIf="!!IsMessage && IsMessage>0">
-      <ion-label>{{IsMessage==4? 'Enter Defects in Disclosure':'Enter Reason for Removal'}} </ion-label> 
-     <ion-input [(ngModel)]="reason" class="form-control"></ion-input>
-     </div> 
-     <div class="col-12" *ngIf="!!IsMessage && IsMessage>0">
-      <ion-button (click)="removeSelected()" color="danger" size="small">{{IsMessage==4? 'Send to Arbitrator':'Remove Arbitrator'}}</ion-button>
-     </div>
+      <ion-label>{{IsMessage==4? 'Enter Defects in Disclosure':'Enter Reason for Removal'}} </ion-label>
+      <ion-input [(ngModel)]="reason" class="form-control"></ion-input>
+    </div>
+    <div class="col-12" *ngIf="!!IsMessage && IsMessage>0">
+      <ion-button (click)="removeSelected()" color="danger" size="small">{{IsMessage==4? 'Send to Arbitrator':'Remove
+        Arbitrator'}}</ion-button>
+    </div>
   </ion-list>
   <!-- <ion-list>
     <ion-item>
@@ -144,5 +157,3 @@
     </div>
   </div>
 </ion-footer> -->
-
-

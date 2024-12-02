@@ -13,3 +13,8 @@
 	  --width: 100% !important;
 	  --height: 100% !important; 
 	}    
+
+
+	.custom-modal-height {
+		--height: 40vh; /* Set the modal's height to 40% of the viewport height */
+	  }

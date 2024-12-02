@@ -150,7 +150,7 @@ GetAllArbitrationPartiesonly() {
   this.arbitrationservice.spGetAllarbitrationParties(JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).Id).subscribe((data: any) => {
     if (!!data && data.length > 0) {
       this.ArbitrationPartiesonly = data;
-      console.log(this.ArbitrationPartiesonly, ' this.ArbitrationPartiesonly');
+    //  console.log(this.ArbitrationPartiesonly, ' this.ArbitrationPartiesonly');
 
       if (data[0].IsVideoStart === 2 || data[0].IsVideoStart === 3) {
         const secureCode = JSON.parse(`${localStorage.getItem('ArbitrationDetails')}`).SecureCode;
