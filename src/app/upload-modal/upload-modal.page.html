@@ -178,8 +178,8 @@
 
       <div class="form-group col-6"
         *ngIf="(!!FormType && FormType==1 && !!doctype && doctype.length>1) ||(!!FormType && FormType==2 && applicationtype=='Application' && !!doctype && doctype.length>1)">
-        <button class="btn btn-sm purple-btn orange-btn" [disabled]="FilterExhibits(0).length==0"
-          (click)="exhibitfiles.click()">
+        <button class="btn btn-sm purple-btn orange-btn"
+          [disabled]="FilterExhibits(0).length==0 || exhibits.length == 2 " (click)="exhibitfiles.click()">
           Exhibits
         </button>
       </div>
@@ -187,11 +187,13 @@
         <div class="spinner-border text-primary" role="status" *ngIf="!!doctype && doctype.length>1 && loader == true">
           <span class="visually-hidden"></span>
         </div>
+        <div class="spinner-border text-primary" role="status"
+          *ngIf="(!!FormType && FormType==1 && !!doctype && doctype.length>1) ||(!!FormType && FormType==2 && applicationtype=='Application' && !!doctype && doctype.length>1) && loader2 == true">
+          <span class="visually-hidden"></span>
+        </div>
       </div>
       <div class="form-group col-6">
-        <!-- <div class="spinner-border text-primary" role="status" *ngIf="!!doctype && doctype.length>1 ">
-          <span class="visually-hidden"></span>
-        </div> -->
+
       </div>
       <div class="col-12"
         *ngIf="(!!FormType && FormType==1 && !!doctype && doctype.length>1) ||(!!FormType && FormType==2 && applicationtype=='Application'&& !!doctype && doctype.length>1) ">
@@ -232,7 +234,7 @@
     <div class="row justify-content-center" *ngIf="!!DocType && DocType==3">
       <div class="form-group col-6">
         <button class="btn btn-sm purple-btn" (click)="applicationfiles.click()">
-          Upload Document
+          Upload Documentsss
         </button>
       </div>
       <div class="form-group col-6">

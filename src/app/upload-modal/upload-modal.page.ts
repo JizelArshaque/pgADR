@@ -527,6 +527,7 @@ export class UploadModalPage implements OnInit {
       }
     }
   }
+  loader2:boolean=false
   FilterExhibits(type: any) {
     return this.exhibits.filter(x => x.Type != type);
   }
@@ -648,8 +649,10 @@ export class UploadModalPage implements OnInit {
     });
   }
   UploadDocumentCDNforExhibits(doc: any) {
+    this.loader2=true
     this.arbitrationservice.UploadDocumentCDN(doc).subscribe((data: any) => {
       if (data) {
+        this.loader2=false
         if (data.Id > 0 && data.Error == 0) {
 
           this.authURLScode = data.SecreteCode;
@@ -657,13 +660,20 @@ export class UploadModalPage implements OnInit {
           doc.DocUrl = data.SecreteCode;
           doc.Base64Data = '';
           this.exhibits.push(doc);
-          this.alertservice.Alert("Document Uploaded", 3, () => { }, () => { },);
+          
+          alert('Document Uploaded')
+          // this.alertservice.Alert("Document Uploaded", 3, () => { }, () => { },);
         } else {
-          this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
+          this.loader2=false
+       
+          alert('Error While Upload')
+          // this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
         }
       }
       else {
-        this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
+        this.loader2=false
+        alert('Error While Upload')
+        // this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
       }
     })
   }
