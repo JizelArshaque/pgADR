@@ -11,6 +11,7 @@ import { ArbitrationParties } from 'src/class/AdditionalParty';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/shared/alert-info/alert.service';
 import { AlertInfoModule } from 'src/shared/alert-info/alert-info.module';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -97,21 +98,27 @@ export class ArbitrationPartyAddPage implements OnInit {
       // debugger
     }
     if (this.navParams.get("ArbitrationEdit")) {
-      this.GetAllCountry()
 
 
+      // this.GetAllCountry()
+      // this.GetAllStates(this.selectedCountry)
+      // this.GetAllCities(this.selectedState)
 
 
+      
       this.additionalpartyedit = this.navParams.get("ArbitrationEdit");
       console.log(this.additionalpartyedit, "============edit============")
+
       this.Name = this.additionalpartyedit.Name
       this.Email = this.additionalpartyedit.Email
       this.Mobile = this.additionalpartyedit.Mobile
       this.Side = this.additionalpartyedit.Side
       this.PartyType = this.additionalpartyedit.Type
+
       this.cntry = this.additionalpartyedit.Country
+
       this.stat = this.additionalpartyedit.State
-      this.selectedState = this.State.find(x => x.state === this.additionalpartyedit.State);
+      // this.selectedState = this.State.find(x => x.state === this.additionalpartyedit.State);
       this.city = this.additionalpartyedit.City
 
       this.Address = this.additionalpartyedit.Address
@@ -126,6 +133,11 @@ export class ArbitrationPartyAddPage implements OnInit {
       this.AuthorisationUrl = this.additionalpartyedit.AuthorisationUrl
       this.additionalparty.Id = this.additionalpartyedit.Id;
       this.additionalparty.SecureCode = this.additionalpartyedit.SecureCode;
+      console.log(this.additionalpartyedit.State, 'state', this.additionalpartyedit.City, 'city');
+
+
+
+
     }
     if (this.navParams.get("Arbitration")) {
       this.ArbitrationDetails = this.navParams.get("ArbitrationDetails");
@@ -515,59 +527,69 @@ export class ArbitrationPartyAddPage implements OnInit {
     return this.ArbitrationParties.filter(x => x.Type == 0);
   }
   //added by nazrin 3/5/23
-  GetAllCountry() {
-    this.countryservice.GetAllCountryFromJSON().subscribe((data: any) => {
+
+  async GetAllCountry() {
+    try {
+      // Get all countries from the service
+      const data = await firstValueFrom(this.countryservice.GetAllCountryFromJSON());
       this.Country = <Array<any>>data;
+
+      // Find the selected country
       this.selectedCountry = this.Country?.find(country => country.name === this.cntry);
-      // debugger
-      this.GetAllStates(this.selectedCountry);
-      // debugger
 
-      if (this.stat) {
-        console.log(this.cntry, this.stat);
-
+      // Call GetAllStates with the selected country
+      if (this.selectedCountry) {
+        await this.GetAllStates(this.selectedCountry);
       }
-    });
-  }
-  //added by nazrin 3/5/23
-  GetAllStates(selectedCountry: any) {
-    // debugger
-
-    if (selectedCountry) {
-
-      // Assign selected country name to additionalparty.Country
-      this.additionalparty.Country = selectedCountry.name;
-
-      // Fetch states based on the selected country
-      this.countryservice.GetAllStatesFromJSON().subscribe((data: any) => {
-        // Filter states by the selected country ID
-        this.State = data?.filter((x: any) => x.country_id == selectedCountry.id);
-
-
-        this.GetAllCities(this.selectedState);
-
-        // debugger
-      });
+    } catch (error) {
+      console.error('Error fetching countries:', error);
     }
   }
 
-  //added by nazrin 3/5/23
-  GetAllCities(selectedState: any) {
+  // Fetch states based on selected country
+  async GetAllStates(selectedCountry: any) {
+    try {
+      if (selectedCountry) {
+        // Assign selected country name to additionalparty.Country
+        this.additionalparty.Country = selectedCountry.name;
 
-    if (selectedState) {
-      // Assign selected state name to additionalparty.State
-      this.additionalparty.State = selectedState.name;
+        // Fetch states from the service
+        const data = await firstValueFrom(this.countryservice.GetAllStatesFromJSON());
 
-      // Fetch cities based on the selected state
-      this.countryservice.GetAllCitiesFromJSON().subscribe((data: any) => {
+        // Filter states by the selected country ID
+        console.log(this.stat,'stat');
+        
+        this.State = data?.filter((x: any) => x.country_id == selectedCountry.id);
+        this.selectedState=this.State.find(i=>i.name==this.stat)
+        // Call GetAllCities with the selected state
+        if (this.selectedState) {
+          await this.GetAllCities(this.selectedState);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching states:', error);
+    }
+  }
+
+  // Fetch cities based on selected state
+  async GetAllCities(selectedState: any) {
+    try {
+      if (selectedState) {
+        // Assign selected state name to additionalparty.State
+        this.additionalparty.State = selectedState.name;
+
+        // Fetch cities from the service
+        const data = await firstValueFrom(this.countryservice.GetAllCitiesFromJSON());
+
         // Filter cities by the selected state ID
         this.District = data.filter((x: any) => x.state_id == selectedState.id);
-        this.selectedCity = this.District?.find(citys => citys.name === this.city);
-        // debugger
-      });
-    }
-    console.log(this.selectedState, '============================');
 
+        // Find the selected city
+        this.selectedCity = this.District?.find(city => city.name === this.city);
+      }
+    } catch (error) {
+      console.error('Error fetching cities:', error);
+    }
   }
 
   AppearForChange(event: { component: IonicSelectableComponent, value: any }) {

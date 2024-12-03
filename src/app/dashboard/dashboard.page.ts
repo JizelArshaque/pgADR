@@ -402,11 +402,13 @@ export class DashboardPage implements OnInit, AfterViewInit {
 
           const arbitrationDetailId = localStorage.getItem('ArbitrationDetailId');
           if (arbitrationDetailId) {
+
             await Promise.all([
               this.GetAllArbitrationDetails(),
               this.GetAllArbitrationParties()
             ]);
           } else {
+
             await this.GetAllArbitrationDetailsId();
           }
         }
@@ -445,6 +447,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
       this.usertype = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Type
       this.userside = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Side
       this.Type = userData?.Type;
+      // alert(userData?.Type)
       this.GetAllScrutinyComments();
       this.GetAllAbitrationNotes();
       this.GetAllArbitrationPartiesonly();
@@ -692,6 +695,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
 
           localStorage.setItem('ArbitrationDetails', JSON.stringify(this.ArbitrationDetails));
           this.ArbitrationAgreementType = data[0].ArbitrationAgreementType
+
           if (this.ReplyNoticeByRespondentUrl == null && JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Id && ((this.Type == 0 || this.Type == 2) && JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Side == 1)) {
             //  this.openUploadModal(5);
           }
@@ -1177,14 +1181,14 @@ export class DashboardPage implements OnInit, AfterViewInit {
     // console.log(this.imInPvtCall)
     if (this.imInPvtCall) {
       // console.log("else 2")
-      return this.ArbitrationPartiesonly.filter(x => x.Type == partytype).filter(x => x.Side == side && (x.IsPrivateCall == 2 || x.IsPrivateCall == 10));
+      return this.ArbitrationPartiesonly.filter(x => x.Type == partytype).filter(x => x.Side == side && (x.IsPrivateCall == 2 || x.IsPrivateCall == 10)).reverse();
 
     } else {
       // console.log("else 1")
       // console.log(this.ArbitrationPartiesonly, '    console.log(this.ArbitrationPartiesonly)')
       // console.log(this.ArbitrationParties.filter(x => x.Type == partytype).filter(x => x.Side == side), '-----------------WHAT--------------------');
 
-      return this.ArbitrationParties.filter(x => x.Type == partytype).filter(x => x.Side == side);
+      return this.ArbitrationParties.filter(x => x.Type == partytype).filter(x => x.Side == side).reverse();
 
     }
   }
@@ -1521,7 +1525,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
 
               localStorage.setItem("SCode", data.SecretCode);
               const user = JSON.parse(localStorage.getItem('ADR_Dashboard_User') || '[]')
-
+              this.Type = user?.Type
               this.videocallUserservice.UpdateArbitrationPartyLastLoginTime(user.Id, this.currentTimeforchecking).subscribe(data => {
                 if (data) {
                   // window.location.reload();
@@ -1535,6 +1539,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
                   } else {
                     this.loadPageFunctions()
                     this.load()
+
                   }
                 }
               });
@@ -1716,12 +1721,14 @@ export class DashboardPage implements OnInit, AfterViewInit {
     });
     modal.onDidDismiss().then((modelData: any) => {
       if (!!modelData && !!modelData.data && modelData.data.FormType == 0) {
-        this.GetAllArbitrationDetails();
+        // this.GetAllArbitrationDetails();
+        this.loadPageFunctions()
       }
       else if (!!modelData && !!modelData.data && modelData.data.FormType > 0) {
         this.OpenProceduralOrderModalForApplication(modelData.data.FormType, modelData.data.IsConnectwithParty, modelData.data.DocType, doctype.toString(), cm);
       }
     });
+
     await modal.present();
   }
   async openUploadModal(Type: any) {
@@ -1756,10 +1763,12 @@ export class DashboardPage implements OnInit, AfterViewInit {
   }
   async openProfileModal(party: any) {
     // code edited by jizel 
-    // console.log(this.ArbitrationPartiesonly, 'ppppppppp', party.Type);
+    // console.log(this.ArbitrationPartiesonly, 'ppppppppp', party.Type, '----------------', this.FilterArbitrationPartiesWithIsConteoller(0, 3, 1));
 
     let arbdoc: any = '';
     if (party.Type == 2) {
+      console.log('here1');
+
       const modal = await this.modalController.create({
         component: ProfileDetailsPage,
         cssClass: 'my-modal',
@@ -1778,11 +1787,14 @@ export class DashboardPage implements OnInit, AfterViewInit {
       });
       await modal.present();
     } else {
+
       if (party.Type == 3) {
         if ((!!this.filterarbitrationDocumentwithUserId(3, 3, party.Id) && this.filterarbitrationDocumentwithUserId(3, 3, party.Id).length > 0)) {
           arbdoc = this.filterarbitrationDocumentwithUserId(3, 3, party.Id)[0].Description;
+          console.log('here4');
         }
       }
+
       const modal = await this.modalController.create({
         component: ProfileDetailsPage,
         // You can pass data to the modal using the componentProps option if needed
@@ -2686,6 +2698,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
     return this.ArbitrationDocs.filter(x => x.Segment == segment && x.ReferenceDocumentId > 0 && x.Date == date && x.IsMailer == 0 && x.DocType == doctype);
   }
   filterarbitrationDocumentWithApplicationOrder(segment: any, id: any, doctype: any) {
+
     return this.ArbitrationDocs.filter(x => x.Segment == segment && x.ReferenceDocumentId == id && x.IsMailer == 0 && x.DocType == doctype);
   }
   filterarbitrationDocumentWithApplicationCounter(segment: any, id: any) {

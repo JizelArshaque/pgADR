@@ -1797,7 +1797,7 @@
                         </button>
 
                         <button
-                          *ngIf="filterarbitrationDocumentWithApplicationOrder(2,cm.Id,5).length>1 && (!filterarbitrationDocumentWithApplicationCounter(2,cm.Id) ||(!!filterarbitrationDocumentWithApplicationCounter(2,cm.Id) && filterarbitrationDocumentWithApplicationCounter(2,cm.Id).length==0)) && ((User.Type==0 || User.Type==2) && User.Side!=cm.Side) "
+                          *ngIf="filterarbitrationDocumentWithApplicationOrder(2,cm.Id,5).length>=1 && (!filterarbitrationDocumentWithApplicationCounter(2,cm.Id) ||(!!filterarbitrationDocumentWithApplicationCounter(2,cm.Id) && filterarbitrationDocumentWithApplicationCounter(2,cm.Id).length==0)) && ((User.Type==0 || User.Type==2) && User.Side!=cm.Side) "
                           class="subbtn box-item" (click)="openUploadModalForApplication(2,3,cm)">
                           File Counter
                         </button>
@@ -2104,7 +2104,7 @@
             <div class="box-content">
               <button class="subbtn box-item" *ngFor="let cm of FilterArbitrationParties(0,0)"
                 (click)="openProfileModal(cm)">
-                {{cm.Name}}
+                {{cm.Name}} 
               </button>
             </div>
           </div>

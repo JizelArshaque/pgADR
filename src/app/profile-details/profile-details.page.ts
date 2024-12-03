@@ -54,7 +54,8 @@ export class ProfileDetailsPage implements OnInit {
 
     this.modalController.dismiss();
     const modal = await this.modalController.create({
-      component: ArbitrationPartyAddPage, cssClass: 'my-modal',
+      component: ArbitrationPartyAddPage, 
+      cssClass: 'my-modal',
       componentProps: {
         // ArbitrationDetails: this.ArbitrationDetails,
         ArbitrationParties: this.ArbitrationParties,

@@ -374,6 +374,7 @@ export class UploadModalPage implements OnInit {
     }
   }
   fileChangePleading(event: any) {
+    // alert('clicked')
     let fileList: FileList = event.target.files;
     if (fileList.length > 0) {
       for (let i = 0; i < fileList.length; i++) {
@@ -749,10 +750,13 @@ export class UploadModalPage implements OnInit {
       });
     }
   }
-
+  loader: boolean = false
   UploadDocumentCDN(doc: any) {
+    this.loader = true
     this.arbitrationservice.UploadDocumentCDN(doc).subscribe((data: any) => {
       if (data) {
+        this.loader = false
+        alert('Document uploaded!')
         if (data.Id > 0 && data.Error == 0) {
           this.authURLScode = data.SecreteCode;
           doc.SecreteCode = data.SecreteCode;
@@ -761,10 +765,11 @@ export class UploadModalPage implements OnInit {
           this.exhibits.push(doc);
           //  this.UploadArbitrationDocument(doc);
         } else {
-          this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
+          alert("Error while uploading!")
         }
       }
       else {
+        this.loader = false
         this.alertservice.Alert("Error While Upload ", 3, () => { }, () => { },);
       }
     })
