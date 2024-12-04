@@ -548,7 +548,13 @@ export class UploadModalPage implements OnInit {
   async GenerateFIleNumber(type: any) {
     if (type == 1) {
       this.message = 'undefined'
-    }
+    }else if( type== 2 && this.message == ''){
+		alert('Please describe the defect to send!')
+		return
+	}else if( type== 3 && this.message == ''){
+		alert('Please add  a reason to dismiss arbitration!')
+		return
+			}
     this.isButtonDisabled = true;
     const loading = await this.loadingCtrl.create({
       message: 'Please wait...'
@@ -588,6 +594,10 @@ export class UploadModalPage implements OnInit {
 
   async CommenttoClaimant() {
 
+	if(this.message == ''){
+		alert('please add a comment to send to claimant!')
+		return
+	}
     this.isButtonDisabled = true;
     const loading = await this.loadingCtrl.create({
       message: 'Please wait...'

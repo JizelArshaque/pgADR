@@ -347,6 +347,10 @@ export class DashboardPage implements OnInit, AfterViewInit {
   ArbitrationDetailId: any;
   filteredDates: any[] = [];
 
+
+  usernameForDashboard:string=''
+  userTypeForDashboard:number=0
+
   constructor(private elementRef: ElementRef, private toastController: ToastController, private renderer: Renderer2, private el: ElementRef, private popoverController: PopoverController, public loginservice: LoginService,
     public videochatservice: TestProvider, public videocallUserservice: Videocalluser,
     private alertController: AlertController, private modalController: ModalController,
@@ -444,6 +448,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
     const userDataString = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`);
     if (userDataString) {
       const userData = userDataString;
+	  this.usernameForDashboard = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Name
       this.usertype = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Type
       this.userside = JSON.parse(`${localStorage.getItem('ADR_Dashboard_User')}`).Side
       this.Type = userData?.Type;

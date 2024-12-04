@@ -57,8 +57,8 @@
       <div class="form-group col-12"
         *ngIf="selectedProcedure === 'Dismiss Arbitration' ||selectedProcedure === 'Comment to Claimant' || selectedProcedure ==='Intimation on defective filing (to Claimant)'">
         <label>{{selectedProcedure === 'Dismiss Arbitration'?'Reason for
-          Dismissal':selectedProcedure === 'Comment to
-          Claimant'?'Comment':'Describe Defect'}}
+          Dismissal *':selectedProcedure === 'Comment to
+          Claimant'?'Comment *':'Describe Defect *'}}
         </label>
         <textarea name="Message" [(ngModel)]="message" type="text" class="form-control"></textarea>
       </div>
@@ -234,7 +234,7 @@
     <div class="row justify-content-center" *ngIf="!!DocType && DocType==3">
       <div class="form-group col-6">
         <button class="btn btn-sm purple-btn" (click)="applicationfiles.click()">
-          Upload Documentsss
+          Upload Document
         </button>
       </div>
       <div class="form-group col-6">

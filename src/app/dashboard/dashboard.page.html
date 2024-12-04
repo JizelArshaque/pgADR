@@ -757,7 +757,7 @@
                 <i class="fa-solid fa-user" style="margin-top: -120px; margin-left: 7rem; height: 30px"></i>
                 <label for="profile2"><i class="mdi mdi-menu"></i></label>
                 <ul style="
-                    width: 9rem;
+                    width: 13rem;
                     z-index: 2;
                     border: 3px solid #11375aab;
                     border-radius: 5px;
@@ -765,6 +765,11 @@
                   <!-- <li><a><i class="mdi mdi-account"></i>Account</a></li> -->
 
                   <!-- Report item with modal function call -->
+				  <li>
+                    <a ><i class="mdi mdi-settings" style="color: black"></i>   
+						 {{ usernameForDashboard.split(' ')[0] }}
+                      <i class="fa-solid fa-user" style="color: black"></i></a>
+                  </li>
                   <li>
                     <a (click)="modal()"><i class="mdi mdi-settings" style="color: black"></i>Report &nbsp;
                       <i class="fa-solid fa-bug" style="color: black"></i></a>
